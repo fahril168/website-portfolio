@@ -139,12 +139,29 @@ img {
     margin-right: auto;
     max-width: 520px;
     width: 100%;
+    text-align: left;
+  }
+  .home__title {
+    margin-left: var(--mb-2);
+  }
+  .home__p {
+    text-align: left !important;
+    margin-left: var(--mb-2);
+  }
+  .button {
+    margin-left: var(--mb-2);
+  }
+  .home__social {
+    flex-direction: row;
+    justify-content: flex-start;
+    margin-left: var(--mb-2);
   }
   .home__img {
     margin: 2rem auto 0;
     max-width: 280px;
     width: 100%;
     justify-self: center;
+    order: -1;
   }
   .home__img img {
     margin: 0 auto;
