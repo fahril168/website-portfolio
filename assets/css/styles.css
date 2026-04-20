@@ -375,6 +375,57 @@ img {
   cursor: pointer;
   margin-left: auto;
 }
+.contact__container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.contact__card {
+  padding: 2rem;
+  background-color: #f5f5f5;
+  border-radius: 0.75rem;
+  text-align: center;
+  transition: 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.contact__card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+.contact__icon {
+  font-size: 3rem;
+  color: var(--first-color);
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.contact__card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  color: var(--second-color);
+}
+.contact__card p {
+  margin-bottom: 1.5rem;
+  color: #666;
+  font-size: var(--normal-font-size);
+}
+.contact__card .button {
+  display: inline-block;
+  margin: 0;
+  margin-top: auto;
+}
+
+@media screen and (max-width: 768px) {
+  .contact__container {
+    grid-template-columns: 1fr;
+  }
+}
 
 /* ===== FOOTER =====*/
 .footer {
