@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Portfolio</title>
+    <!-- =====BOX ICONS===== -->
+    <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <a href="index.html" class="back-button"><i class="bx bx-left-arrow-alt"></i> Back</a>
+    <section class="design-section">
+        <h1 class="design-title">Design Portfolio</h1>
+
+        <div class="year-section">
+            <h2>Poster</h2>
+            <div class="design-grid">
+                <button type="button" class="design-card" data-preview="assets/img/design1.png">
+                    <img src="assets/img/design1.png" alt="Design Portfolio">
+                </button>
+                <button type="button" class="design-card" data-preview="assets/img/design2.png">
+                    <img src="assets/img/design2.png" alt="Design Portfolio">
+                </button>
+                <button type="button" class="design-card" data-preview="assets/img/design3.png">
+                    <img src="assets/img/design3.png" alt="Design Portfolio">
+                </button>
+                <button type="button" class="design-card" data-preview="assets/img/design4.png">
+                    <img src="assets/img/design4.png" alt="Design Portfolio">
+                </button>
+                <button type="button" class="design-card" data-preview="assets/img/design5.png">
+                    <img src="assets/img/design5.png" alt="Design Portfolio">
+                </button>
+                <button type="button" class="design-card" data-preview="assets/img/design6.png">
+                    <img src="assets/img/design6.png" alt="Design Portfolio">
+                </button>
+                <button type="button" class="design-card" data-preview="assets/img/design7.png">
+                    <img src="assets/img/design7.png" alt="Design Portfolio">
+                </button>
+                <button type="button" class="design-card" data-preview="assets/img/design8.png">
+                    <img src="assets/img/design8.png" alt="Design Portfolio">
+                </button>
+                <button type="button" class="design-card" data-preview="assets/img/design13.png">
+                    <img src="assets/img/design13.png" alt="Design Portfolio">
+                </button>
+            </div>
+        </div>
+
+        <div class="year-section">
+            <h2>Pamflet</h2>
+            <div class="design-grid">
+                <button type="button" class="design-card" data-preview="assets/img/design9.png">
+                    <img src="assets/img/design9.png" alt="Design Portfolio">
+                </button>
+                <button type="button" class="design-card" data-preview="assets/img/design11.png">
+                    <img src="assets/img/design11.png" alt="Design Portfolio">
+                </button>
+                <button type="button" class="design-card" data-preview="assets/img/design12.png">
+                    <img src="assets/img/design12.png" alt="Design Portfolio">
+                </button>
+                <button type="button" class="design-card" data-preview="assets/img/design10.png">
+                    <img src="assets/img/design10.png" alt="Design Portfolio">
+                </button>
+
+            </div>
+        </div>
+    </section>
+
+    <div class="design-modal" aria-hidden="true">
+        <div class="design-modal__overlay"></div>
+        <div class="design-modal__content" role="dialog" aria-modal="true" aria-label="Image preview">
+            <button type="button" class="design-modal__close" aria-label="Close preview">
+                <i class="bx bx-x"></i>
+            </button>
+            <img class="design-modal__img" src="" alt="Preview">
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            const modal = document.querySelector(".design-modal");
+            const modalImg = document.querySelector(".design-modal__img");
+            const overlay = document.querySelector(".design-modal__overlay");
+            const closeBtn = document.querySelector(".design-modal__close");
+            const cards = document.querySelectorAll(".design-card");
+
+            function openModal(src) {
+                modalImg.src = src;
+                modal.classList.add("is-active");
+                modal.setAttribute("aria-hidden", "false");
+                document.body.style.overflow = "hidden";
+            }
+
+            function closeModal() {
+                modal.classList.remove("is-active");
+                modal.setAttribute("aria-hidden", "true");
+                modalImg.src = "";
+                document.body.style.overflow = "";
+            }
+
+            cards.forEach((card) => {
+                card.addEventListener("click", () => {
+                    const src = card.getAttribute("data-preview");
+                    if (src) {
+                        openModal(src);
+                    }
+                });
+            });
+
+            overlay.addEventListener("click", closeModal);
+            closeBtn.addEventListener("click", closeModal);
+
+            document.addEventListener("keydown", (event) => {
+                if (event.key === "Escape" && modal.classList.contains("is-active")) {
+                    closeModal();
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
