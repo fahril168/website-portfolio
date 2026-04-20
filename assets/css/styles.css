@@ -810,6 +810,14 @@ img {
   }
 }
 
+@media screen and (max-width: 768px) {
+  .design-section,
+  .video-section {
+    margin-top: calc(-1 * var(--header-height));
+    padding-top: 0;
+  }
+}
+
 /* CARD */
 .design-card{
   display:block;
@@ -835,7 +843,7 @@ img {
 
 @media screen and (max-width: 767px) {
   .design-title, .video-title {
-    position: fixed;
+    /* position: fixed; */
     top: 0;
     left: 0;
     width: 100%;
