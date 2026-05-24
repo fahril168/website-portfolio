@@ -901,29 +901,29 @@ img {
 }
 
 /* GRID */
-.design-grid{
-  display:grid;
-  grid-template-columns: repeat(3,1fr);
-  gap:25px;
-  max-width:900px;
-  margin:auto;
-  flex: 1;
-  padding: 0 16px;
+.design-grid {
+    columns: 3;
+    column-gap: 25px;
+    max-width: 900px;
+    margin: auto;
+    padding: 0 16px;
 }
 
 @media screen and (max-width: 992px) {
   .design-grid{
-    grid-template-columns: repeat(2,1fr);
+    columns: 2;
   }
 }
 
 @media screen and (max-width: 576px) {
-  .design-grid{
-    grid-template-columns: repeat(2,1fr);
-    gap: 12px;
-    max-width: 520px;
-    padding: 0 12px;
-  }
+    .design-grid {
+        columns: 2;
+        column-gap: 12px;
+        padding: 0 12px;
+    }
+    .design-card { 
+      margin-bottom: 12px; 
+    }
 }
 
 @media screen and (max-width: 768px) {
@@ -935,18 +935,21 @@ img {
 }
 
 /* CARD */
-.design-card{
-  display:block;
-  border-radius:12px;
-  overflow:hidden;
-  box-shadow:0 10px 25px rgba(0,0,0,0.1);
-  transition:0.3s;
-  border: none;
-  padding: 0;
-  background: transparent;
-  cursor: pointer;
-  width: 100%;
-  text-align: inherit;
+.design-card {
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0,0,0,.10);
+    transition: transform .3s ease, box-shadow .3s ease;
+    border: none;
+    padding: 0;
+    background: #eef0f8;
+    cursor: pointer;
+    width: 100%;
+    display: block;
+    break-inside: avoid;
+    margin-bottom: 25px;
+    float: none;  /* hapus float */
 }
 
 /* IMAGE */
@@ -1114,20 +1117,6 @@ img {
         ══════════════════════════════════════ */
 
 /* Wrapper yang menjaga aspect ratio 4:3 */
-.design-card {
-    position: relative;
-    border-radius: 14px;
-    overflow: hidden;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, .10);
-    transition: transform .3s ease, box-shadow .3s ease;
-    border: none;
-    padding: 0;
-    background: #eef0f8;
-    cursor: pointer;
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    display: block;
-}
 
 .design-card:hover {
     transform: translateY(-7px);
@@ -1140,18 +1129,17 @@ img {
 }
 
 /* Skeleton shimmer saat gambar belum load */
-.design-card::before {
+.design-card:not(.img-loaded)::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg,
-            #e8eaf2 25%,
-            #f3f4fb 50%,
-            #e8eaf2 75%);
+    background: linear-gradient(90deg, #e8eaf2 25%, #f3f4fb 50%, #e8eaf2 75%);
     background-size: 200% 100%;
     animation: shimmer 1.4s infinite;
     z-index: 0;
     border-radius: 14px;
+    /* height perlu diset agar shimmer terlihat saat gambar belum ada */
+    min-height: 200px;
 }
 
 @keyframes shimmer {
@@ -1166,13 +1154,11 @@ img {
 
 /* Thumbnail di dalam card — cover penuh, lazy load */
 .design-card img.thumb {
-    position: absolute;
-    inset: 0;
+    position: static;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;        /* ← ikuti rasio asli */
+    object-fit: unset;
     display: block;
-    /* awalnya transparan, fade in saat loaded */
     opacity: 0;
     transition: opacity .4s ease;
     z-index: 1;

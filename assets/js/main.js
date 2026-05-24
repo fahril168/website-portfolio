@@ -371,18 +371,6 @@ if (
                         img.src =
                             src;
 
-                        img.addEventListener(
-                            'load',
-                            () => {
-                                img.classList.add(
-                                    'loaded'
-                                );
-                            },
-                            {
-                                once: true
-                            }
-                        );
-
                         imgObserver.unobserve(
                             img
                         );
@@ -499,16 +487,13 @@ if (
         container.innerHTML =
             html;
 
-        container
-            .querySelectorAll(
-                '.thumb'
-            )
-            .forEach(
-                img =>
-                    imgObserver.observe(
-                        img
-                    )
-            );
+        container.querySelectorAll('.thumb').forEach(img => {
+            imgObserver.observe(img);
+            img.addEventListener('load', () => {
+                img.classList.add('loaded');
+                img.closest('.design-card').classList.add('img-loaded');
+            }, { once: true });
+        });
 
         container
             .querySelectorAll(
