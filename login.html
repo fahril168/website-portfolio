@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css" rel="stylesheet" />
+  <title>Login — Fahril</title>
+  <style>
+    :root {
+      --header-height: 3rem;
+      --font-semi: 600;
+      --hue-color: 224;
+      --first-color: hsl(224, 89%, 60%);
+      --second-color: hsl(224, 56%, 12%);
+      --body-font: "Poppins", sans-serif;
+      --big-font-size: 2rem;
+      --h2-font-size: 1.25rem;
+      --normal-font-size: .938rem;
+      --smaller-font-size: .75rem;
+      --mb-2: 1rem;
+      --mb-4: 2rem;
+      --mb-5: 2.5rem;
+      --mb-6: 3rem;
+      --z-fixed: 100;
+    }
+    @media screen and (min-width: 968px) {
+      :root {
+        --big-font-size: 3.5rem;
+        --h2-font-size: 2rem;
+        --normal-font-size: 1rem;
+        --smaller-font-size: .875rem;
+      }
+    }
+    *, ::before, ::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: var(--header-height) 0 0 0;
+      font-family: var(--body-font);
+      font-size: var(--normal-font-size);
+      color: var(--second-color);
+      min-height: 100vh;
+      background: #f8f9ff;
+    }
+    h1, h2, p { margin: 0; }
+    ul { margin: 0; padding: 0; list-style: none; }
+    a { text-decoration: none; }
+    img { max-width: 100%; height: auto; display: block; }
+
+    /* ── HEADER ── */
+    .l-header {
+      width: 100%;
+      position: fixed;
+      top: 0; left: 0;
+      z-index: var(--z-fixed);
+      background-color: #fff;
+      box-shadow: 0 1px 4px rgba(146, 161, 176, 0.15);
+    }
+    .nav {
+      height: var(--header-height);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: var(--font-semi);
+      max-width: 80vw;
+      margin: 0 auto;
+      padding: 0 var(--mb-2);
+    }
+    @media screen and (min-width: 768px) {
+      .nav { height: calc(var(--header-height) + 1.5rem); }
+    }
+    .nav__logo { color: var(--second-color); font-size: 1.2rem; font-weight: 700; }
+    .nav__logo:hover { color: var(--first-color); }
+    .nav__badge {
+      background: hsl(224, 89%, 95%);
+      color: var(--first-color);
+      font-size: .7rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      letter-spacing: .04em;
+    }
+
+    /* ── MAIN ── */
+    .login-page {
+      min-height: calc(100vh - var(--header-height));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem 4rem;
+    }
+
+    .login-wrapper {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+      width: 100%;
+      max-width: 900px;
+      background: #fff;
+      border-radius: 1.25rem;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(14, 36, 49, 0.12);
+    }
+
+    @media screen and (min-width: 640px) {
+      .login-wrapper { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* LEFT PANEL */
+    .login-left {
+      background: var(--second-color);
+      padding: 3rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .login-left::before {
+      content: '';
+      position: absolute;
+      width: 280px; height: 280px;
+      border-radius: 50%;
+      background: var(--first-color);
+      opacity: .08;
+      bottom: -80px; right: -80px;
+    }
+    .login-left::after {
+      content: '';
+      position: absolute;
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      background: var(--first-color);
+      opacity: .06;
+      top: -50px; left: -50px;
+    }
+    .login-brand {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #fff;
+      position: relative;
+      z-index: 1;
+    }
+    .login-brand span { color: var(--first-color); }
+    .login-left-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #fff;
+      position: relative;
+      z-index: 1;
+      line-height: 1.5;
+    }
+    .login-left-sub {
+      font-size: .85rem;
+      color: rgba(255,255,255,.6);
+      position: relative;
+      z-index: 1;
+      line-height: 1.7;
+    }
+    .login-dot-row {
+      display: flex;
+      gap: .5rem;
+      position: relative;
+      z-index: 1;
+      margin-top: .5rem;
+    }
+    .login-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.25);
+    }
+    .login-dot.active { background: var(--first-color); width: 24px; border-radius: 4px; }
+
+    /* RIGHT PANEL */
+    .login-right {
+      padding: 3rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .login-right-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--second-color);
+      margin-bottom: .4rem;
+    }
+    .login-right-sub {
+      font-size: .85rem;
+      color: #888;
+      margin-bottom: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: .4rem;
+    }
+    label {
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--second-color);
+      letter-spacing: .02em;
+    }
+    .input-wrap {
+      position: relative;
+    }
+    .input-wrap i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.1rem;
+      color: #aaa;
+      pointer-events: none;
+    }
+    .input-wrap input {
+      width: 100%;
+      padding: .75rem 1rem .75rem 2.8rem;
+      border: 1.5px solid #e5e7eb;
+      border-radius: .5rem;
+      font-family: var(--body-font);
+      font-size: var(--normal-font-size);
+      color: var(--second-color);
+      outline: none;
+      transition: border-color .25s, box-shadow .25s;
+      background: #fafbff;
+    }
+    .input-wrap input:focus {
+      border-color: var(--first-color);
+      box-shadow: 0 0 0 3px hsl(224, 89%, 93%);
+      background: #fff;
+    }
+    .input-wrap .toggle-pass {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #aaa;
+      font-size: 1.1rem;
+      padding: 0;
+      pointer-events: all;
+    }
+    .input-wrap .toggle-pass:hover { color: var(--first-color); }
+
+    .error-msg {
+      font-size: .78rem;
+      color: #ef4444;
+      margin-top: .25rem;
+      display: none;
+    }
+    .error-msg.show { display: block; }
+
+    .button {
+      display: inline-block;
+      background-color: var(--first-color);
+      color: #fff;
+      padding: .75rem 2.5rem;
+      font-weight: var(--font-semi);
+      border-radius: .5rem;
+      transition: .3s;
+      font-family: var(--body-font);
+      font-size: var(--normal-font-size);
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      text-align: center;
+      margin-top: .5rem;
+    }
+    .button:hover {
+      background-color: #fff;
+      color: var(--first-color);
+      box-shadow: 0 10px 36px rgba(0,0,0,.15);
+    }
+    .button:disabled {
+      opacity: .7;
+      cursor: not-allowed;
+    }
+
+    .login-footer-note {
+      font-size: .75rem;
+      color: #aaa;
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+    .login-footer-note a { color: var(--first-color); font-weight: 600; }
+
+    /* ── FOOTER ── */
+    footer {
+      background-color: var(--second-color);
+      color: #fff;
+      text-align: center;
+      padding: 1rem;
+    }
+    footer p { font-size: var(--smaller-font-size); }
+
+    /* shake animation */
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20%,60% { transform: translateX(-6px); }
+      40%,80% { transform: translateX(6px); }
+    }
+    .shake { animation: shake .35s ease; }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="l-header">
+  <nav class="nav">
+    <a href="index.html" class="nav__logo"><h2>Fahril</h2></a>
+    <span class="nav__badge">Admin Panel</span>
+  </nav>
+</header>
+
+<!-- LOGIN PAGE -->
+<main class="login-page">
+  <div class="login-wrapper">
+
+    <!-- LEFT -->
+    <div class="login-left">
+      <div class="login-brand">Fahril<span>.</span></div>
+      <div class="login-left-title">Selamat datang<br>kembali 👋</div>
+      <div class="login-left-sub">Masuk ke dashboard admin untuk mengelola project yang ditampilkan di portfolio kamu.</div>
+      <div class="login-dot-row">
+        <div class="login-dot active"></div>
+        <div class="login-dot"></div>
+        <div class="login-dot"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="login-right">
+      <h2 class="login-right-title">Login Admin</h2>
+      <p class="login-right-sub">Masukkan kredensial untuk melanjutkan</p>
+
+      <div class="form-group">
+        <label for="username">Username</label>
+        <div class="input-wrap">
+          <i class='bx bx-user'></i>
+          <input type="text" id="username" placeholder="admin" autocomplete="username" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="input-wrap">
+          <i class='bx bx-lock-alt'></i>
+          <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" />
+          <button class="toggle-pass" type="button" onclick="togglePass()" title="Tampilkan password">
+            <i class='bx bx-hide' id="pass-icon"></i>
+          </button>
+        </div>
+        <span class="error-msg" id="error-msg">
+          <i class='bx bx-error-circle'></i> Username atau password salah.
+        </span>
+      </div>
+
+      <button class="button" id="login-btn" onclick="doLogin()">
+        Masuk <i class='bx bx-log-in' style="vertical-align:-2px;margin-left:4px;"></i>
+      </button>
+
+      <p class="login-footer-note">
+        Kembali ke <a href="index.html">halaman portfolio</a>
+      </p>
+    </div>
+
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <p>&copy; 2026 Muh. Fahril. All rights reserved.</p>
+</footer>
+
+<script>
+  /* ── KREDENSIAL — ganti sesuai kebutuhan ── */
+  const ADMIN_USER = 'admin';
+  const ADMIN_PASS = 'fahril123';
+
+  function doLogin() {
+    const user = document.getElementById('username').value.trim();
+    const pass = document.getElementById('password').value;
+    const errEl = document.getElementById('error-msg');
+    const btn = document.getElementById('login-btn');
+    const wrapper = document.querySelector('.login-right');
+
+    errEl.classList.remove('show');
+
+    if (!user || !pass) {
+      errEl.textContent = '⚠ Username dan password wajib diisi.';
+      errEl.classList.add('show');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="bx bx-loader-alt" style="animation:spin .7s linear infinite;vertical-align:-2px;margin-right:4px;"></i> Memeriksa...';
+
+    setTimeout(() => {
+      if (user === ADMIN_USER && pass === ADMIN_PASS) {
+        sessionStorage.setItem('fahril_admin', '1');
+        btn.innerHTML = '<i class="bx bx-check" style="vertical-align:-2px;margin-right:4px;"></i> Berhasil! Mengalihkan...';
+        btn.style.background = '#22c55e';
+        setTimeout(() => { window.location.href = 'admin.html'; }, 700);
+      } else {
+        btn.disabled = false;
+        btn.innerHTML = 'Masuk <i class="bx bx-log-in" style="vertical-align:-2px;margin-left:4px;"></i>';
+        errEl.innerHTML = '<i class="bx bx-error-circle"></i> Username atau password salah.';
+        errEl.classList.add('show');
+        wrapper.classList.add('shake');
+        setTimeout(() => wrapper.classList.remove('shake'), 400);
+      }
+    }, 800);
+  }
+
+  function togglePass() {
+    const inp = document.getElementById('password');
+    const ico = document.getElementById('pass-icon');
+    if (inp.type === 'password') {
+      inp.type = 'text';
+      ico.className = 'bx bx-show';
+    } else {
+      inp.type = 'password';
+      ico.className = 'bx bx-hide';
+    }
+  }
+
+  /* Enter key */
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
+  });
+
+  /* Spin keyframe */
+  const style = document.createElement('style');
+  style.textContent = '@keyframes spin{to{transform:rotate(360deg)}}';
+  document.head.appendChild(style);
+</script>
+</body>
+</html>

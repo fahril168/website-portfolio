@@ -4,54 +4,76 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="assets/css/styles.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <!-- =====BOX ICONS===== -->
+    <title>Video Portfolio</title>
     <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        /* ── LOADING STATE ── */
+        .loading-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+            gap: 1rem;
+            color: #aaa;
+        }
+        .spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid hsl(224, 89%, 90%);
+            border-top-color: hsl(224, 89%, 60%);
+            border-radius: 50%;
+            animation: spin .7s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── EMPTY STATE ── */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+            gap: .75rem;
+            color: #bbb;
+            font-size: .9rem;
+        }
+        .empty-state i {
+            font-size: 3rem;
+            color: hsl(224, 89%, 80%);
+        }
+
+        /* ── ERROR STATE ── */
+        .error-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+            gap: .5rem;
+            color: #ef4444;
+            font-size: .85rem;
+            text-align: center;
+        }
+        .error-state i { font-size: 2.5rem; }
+
+        /* ── YEAR SECTION HIDDEN INITIALLY ── */
+        .year-section { display: none; }
+        .year-section.visible { display: block; }
+    </style>
 </head>
 <body>
     <a href="index.html" class="back-button"><i class="bx bx-left-arrow-alt"></i> Back</a>
     <section class="video-section">
-        <h1 class="video-title">Video Portfolio</h2>
+        <h1 class="video-title">Video Portfolio</h1>
 
-        <div class="year-section">
-            <h2>2026</h2>
-            <div class="video-grid">
-                <a href="https://www.instagram.com/p/DVsoV8GTzJ_/" target="_blank" class="video-card">
-                    <img src="assets/img/video1.png" alt="Video Portfolio">
-                </a>
-            </div>
-        </div>
-
-        <div class="year-section">
-            <h2>2025</h2>
-            <div class="video-grid">
-                <a href="https://www.instagram.com/p/DPi5K6TjTdt/" target="_blank" class="video-card">
-                    <img src="assets/img/video9.png" alt="Video Portfolio">
-                </a>
-                <a href="https://www.instagram.com/p/DRWUAEPkkww/" target="_blank" class="video-card">
-                    <img src="assets/img/video10.png" alt="Video Portfolio">
-                </a>
-                <a href="https://www.instagram.com/p/DO8g3L-k5DX/" target="_blank" class="video-card">
-                    <img src="assets/img/video2.png" alt="Video Portfolio">
-                </a>
-                <a href="https://www.instagram.com/p/DOOAdqFE78o/" target="_blank" class="video-card">
-                    <img src="assets/img/video3.png" alt="Video Portfolio">
-                </a>
-                <a href="https://www.instagram.com/p/DNVO9IhTnQd/" target="_blank" class="video-card">
-                    <img src="assets/img/video4.png" alt="Video Portfolio">
-                </a>
-                <a href="https://drive.google.com/file/d/1s9apcYXhIopvw2FW6z5jEd_YBk8ybsJI/view" target="_blank" class="video-card">
-                    <img src="assets/img/video5.png" alt="Video Portfolio">
-                </a>
-                <a href="https://www.instagram.com/p/DJiUFySzbOy/" target="_blank" class="video-card">
-                    <img src="assets/img/video6.png" alt="Video Portfolio">
-                </a>
-                <a href="https://www.instagram.com/p/DIoJDFtBp-f/" target="_blank" class="video-card">
-                    <img src="assets/img/video7.png" alt="Video Portfolio">
-                </a>
-                <a href="https://www.instagram.com/p/DHa_ShaTyOz/" target="_blank" class="video-card">
-                    <img src="assets/img/video8.png" alt="Video Portfolio">
-                </a>
+        <!-- Dynamic content rendered here -->
+        <div id="video-content">
+            <div style="margin-top:80px">
+                <div class="loading-wrap">
+                    <div class="spinner"></div>
+                    <span>Memuat portfolio...</span>
+                </div>
             </div>
         </div>
     </section>
@@ -89,5 +111,125 @@
             <p class="footer__copy">&copy; 2026 Muh. Fahril. All rights reserved.</p>
         </div>
     </footer>
+
+    <script>
+        /* ── SUPABASE CONFIG ── */
+        const SB_URL = localStorage.getItem('fahril_sb_url') || '';
+        const SB_KEY = localStorage.getItem('fahril_sb_key') || '';
+
+        /* ── HELPERS ── */
+        function esc(s) {
+            if (!s) return '';
+            return String(s)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        async function sbFetch(path) {
+            const res = await fetch(SB_URL + '/rest/v1/' + path, {
+                headers: {
+                    'apikey': SB_KEY,
+                    'Authorization': 'Bearer ' + SB_KEY,
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (!res.ok) {
+                const e = await res.json().catch(() => ({}));
+                throw new Error(e.message || 'Request gagal (' + res.status + ')');
+            }
+            const txt = await res.text();
+            return txt ? JSON.parse(txt) : [];
+        }
+
+        /* ── RENDER ── */
+        function renderVideos(data) {
+            const container = document.getElementById('video-content');
+
+            if (!data || data.length === 0) {
+                container.innerHTML = `
+                    <div style="margin-top:80px">
+                        <div class="empty-state">
+                            <i class='bx bx-video'></i>
+                            <p>Belum ada video yang ditampilkan.</p>
+                        </div>
+                    </div>`;
+                return;
+            }
+
+            /* Kelompokkan by year, urutkan descending */
+            const years = {};
+            data.forEach(item => {
+                const y = item.year || 'Lainnya';
+                if (!years[y]) years[y] = [];
+                years[y].push(item);
+            });
+
+            /* Sort years descending */
+            const sortedYears = Object.keys(years).sort((a, b) => b - a);
+
+            let html = '';
+            sortedYears.forEach(year => {
+                const items = years[year];
+                html += `
+                <div class="year-section visible">
+                    <h2>${esc(String(year))}</h2>
+                    <div class="video-grid">
+                        ${items.map(item => `
+                        <a
+                            href="${esc(item.video_url || '#')}"
+                            target="${item.video_url ? '_blank' : '_self'}"
+                            class="video-card"
+                            title="${esc(item.title || '')}"
+                            rel="noopener noreferrer"
+                        >
+                            <img
+                                src="${esc(item.thumbnail_url || '')}"
+                                alt="${esc(item.title || 'Video Portfolio')}"
+                                loading="lazy"
+                                onerror="this.style.minHeight='160px';this.style.background='#111'"
+                            >
+                        </a>`).join('')}
+                    </div>
+                </div>`;
+            });
+
+            container.innerHTML = html;
+        }
+
+        /* ── LOAD ── */
+        async function loadVideos() {
+            const container = document.getElementById('video-content');
+
+            if (!SB_URL || !SB_KEY) {
+                container.innerHTML = `
+                    <div style="margin-top:80px">
+                        <div class="error-state">
+                            <i class='bx bx-plug'></i>
+                            <p>Supabase belum dikonfigurasi.<br>
+                            Silakan hubungkan Supabase melalui halaman <a href="admin.html" style="color:hsl(224,89%,60%)">Admin</a>.</p>
+                        </div>
+                    </div>`;
+                return;
+            }
+
+            try {
+                /* Fetch semua videos, urutkan by year desc lalu created_at desc */
+                const data = await sbFetch('videos?select=*&order=year.desc,created_at.desc');
+                renderVideos(data);
+            } catch (err) {
+                container.innerHTML = `
+                    <div style="margin-top:80px">
+                        <div class="error-state">
+                            <i class='bx bx-error-circle'></i>
+                            <p>Gagal memuat data: ${esc(err.message)}</p>
+                        </div>
+                    </div>`;
+            }
+        }
+
+        loadVideos();
+    </script>
 </body>
 </html>
