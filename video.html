@@ -4,70 +4,72 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="assets/css/styles.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Portfolio</title>
+
+    <title>Video Portfolio — Fahril</title>
+
     <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
-    <style>
-        /* ── LOADING STATE ── */
-        .loading-wrap {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 200px;
-            gap: 1rem;
-            color: #aaa;
-        }
-        .spinner {
-            width: 36px;
-            height: 36px;
-            border: 3px solid hsl(224, 89%, 90%);
-            border-top-color: hsl(224, 89%, 60%);
-            border-radius: 50%;
-            animation: spin .7s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* ── EMPTY STATE ── */
-        .empty-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 200px;
-            gap: .75rem;
-            color: #bbb;
-            font-size: .9rem;
-        }
-        .empty-state i {
-            font-size: 3rem;
-            color: hsl(224, 89%, 80%);
-        }
-
-        /* ── ERROR STATE ── */
-        .error-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 200px;
-            gap: .5rem;
-            color: #ef4444;
-            font-size: .85rem;
-            text-align: center;
-        }
-        .error-state i { font-size: 2.5rem; }
-
-        /* ── YEAR SECTION HIDDEN INITIALLY ── */
-        .year-section { display: none; }
-        .year-section.visible { display: block; }
-    </style>
 </head>
 <body>
-    <a href="index.html" class="back-button"><i class="bx bx-left-arrow-alt"></i> Back</a>
-    <section class="video-section">
-        <h1 class="video-title">Video Portfolio</h1>
 
-        <!-- Dynamic content rendered here -->
+    <!--===== HEADER =====-->
+    <header class="l-header">
+        <nav class="nav bd-grid">
+            <div>
+                <a href="index.html" class="nav__logo">
+                    <h2>Fahril</h2>
+                </a>
+            </div>
+
+            <div class="nav__menu" id="nav-menu">
+                <ul class="nav__list">
+                    <li class="nav__item">
+                        <a href="index.html#home" class="nav__link">Home</a>
+                    </li>
+
+                    <li class="nav__item">
+                        <a href="index.html#about" class="nav__link">About</a>
+                    </li>
+
+                    <li class="nav__item">
+                        <a href="index.html#work" class="nav__link active-link">
+                            Work
+                        </a>
+                    </li>
+
+                    <li class="nav__item">
+                        <a href="index.html#contact" class="nav__link">
+                            Contact
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="nav__toggle" id="nav-toggle">
+                <i class='bx bx-menu'></i>
+            </div>
+        </nav>
+    </header>
+
+    <section class="video-section">
+
+        <!-- HERO -->
+        <div class="design-hero">
+            <div class="design-hero__content">
+                <h1 class="hero-title">
+                    Video <span class="hero-title--accent">Portfolio</span>
+                </h1>
+
+                <p class="hero-sub">
+                    Kumpulan hasil editing video, cinematic,
+                    reels, dan motion visual yang telah dibuat.
+                </p>
+            </div>
+        </div>
+
+        <!-- FILTER -->
+        <div class="filter-bar" id="video-filter-bar" style="display:none;"></div>
+
+        <!-- CONTENT -->
         <div id="video-content">
             <div style="margin-top:80px">
                 <div class="loading-wrap">
@@ -76,160 +78,120 @@
                 </div>
             </div>
         </div>
+
     </section>
 
     <!--===== FOOTER =====-->
     <footer class="footer">
-        <div class="footer__container bd-grid">
-            <div class="footer__column">
-                <h2 class="footer__title">Muh. Fahril</h2>
-                <p class="footer__text">Seorang mahasiswa yang hobi bermain game.</p>
-                <div class="footer__social footer__social--column">
-                    <a href="https://www.instagram.com/m.fahrill/" class="footer__icon"><i class='bx bxl-instagram'></i></a>
-                    <a href="https://www.linkedin.com/in/muh-fahril-812b11209/" class="footer__icon"><i class='bx bxl-linkedin'></i></a>
-                    <a href="https://github.com/fahril168" class="footer__icon"><i class='bx bxl-github'></i></a>
+        <div class="footer__inner">
+
+            <div class="footer__top">
+
+                <div class="footer__brand">
+                    <a href="index.html" class="footer__logo">
+                        Fahril<span>.</span>
+                    </a>
+
+                    <p class="footer__tagline">
+                        Mahasiswa Teknik Informatika yang
+                        berfokus pada videografi, desain grafis,
+                        dan pengembangan web.
+                    </p>
+
+                    <div class="footer__socials">
+                        <a href="https://www.instagram.com/m.fahrill/"
+                           class="footer__social-link"
+                           target="_blank">
+
+                            <i class='bx bxl-instagram'></i>
+                        </a>
+
+                        <a href="https://www.linkedin.com/in/muh-fahril-812b11209/"
+                           class="footer__social-link"
+                           target="_blank">
+
+                            <i class='bx bxl-linkedin'></i>
+                        </a>
+
+                        <a href="https://github.com/fahril168"
+                           class="footer__social-link"
+                           target="_blank">
+
+                            <i class='bx bxl-github'></i>
+                        </a>
+
+                        <a href="https://wa.me/6282271591208"
+                           class="footer__social-link"
+                           target="_blank">
+
+                            <i class='bx bxl-whatsapp'></i>
+                        </a>
+                    </div>
                 </div>
+
+                <div class="footer__col">
+                    <h4 class="footer__col-title">Navigasi</h4>
+
+                    <ul class="footer__nav">
+                        <li><a href="index.html#home">Home</a></li>
+                        <li><a href="index.html#about">About</a></li>
+                        <li><a href="index.html#work">Work</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer__col">
+                    <h4 class="footer__col-title">Portfolio</h4>
+
+                    <ul class="footer__nav">
+                        <li><a href="design.html">Design Graphics</a></li>
+                        <li><a href="video.html">Video Editing</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer__col">
+                    <h4 class="footer__col-title">Kontak</h4>
+
+                    <ul class="footer__contact-list">
+                        <li>
+                            <i class='bx bxs-envelope'></i>
+                            <a href="mailto:muh.fahril.uho@gmail.com">
+                                muh.fahril.uho@gmail.com
+                            </a>
+                        </li>
+
+                        <li>
+                            <i class='bx bxl-whatsapp'></i>
+                            <a href="https://wa.me/6282271591208">
+                                +62 822-7159-1208
+                            </a>
+                        </li>
+
+                        <li>
+                            <i class='bx bxs-map'></i>
+                            <span>Kendari, Sulawesi Tenggara</span>
+                        </li>
+                    </ul>
+                </div>
+
             </div>
-            <div class="footer__column">
-                <h3>Video Editing</h3>
-                <ul class="footer__list">
-                    <li>Adobe Premiere Pro</li>
-                    <li>Adobe After Effects</li>
-                    <li>Capcut</li>
-                    <li>DaVinci Resolve</li>
-                </ul>
+
+            <div class="footer__divider"></div>
+
+            <div class="footer__bottom">
+                <p class="footer__copy">
+                    &copy; 2026 Muh. Fahril. All rights reserved.
+                </p>
+
+                <a href="#" class="footer__totop">
+                    <i class='bx bx-chevron-up'></i>
+                </a>
             </div>
-            <div class="footer__column">
-                <h3>Design Graphics</h3>
-                <ul class="footer__list">
-                    <li>Canva</li>
-                    <li>Figma</li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer__bottom">
-            <p class="footer__copy">&copy; 2026 Muh. Fahril. All rights reserved.</p>
         </div>
     </footer>
 
-    <script>
-        /* ── SUPABASE CONFIG ── */
-        const SB_URL = localStorage.getItem('fahril_sb_url') || '';
-        const SB_KEY = localStorage.getItem('fahril_sb_key') || '';
+    <!-- MAIN JS -->
+    <script src="assets/js/main.js"></script>
 
-        /* ── HELPERS ── */
-        function esc(s) {
-            if (!s) return '';
-            return String(s)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;');
-        }
-
-        async function sbFetch(path) {
-            const res = await fetch(SB_URL + '/rest/v1/' + path, {
-                headers: {
-                    'apikey': SB_KEY,
-                    'Authorization': 'Bearer ' + SB_KEY,
-                    'Content-Type': 'application/json'
-                }
-            });
-            if (!res.ok) {
-                const e = await res.json().catch(() => ({}));
-                throw new Error(e.message || 'Request gagal (' + res.status + ')');
-            }
-            const txt = await res.text();
-            return txt ? JSON.parse(txt) : [];
-        }
-
-        /* ── RENDER ── */
-        function renderVideos(data) {
-            const container = document.getElementById('video-content');
-
-            if (!data || data.length === 0) {
-                container.innerHTML = `
-                    <div style="margin-top:80px">
-                        <div class="empty-state">
-                            <i class='bx bx-video'></i>
-                            <p>Belum ada video yang ditampilkan.</p>
-                        </div>
-                    </div>`;
-                return;
-            }
-
-            /* Kelompokkan by year, urutkan descending */
-            const years = {};
-            data.forEach(item => {
-                const y = item.year || 'Lainnya';
-                if (!years[y]) years[y] = [];
-                years[y].push(item);
-            });
-
-            /* Sort years descending */
-            const sortedYears = Object.keys(years).sort((a, b) => b - a);
-
-            let html = '';
-            sortedYears.forEach(year => {
-                const items = years[year];
-                html += `
-                <div class="year-section visible">
-                    <h2>${esc(String(year))}</h2>
-                    <div class="video-grid">
-                        ${items.map(item => `
-                        <a
-                            href="${esc(item.video_url || '#')}"
-                            target="${item.video_url ? '_blank' : '_self'}"
-                            class="video-card"
-                            title="${esc(item.title || '')}"
-                            rel="noopener noreferrer"
-                        >
-                            <img
-                                src="${esc(item.thumbnail_url || '')}"
-                                alt="${esc(item.title || 'Video Portfolio')}"
-                                loading="lazy"
-                                onerror="this.style.minHeight='160px';this.style.background='#111'"
-                            >
-                        </a>`).join('')}
-                    </div>
-                </div>`;
-            });
-
-            container.innerHTML = html;
-        }
-
-        /* ── LOAD ── */
-        async function loadVideos() {
-            const container = document.getElementById('video-content');
-
-            if (!SB_URL || !SB_KEY) {
-                container.innerHTML = `
-                    <div style="margin-top:80px">
-                        <div class="error-state">
-                            <i class='bx bx-plug'></i>
-                            <p>Supabase belum dikonfigurasi.<br>
-                            Silakan hubungkan Supabase melalui halaman <a href="admin.html" style="color:hsl(224,89%,60%)">Admin</a>.</p>
-                        </div>
-                    </div>`;
-                return;
-            }
-
-            try {
-                /* Fetch semua videos, urutkan by year desc lalu created_at desc */
-                const data = await sbFetch('videos?select=*&order=year.desc,created_at.desc');
-                renderVideos(data);
-            } catch (err) {
-                container.innerHTML = `
-                    <div style="margin-top:80px">
-                        <div class="error-state">
-                            <i class='bx bx-error-circle'></i>
-                            <p>Gagal memuat data: ${esc(err.message)}</p>
-                        </div>
-                    </div>`;
-            }
-        }
-
-        loadVideos();
-    </script>
 </body>
 </html>
