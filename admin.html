@@ -10,20 +10,14 @@
     :root {
       --header-height: 3rem;
       --font-semi: 600;
-      --hue-color: 224;
       --first-color: hsl(224, 89%, 60%);
       --second-color: hsl(224, 56%, 12%);
       --body-font: "Poppins", sans-serif;
       --normal-font-size: .938rem;
       --smaller-font-size: .75rem;
-      --mb-2: 1rem;
-      --mb-4: 2rem;
-      --mb-6: 3rem;
       --z-fixed: 100;
     }
-    @media screen and (min-width: 968px) {
-      :root { --normal-font-size: 1rem; --smaller-font-size: .875rem; }
-    }
+    @media (min-width: 968px) { :root { --normal-font-size: 1rem; --smaller-font-size: .875rem; } }
     *, ::before, ::after { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
@@ -42,788 +36,600 @@
 
     /* ── HEADER ── */
     .l-header {
-      width: 100%;
-      position: fixed;
-      top: 0; left: 0;
-      z-index: var(--z-fixed);
-      background-color: #fff;
-      box-shadow: 0 1px 4px rgba(146, 161, 176, 0.15);
+      width: 100%; position: fixed; top: 0; left: 0;
+      z-index: var(--z-fixed); background: #fff;
+      box-shadow: 0 1px 4px rgba(146,161,176,.15);
     }
     .nav {
       height: calc(var(--header-height) + 1.5rem);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      display: flex; justify-content: space-between; align-items: center;
       font-weight: var(--font-semi);
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 1.5rem;
+      max-width: 1300px; margin: 0 auto; padding: 0 1.5rem;
     }
     .nav__logo { color: var(--second-color); font-size: 1.25rem; font-weight: 700; transition: color .2s; }
     .nav__logo:hover { color: var(--first-color); }
     .nav__right { display: flex; align-items: center; gap: 1rem; }
     .nav__badge {
-      background: hsl(224, 89%, 95%);
-      color: var(--first-color);
-      font-size: .7rem;
-      font-weight: 700;
-      padding: 3px 10px;
-      border-radius: 20px;
+      background: hsl(224,89%,95%); color: var(--first-color);
+      font-size: .7rem; font-weight: 700; padding: 3px 10px; border-radius: 20px;
     }
     .nav__avatar {
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      background: var(--first-color);
-      color: #fff;
-      font-size: .75rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 36px; height: 36px; border-radius: 50%; background: var(--first-color);
+      color: #fff; font-size: .75rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
     }
     .nav__logout {
-      font-size: .82rem;
-      font-weight: 600;
-      color: #999;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      border: 1.5px solid #e5e7eb;
-      padding: 4px 12px;
-      border-radius: 8px;
-      transition: .2s;
-      background: none;
-      font-family: var(--body-font);
+      font-size: .82rem; font-weight: 600; color: #999; cursor: pointer;
+      display: flex; align-items: center; gap: 4px;
+      border: 1.5px solid #e5e7eb; padding: 4px 12px; border-radius: 8px;
+      transition: .2s; background: none; font-family: var(--body-font);
     }
     .nav__logout:hover { border-color: var(--first-color); color: var(--first-color); }
 
     /* ── LAYOUT ── */
     .admin-layout {
-      display: grid;
-      grid-template-columns: 220px 1fr;
-      max-width: 1200px;
-      margin: 0 auto;
-      gap: 1.5rem;
-      padding: 1.5rem;
-      align-items: start;
+      display: grid; grid-template-columns: 230px 1fr;
+      max-width: 1300px; margin: 0 auto;
+      gap: 1.5rem; padding: 1.5rem; align-items: start;
     }
-    @media screen and (max-width: 768px) {
-      .admin-layout { grid-template-columns: 1fr; }
-      .sidebar { display: none; }
-    }
+    @media (max-width: 900px) { .admin-layout { grid-template-columns: 1fr; } .sidebar { display: none; } }
 
     /* ── SIDEBAR ── */
     .sidebar {
-      background: #fff;
-      border-radius: 1rem;
-      overflow: hidden;
+      background: #fff; border-radius: 1rem; overflow: hidden;
       box-shadow: 0 4px 16px rgba(14,36,49,.07);
-      position: sticky;
-      top: calc(var(--header-height) + 2rem);
+      position: sticky; top: calc(var(--header-height) + 2rem);
     }
     .sidebar-header {
-      background: var(--second-color);
-      padding: 1.25rem 1.25rem 1rem;
-      position: relative;
-      overflow: hidden;
+      background: var(--second-color); padding: 1.25rem 1.25rem 1rem;
+      position: relative; overflow: hidden;
     }
     .sidebar-header::after {
-      content: '';
-      position: absolute;
-      width: 100px; height: 100px;
-      border-radius: 50%;
-      background: var(--first-color);
-      opacity: .1;
-      bottom: -30px; right: -20px;
+      content: ''; position: absolute;
+      width: 100px; height: 100px; border-radius: 50%;
+      background: var(--first-color); opacity: .1; bottom: -30px; right: -20px;
     }
-    .sidebar-header-name {
-      font-size: .95rem;
-      font-weight: 700;
-      color: #fff;
-    }
-    .sidebar-header-role {
-      font-size: .72rem;
-      color: rgba(255,255,255,.55);
-      margin-top: 2px;
-    }
+    .sidebar-header-name { font-size: .95rem; font-weight: 700; color: #fff; }
+    .sidebar-header-role { font-size: .72rem; color: rgba(255,255,255,.55); margin-top: 2px; }
     .sidebar-menu { padding: .75rem 0; }
     .sidebar-section-label {
-      font-size: .65rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .07em;
-      color: #bbb;
-      padding: .5rem 1.25rem .25rem;
-      margin-top: .25rem;
+      font-size: .65rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .07em; color: #bbb; padding: .5rem 1.25rem .25rem; margin-top: .25rem;
     }
     .sidebar-link {
-      display: flex;
-      align-items: center;
-      gap: .6rem;
-      padding: .6rem 1.25rem;
-      font-size: .85rem;
-      font-weight: 500;
-      color: #666;
-      cursor: pointer;
-      transition: .15s;
+      display: flex; align-items: center; gap: .6rem;
+      padding: .6rem 1.25rem; font-size: .85rem; font-weight: 500;
+      color: #666; cursor: pointer; transition: .15s; border: none; background: none; width: 100%; text-align: left;
     }
     .sidebar-link i { font-size: 1.05rem; }
     .sidebar-link:hover { color: var(--second-color); background: #f4f6fb; }
     .sidebar-link.active {
-      color: var(--first-color);
-      background: hsl(224,89%,96%);
-      font-weight: 700;
-      border-right: 3px solid var(--first-color);
+      color: var(--first-color); background: hsl(224,89%,96%);
+      font-weight: 700; border-right: 3px solid var(--first-color);
     }
     .sidebar-count {
-      margin-left: auto;
-      background: var(--first-color);
-      color: #fff;
-      font-size: .65rem;
-      font-weight: 700;
-      padding: 2px 7px;
-      border-radius: 20px;
+      margin-left: auto; background: var(--first-color); color: #fff;
+      font-size: .65rem; font-weight: 700; padding: 2px 7px; border-radius: 20px;
     }
 
     /* ── MAIN ── */
     .main { min-width: 0; }
 
+    /* ── TAB PANELS ── */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
     /* ── SUPABASE BANNER ── */
     .supabase-banner {
-      background: var(--second-color);
-      border-radius: 1rem;
-      padding: 1.25rem 1.5rem;
-      margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      flex-wrap: wrap;
-      position: relative;
-      overflow: hidden;
+      background: var(--second-color); border-radius: 1rem;
+      padding: 1.25rem 1.5rem; margin-bottom: 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; flex-wrap: wrap; position: relative; overflow: hidden;
     }
     .supabase-banner::before {
-      content: '';
-      position: absolute;
-      width: 200px; height: 200px;
-      border-radius: 50%;
-      background: var(--first-color);
-      opacity: .07;
-      right: -60px; top: -60px;
+      content: ''; position: absolute; width: 200px; height: 200px;
+      border-radius: 50%; background: var(--first-color);
+      opacity: .07; right: -60px; top: -60px;
     }
     .banner-left { position: relative; z-index: 1; }
     .banner-title {
-      font-size: .85rem;
-      font-weight: 700;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 2px;
+      font-size: .85rem; font-weight: 700; color: #fff;
+      display: flex; align-items: center; gap: 6px; margin-bottom: 2px;
     }
     .banner-sub { font-size: .75rem; color: rgba(255,255,255,.55); }
-    .banner-inputs {
-      display: flex;
-      gap: .6rem;
-      align-items: center;
-      flex-wrap: wrap;
-      position: relative;
-      z-index: 1;
-    }
+    .banner-inputs { display: flex; gap: .6rem; align-items: center; flex-wrap: wrap; position: relative; z-index: 1; }
     .banner-input {
-      background: rgba(255,255,255,.12);
-      border: 1px solid rgba(255,255,255,.2);
-      border-radius: .5rem;
-      padding: .5rem .75rem;
-      color: #fff;
-      font-family: var(--body-font);
-      font-size: .78rem;
-      outline: none;
-      width: 210px;
-      transition: border-color .2s;
+      background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2);
+      border-radius: .5rem; padding: .5rem .75rem; color: #fff;
+      font-family: var(--body-font); font-size: .78rem; outline: none; width: 210px; transition: border-color .2s;
     }
     .banner-input::placeholder { color: rgba(255,255,255,.45); }
     .banner-input:focus { border-color: var(--first-color); }
     .btn-connect {
-      background: var(--first-color);
-      color: #fff;
-      border: none;
-      border-radius: .5rem;
-      padding: .5rem 1rem;
-      font-family: var(--body-font);
-      font-size: .78rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      transition: .2s;
-      white-space: nowrap;
+      background: var(--first-color); color: #fff; border: none;
+      border-radius: .5rem; padding: .5rem 1rem;
+      font-family: var(--body-font); font-size: .78rem; font-weight: 700;
+      cursor: pointer; display: flex; align-items: center; gap: 5px; transition: .2s; white-space: nowrap;
     }
     .btn-connect:hover { opacity: .88; }
-    .status-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: #f87171;
-      display: inline-block;
-    }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #f87171; display: inline-block; }
     .status-dot.on { background: #4ade80; }
 
     /* ── STATS ── */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-    @media screen and (max-width: 600px) { .stats-grid { grid-template-columns: 1fr; } }
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+    @media (max-width: 600px) { .stats-grid { grid-template-columns: 1fr 1fr; } }
     .stat-card {
-      background: #fff;
-      border-radius: 1rem;
-      padding: 1.25rem 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
+      background: #fff; border-radius: 1rem; padding: 1.1rem 1.25rem;
+      display: flex; align-items: center; gap: .85rem;
       box-shadow: 0 4px 16px rgba(14,36,49,.06);
     }
     .stat-icon {
-      width: 46px; height: 46px;
-      border-radius: .75rem;
-      background: hsl(224,89%,95%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+      width: 44px; height: 44px; border-radius: .75rem;
+      background: hsl(224,89%,95%); display: flex;
+      align-items: center; justify-content: center; flex-shrink: 0;
     }
-    .stat-icon i { font-size: 1.4rem; color: var(--first-color); }
-    .stat-label { font-size: .75rem; color: #888; font-weight: 500; }
-    .stat-value { font-size: 1.7rem; font-weight: 700; color: var(--second-color); line-height: 1.1; }
+    .stat-icon i { font-size: 1.3rem; color: var(--first-color); }
+    .stat-label { font-size: .72rem; color: #888; font-weight: 500; }
+    .stat-value { font-size: 1.6rem; font-weight: 700; color: var(--second-color); line-height: 1.1; }
 
     /* ── PAGE HEADER ── */
     .page-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1.25rem;
-      flex-wrap: wrap;
-      gap: .75rem;
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1.25rem; flex-wrap: wrap; gap: .75rem;
     }
     .page-title { font-size: 1.3rem; font-weight: 700; color: var(--second-color); }
     .page-sub { font-size: .8rem; color: #888; margin-top: 2px; }
 
     /* ── TOOLBAR ── */
-    .toolbar {
-      display: flex;
-      align-items: center;
-      gap: .75rem;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
-    }
-    .search-wrap {
-      position: relative;
-      flex: 1;
-      min-width: 180px;
-      max-width: 340px;
-    }
-    .search-wrap i {
-      position: absolute;
-      left: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #aaa;
-      font-size: 1.05rem;
-      pointer-events: none;
-    }
+    .toolbar { display: flex; align-items: center; gap: .75rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .search-wrap { position: relative; flex: 1; min-width: 180px; max-width: 340px; }
+    .search-wrap i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #aaa; font-size: 1.05rem; pointer-events: none; }
     .search-input {
-      width: 100%;
-      height: 40px;
-      border: 1.5px solid #e5e7eb;
-      border-radius: .5rem;
-      padding: 0 12px 0 36px;
-      font-family: var(--body-font);
-      font-size: .875rem;
-      color: var(--second-color);
-      background: #fff;
-      outline: none;
-      transition: border-color .2s;
+      width: 100%; height: 40px; border: 1.5px solid #e5e7eb; border-radius: .5rem;
+      padding: 0 12px 0 36px; font-family: var(--body-font); font-size: .875rem;
+      color: var(--second-color); background: #fff; outline: none; transition: border-color .2s;
     }
     .search-input:focus { border-color: var(--first-color); }
 
     /* ── BUTTONS ── */
     .button {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background-color: var(--first-color);
-      color: #fff;
-      padding: 0 1.25rem;
-      height: 40px;
-      font-weight: var(--font-semi);
-      border-radius: .5rem;
-      transition: .25s;
-      font-family: var(--body-font);
-      font-size: var(--normal-font-size);
-      border: none;
-      cursor: pointer;
-      white-space: nowrap;
+      display: inline-flex; align-items: center; gap: 6px;
+      background-color: var(--first-color); color: #fff;
+      padding: 0 1.25rem; height: 40px; font-weight: var(--font-semi);
+      border-radius: .5rem; transition: .25s; font-family: var(--body-font);
+      font-size: var(--normal-font-size); border: none; cursor: pointer; white-space: nowrap;
     }
-    .button:hover {
-      background-color: #fff;
-      color: var(--first-color);
-      box-shadow: 0 10px 36px rgba(0,0,0,.15);
-    }
-    .button-ghost {
-      background: #fff;
-      color: #666;
-      border: 1.5px solid #e5e7eb;
-    }
+    .button:hover { background-color: #fff; color: var(--first-color); box-shadow: 0 10px 36px rgba(0,0,0,.15); }
+    .button-ghost { background: #fff; color: #666; border: 1.5px solid #e5e7eb; }
     .button-ghost:hover { background: #f4f6fb; color: var(--second-color); box-shadow: none; }
-    .button-danger {
-      background: #fef2f2;
-      color: #ef4444;
-      border: 1.5px solid #fecaca;
-    }
+    .button-danger { background: #fef2f2; color: #ef4444; border: 1.5px solid #fecaca; }
     .button-danger:hover { background: #fee2e2; color: #dc2626; box-shadow: none; }
     .button-sm { height: 32px; padding: 0 .75rem; font-size: .78rem; }
+    .button-red { background: #ef4444; color: #fff; border: none; }
+    .button-red:hover { background: #dc2626; color: #fff; box-shadow: none; }
 
-    /* ── TABLE CARD ── */
-    .table-card {
-      background: #fff;
-      border-radius: 1rem;
-      overflow: hidden;
-      box-shadow: 0 4px 16px rgba(14,36,49,.07);
-    }
+    /* ── TABLE ── */
+    .table-card { background: #fff; border-radius: 1rem; overflow: hidden; box-shadow: 0 4px 16px rgba(14,36,49,.07); }
+    .table-scroll { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; }
     thead { background: #f4f6fb; border-bottom: 1.5px solid #e5e7eb; }
-    th {
-      padding: .75rem 1rem;
-      text-align: left;
-      font-size: .7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-      color: #aaa;
-    }
-    td {
-      padding: .9rem 1rem;
-      font-size: .85rem;
-      vertical-align: middle;
-      border-bottom: 1px solid #f0f1f4;
-      color: var(--second-color);
-    }
+    th { padding: .75rem 1rem; text-align: left; font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #aaa; }
+    td { padding: .9rem 1rem; font-size: .85rem; vertical-align: middle; border-bottom: 1px solid #f0f1f4; color: var(--second-color); }
     tr:last-child td { border-bottom: none; }
     tbody tr:hover td { background: #fafbff; }
-
     .project-cell { display: flex; align-items: center; gap: .75rem; }
     .project-thumb {
-      width: 48px; height: 36px;
-      border-radius: 8px;
-      background: hsl(224,89%,95%);
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+      width: 52px; height: 40px; border-radius: 8px; background: hsl(224,89%,95%);
+      overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
     .project-thumb img { width: 100%; height: 100%; object-fit: cover; }
     .project-thumb i { font-size: 1.2rem; color: hsl(224,89%,75%); }
     .project-name { font-weight: 700; font-size: .85rem; }
-    .project-desc {
-      font-size: .75rem;
-      color: #999;
-      max-width: 200px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: .72rem;
-      font-weight: 700;
-      color: var(--first-color);
-      background: hsl(224,89%,95%);
-      padding: 3px 9px;
-      border-radius: 20px;
-      text-decoration: none;
-      transition: background .15s;
-    }
+    .project-meta { font-size: .72rem; color: #aaa; margin-top: 2px; }
+    .project-desc { font-size: .75rem; color: #999; max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .chip { display: inline-flex; align-items: center; gap: 4px; font-size: .72rem; font-weight: 700; color: var(--first-color); background: hsl(224,89%,95%); padding: 3px 9px; border-radius: 20px; text-decoration: none; transition: background .15s; }
     .chip:hover { background: hsl(224,89%,88%); }
     .chip-null { color: #ccc; background: #f4f6fb; cursor: default; }
+    .chip-cat { color: #7c3aed; background: #f5f3ff; }
     .date-text { font-size: .75rem; color: #bbb; }
     .action-group { display: flex; gap: 6px; }
-
-    /* ── EMPTY / LOADING ── */
     .center-cell { text-align: center; padding: 3rem 1rem !important; color: #aaa; font-size: .875rem; }
-    .empty-icon {
-      width: 56px; height: 56px;
-      border-radius: 50%;
-      background: hsl(224,89%,95%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto .75rem;
-    }
+    .empty-icon { width: 56px; height: 56px; border-radius: 50%; background: hsl(224,89%,95%); display: flex; align-items: center; justify-content: center; margin: 0 auto .75rem; }
     .empty-icon i { font-size: 1.5rem; color: var(--first-color); }
+
+    /* ── SPINNER ── */
     .spinner {
-      width: 20px; height: 20px;
-      border: 2.5px solid hsl(224,89%,88%);
-      border-top-color: var(--first-color);
-      border-radius: 50%;
-      animation: spin .7s linear infinite;
-      display: inline-block;
-      vertical-align: -4px;
-      margin-right: 6px;
+      width: 20px; height: 20px; border: 2.5px solid hsl(224,89%,88%);
+      border-top-color: var(--first-color); border-radius: 50%;
+      animation: spin .7s linear infinite; display: inline-block;
+      vertical-align: -4px; margin-right: 6px;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
     /* ── MODAL ── */
     .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(14,36,49,.55);
-      z-index: 200;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
+      display: none; position: fixed; inset: 0;
+      background: rgba(14,36,49,.55); z-index: 200;
+      align-items: center; justify-content: center; padding: 1rem;
     }
     .modal-overlay.open { display: flex; }
     .modal {
-      background: #fff;
-      border-radius: 1.25rem;
-      width: 100%;
-      max-width: 540px;
-      max-height: 90vh;
-      overflow-y: auto;
-      padding: 2rem;
-      box-shadow: 0 24px 80px rgba(14,36,49,.2);
+      background: #fff; border-radius: 1.25rem; width: 100%;
+      max-width: 560px; max-height: 92vh; overflow-y: auto;
+      padding: 2rem; box-shadow: 0 24px 80px rgba(14,36,49,.2);
     }
     .modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1.5rem;
-      padding-bottom: 1rem;
-      border-bottom: 1.5px solid #f0f1f4;
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1.5px solid #f0f1f4;
     }
     .modal-title { font-size: 1.1rem; font-weight: 700; color: var(--second-color); }
     .modal-close {
-      width: 32px; height: 32px;
-      border-radius: 8px;
-      border: 1.5px solid #e5e7eb;
-      background: #fff;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #aaa;
-      font-size: 1.1rem;
-      transition: .15s;
+      width: 32px; height: 32px; border-radius: 8px; border: 1.5px solid #e5e7eb;
+      background: #fff; cursor: pointer; display: flex; align-items: center;
+      justify-content: center; color: #aaa; font-size: 1.1rem; transition: .15s;
     }
     .modal-close:hover { background: #f4f6fb; color: var(--second-color); }
-
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
     .form-group { display: flex; flex-direction: column; gap: 5px; }
     .form-group.full { grid-column: 1 / -1; }
     label { font-size: .78rem; font-weight: 700; color: var(--second-color); }
-    input[type="text"], input[type="url"], input[type="password"], textarea {
-      width: 100%;
-      border: 1.5px solid #e5e7eb;
-      border-radius: .5rem;
-      padding: .65rem .75rem;
-      font-family: var(--body-font);
-      font-size: .875rem;
-      color: var(--second-color);
-      background: #fafbff;
-      outline: none;
-      resize: vertical;
-      transition: border-color .2s, box-shadow .2s;
+    .label-opt { font-size: .68rem; font-weight: 500; color: #bbb; margin-left: 4px; }
+    input[type="text"], input[type="url"], input[type="number"], input[type="password"], textarea, select {
+      width: 100%; border: 1.5px solid #e5e7eb; border-radius: .5rem;
+      padding: .65rem .75rem; font-family: var(--body-font); font-size: .875rem;
+      color: var(--second-color); background: #fafbff; outline: none;
+      resize: vertical; transition: border-color .2s, box-shadow .2s; appearance: none;
     }
-    input:focus, textarea:focus {
-      border-color: var(--first-color);
-      box-shadow: 0 0 0 3px hsl(224,89%,93%);
-      background: #fff;
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--first-color); box-shadow: 0 0 0 3px hsl(224,89%,93%); background: #fff;
     }
     textarea { min-height: 80px; }
     .form-hint { font-size: .72rem; color: #bbb; }
+    .modal-footer { display: flex; justify-content: flex-end; gap: .75rem; margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1.5px solid #f0f1f4; }
 
-    .modal-footer {
-      display: flex;
-      justify-content: flex-end;
-      gap: .75rem;
-      margin-top: 1.5rem;
-      padding-top: 1.25rem;
-      border-top: 1.5px solid #f0f1f4;
+    /* ── UPLOAD AREA ── */
+    .upload-area {
+      border: 2px dashed #e5e7eb; border-radius: .75rem; padding: 1.25rem;
+      text-align: center; cursor: pointer; transition: border-color .2s, background .2s;
+      background: #fafbff; position: relative;
     }
+    .upload-area:hover, .upload-area.drag-over { border-color: var(--first-color); background: hsl(224,89%,98%); }
+    .upload-area input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+    .upload-icon { font-size: 2rem; color: hsl(224,89%,75%); margin-bottom: .35rem; }
+    .upload-text { font-size: .8rem; color: #888; }
+    .upload-text strong { color: var(--first-color); }
+    .upload-preview {
+      width: 100%; max-height: 140px; object-fit: contain;
+      border-radius: .5rem; margin-top: .75rem; display: none;
+    }
+    .upload-preview.show { display: block; }
+    .upload-filename { font-size: .75rem; color: var(--first-color); font-weight: 600; margin-top: .4rem; }
+    .upload-progress {
+      height: 4px; background: #e5e7eb; border-radius: 4px; margin-top: .75rem; overflow: hidden; display: none;
+    }
+    .upload-progress.show { display: block; }
+    .upload-progress-bar { height: 100%; background: var(--first-color); border-radius: 4px; width: 0; transition: width .3s; }
+    .upload-or { font-size: .72rem; color: #bbb; margin: .5rem 0; }
 
-    /* Delete modal */
+    /* ── DELETE MODAL ── */
     .modal-delete-body { text-align: center; }
-    .delete-icon {
-      width: 60px; height: 60px;
-      border-radius: 50%;
-      background: #fef2f2;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 1rem;
-    }
+    .delete-icon { width: 60px; height: 60px; border-radius: 50%; background: #fef2f2; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
     .delete-icon i { font-size: 1.6rem; color: #ef4444; }
     .delete-title { font-size: 1.1rem; font-weight: 700; margin-bottom: .5rem; }
     .delete-desc { font-size: .875rem; color: #888; margin-bottom: 1.5rem; }
     .delete-footer { display: flex; justify-content: center; gap: .75rem; }
-    .button-red { background: #ef4444; color: #fff; border: none; }
-    .button-red:hover { background: #dc2626; color: #fff; box-shadow: none; }
 
     /* ── TOAST ── */
     .toast {
-      position: fixed;
-      bottom: 2rem; right: 2rem;
-      background: var(--second-color);
-      color: #fff;
-      padding: .75rem 1.25rem;
-      border-radius: .6rem;
-      font-size: .85rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      opacity: 0;
-      transform: translateY(12px);
-      pointer-events: none;
-      transition: opacity .2s, transform .2s;
-      z-index: 999;
+      position: fixed; bottom: 2rem; right: 2rem; background: var(--second-color);
+      color: #fff; padding: .75rem 1.25rem; border-radius: .6rem;
+      font-size: .85rem; font-weight: 600; display: flex; align-items: center; gap: 7px;
+      opacity: 0; transform: translateY(12px); pointer-events: none;
+      transition: opacity .2s, transform .2s; z-index: 999;
     }
     .toast.show { opacity: 1; transform: translateY(0); }
     .toast i { font-size: 1.1rem; color: var(--first-color); }
 
-    /* ── SECTION TITLE (portfolio style) ── */
-    .section-title {
-      position: relative;
-      font-size: 1.25rem;
-      color: var(--first-color);
-      margin-bottom: 1.5rem;
-      text-align: left;
-      font-weight: 700;
-    }
-    .section-title::after {
-      position: absolute;
-      content: '';
-      width: 40px;
-      height: .18rem;
-      left: 0;
-      top: 2rem;
-      background: var(--first-color);
-    }
-
     /* ── FOOTER ── */
-    .footer {
-      background-color: var(--second-color);
-      color: #fff;
-      text-align: center;
-      padding: 1.25rem;
-      margin-top: 3rem;
-    }
+    .footer { background-color: var(--second-color); color: #fff; text-align: center; padding: 1.25rem; margin-top: 3rem; }
     .footer p { font-size: var(--smaller-font-size); }
   </style>
 </head>
 <body>
 
-<!-- ── HEADER ── -->
+<!-- HEADER -->
 <header class="l-header">
   <nav class="nav">
     <a href="index.html" class="nav__logo"><h2>Fahril</h2></a>
     <div class="nav__right">
       <span class="nav__badge">Admin Panel</span>
       <div class="nav__avatar">MF</div>
-      <button class="nav__logout" onclick="logout()">
-        <i class='bx bx-log-out'></i> Logout
-      </button>
+      <button class="nav__logout" onclick="logout()"><i class='bx bx-log-out'></i> Logout</button>
     </div>
   </nav>
 </header>
 
 <div class="admin-layout">
 
-  <!-- ── SIDEBAR ── -->
+  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-header">
       <div class="sidebar-header-name">Muh. Fahril</div>
       <div class="sidebar-header-role">Administrator</div>
     </div>
     <div class="sidebar-menu">
-      <div class="sidebar-section-label">Menu</div>
-      <a class="sidebar-link active">
-        <i class='bx bx-desktop'></i>
-        Projects
-        <span class="sidebar-count" id="sidebar-count">0</span>
-      </a>
-      <a class="sidebar-link" href="index.html">
-        <i class='bx bx-home'></i>
-        Lihat Portfolio
+      <div class="sidebar-section-label">Konten</div>
+      <button class="sidebar-link active" id="tab-btn-design" onclick="switchTab('design')">
+        <i class='bx bx-palette'></i> Design
+        <span class="sidebar-count" id="count-design">0</span>
+      </button>
+      <button class="sidebar-link" id="tab-btn-video" onclick="switchTab('video')">
+        <i class='bx bx-video'></i> Video Editing
+        <span class="sidebar-count" id="count-video">0</span>
+      </button>
+      <div class="sidebar-section-label">Navigasi</div>
+      <a href="index.html" class="sidebar-link">
+        <i class='bx bx-home'></i> Lihat Portfolio
       </a>
       <div class="sidebar-section-label">Akun</div>
-      <a class="sidebar-link" onclick="logout()">
-        <i class='bx bx-log-out'></i>
-        Logout
-      </a>
+      <button class="sidebar-link" onclick="logout()">
+        <i class='bx bx-log-out'></i> Logout
+      </button>
     </div>
   </aside>
 
-  <!-- ── MAIN ── -->
+  <!-- MAIN -->
   <div class="main">
 
     <!-- SUPABASE BANNER -->
     <div class="supabase-banner">
       <div class="banner-left">
         <div class="banner-title">
-          <span class="status-dot" id="status-dot"></span>
-          Koneksi Supabase
+          <span class="status-dot" id="status-dot"></span> Koneksi Supabase
         </div>
         <div class="banner-sub" id="status-text">Masukkan URL & Anon Key untuk terhubung</div>
       </div>
       <div class="banner-inputs">
         <input class="banner-input" id="sb-url" type="text" placeholder="https://xxxx.supabase.co" />
         <input class="banner-input" id="sb-key" type="text" placeholder="anon key..." />
-        <button class="btn-connect" onclick="connectSupabase()">
-          <i class='bx bx-plug'></i> Connect
-        </button>
+        <button class="btn-connect" onclick="connectSupabase()"><i class='bx bx-plug'></i> Connect</button>
       </div>
     </div>
 
-    <!-- PAGE HEADER -->
-    <div class="page-header">
-      <div>
-        <h1 class="page-title">Manajemen Project</h1>
-        <p class="page-sub">Kelola semua project yang tampil di portfolio kamu</p>
-      </div>
-      <button class="button" onclick="openForm('add')">
-        <i class='bx bx-plus'></i> Tambah Project
-      </button>
-    </div>
-
-    <!-- STATS -->
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-icon"><i class='bx bx-desktop'></i></div>
+    <!-- ═══════════════════════ TAB: DESIGN ═══════════════════════ -->
+    <div class="tab-panel active" id="panel-design">
+      <div class="page-header">
         <div>
-          <div class="stat-label">Total Project</div>
-          <div class="stat-value" id="stat-total">0</div>
+          <h1 class="page-title">Manajemen Design</h1>
+          <p class="page-sub">Kelola karya desain grafis, poster, dan UI/UX</p>
+        </div>
+        <button class="button" onclick="openDesignForm('add')"><i class='bx bx-plus'></i> Tambah Design</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon"><i class='bx bx-palette'></i></div>
+          <div><div class="stat-label">Total Design</div><div class="stat-value" id="design-stat-total">0</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class='bx bx-layer'></i></div>
+          <div><div class="stat-label">Kategori</div><div class="stat-value" id="design-stat-cat">0</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class='bx bx-calendar'></i></div>
+          <div><div class="stat-label">Terbaru</div><div class="stat-value" id="design-stat-year">—</div></div>
         </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-icon"><i class='bx bx-link-external'></i></div>
-        <div>
-          <div class="stat-label">Dengan Live Link</div>
-          <div class="stat-value" id="stat-live">0</div>
+
+      <div class="toolbar">
+        <div class="search-wrap">
+          <i class='bx bx-search'></i>
+          <input type="text" class="search-input" id="design-search" placeholder="Cari design..." oninput="filterDesigns()" />
+        </div>
+        <button class="button button-ghost" onclick="loadDesigns()"><i class='bx bx-refresh'></i> Refresh</button>
+      </div>
+
+      <div class="table-card">
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Karya</th>
+                <th>Kategori</th>
+                <th>Tahun</th>
+                <th>Deskripsi</th>
+                <th>Tanggal</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="design-tbody">
+              <tr><td colspan="6" class="center-cell"><div class="empty-icon"><i class='bx bx-plug'></i></div>Hubungkan ke Supabase untuk memuat data</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-icon"><i class='bx bxl-github'></i></div>
+    </div>
+
+    <!-- ═══════════════════════ TAB: VIDEO ═══════════════════════ -->
+    <div class="tab-panel" id="panel-video">
+      <div class="page-header">
         <div>
-          <div class="stat-label">Dengan GitHub</div>
-          <div class="stat-value" id="stat-gh">0</div>
+          <h1 class="page-title">Manajemen Video</h1>
+          <p class="page-sub">Kelola project video editing dan motion graphics</p>
+        </div>
+        <button class="button" onclick="openVideoForm('add')"><i class='bx bx-plus'></i> Tambah Video</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon"><i class='bx bx-video'></i></div>
+          <div><div class="stat-label">Total Video</div><div class="stat-value" id="video-stat-total">0</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class='bx bx-link-external'></i></div>
+          <div><div class="stat-label">Dengan Link</div><div class="stat-value" id="video-stat-link">0</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class='bx bx-calendar'></i></div>
+          <div><div class="stat-label">Terbaru</div><div class="stat-value" id="video-stat-year">—</div></div>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <div class="search-wrap">
+          <i class='bx bx-search'></i>
+          <input type="text" class="search-input" id="video-search" placeholder="Cari video..." oninput="filterVideos()" />
+        </div>
+        <button class="button button-ghost" onclick="loadVideos()"><i class='bx bx-refresh'></i> Refresh</button>
+      </div>
+
+      <div class="table-card">
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Video</th>
+                <th>Tahun</th>
+                <th>Deskripsi</th>
+                <th>Link Video</th>
+                <th>Tanggal</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="video-tbody">
+              <tr><td colspan="6" class="center-cell"><div class="empty-icon"><i class='bx bx-plug'></i></div>Hubungkan ke Supabase untuk memuat data</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
 
-    <!-- TOOLBAR + TABLE -->
-    <div class="toolbar">
-      <div class="search-wrap">
-        <i class='bx bx-search'></i>
-        <input type="text" class="search-input" id="search-input" placeholder="Cari project..." oninput="filterProjects()" />
-      </div>
-      <button class="button button-ghost" onclick="loadProjects()">
-        <i class='bx bx-refresh'></i> Refresh
-      </button>
-    </div>
+  </div><!-- /main -->
+</div><!-- /admin-layout -->
 
-    <div class="table-card">
-      <table>
-        <thead>
-          <tr>
-            <th>Project</th>
-            <th>Deskripsi</th>
-            <th>Live</th>
-            <th>GitHub</th>
-            <th>Tanggal</th>
-            <th>Aksi</th>
-          </tr>
-        </thead>
-        <tbody id="project-tbody">
-          <tr>
-            <td colspan="6" class="center-cell">
-              <div class="empty-icon"><i class='bx bx-plug'></i></div>
-              Hubungkan ke Supabase untuk memuat data
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+<footer class="footer"><p>&copy; 2026 Muh. Fahril. All rights reserved.</p></footer>
 
-  </div>
-</div>
-
-<!-- ── FOOTER ── -->
-<footer class="footer">
-  <p>&copy; 2026 Muh. Fahril. All rights reserved.</p>
-</footer>
-
-<!-- ── MODAL FORM ── -->
-<div class="modal-overlay" id="modal-form">
+<!-- ═══════════ MODAL: DESIGN FORM ═══════════ -->
+<div class="modal-overlay" id="modal-design-form">
   <div class="modal">
     <div class="modal-header">
-      <h2 class="modal-title" id="form-title">Tambah Project Baru</h2>
-      <button class="modal-close" onclick="closeModal('modal-form')"><i class='bx bx-x'></i></button>
+      <h2 class="modal-title" id="design-form-title">Tambah Design Baru</h2>
+      <button class="modal-close" onclick="closeModal('modal-design-form')"><i class='bx bx-x'></i></button>
     </div>
-    <input type="hidden" id="edit-id" />
+    <input type="hidden" id="design-edit-id" />
     <div class="form-grid">
       <div class="form-group full">
-        <label>Nama Project *</label>
-        <input type="text" id="f-title" placeholder="Contoh: E-Commerce App" />
-      </div>
-      <div class="form-group full">
-        <label>Deskripsi *</label>
-        <textarea id="f-desc" placeholder="Deskripsi singkat tentang project ini..."></textarea>
-      </div>
-      <div class="form-group full">
-        <label>URL Gambar</label>
-        <input type="url" id="f-img" placeholder="https://example.com/image.png" />
-        <span class="form-hint">Link thumbnail project (opsional)</span>
+        <label>Judul *</label>
+        <input type="text" id="d-title" placeholder="Contoh: Poster Event Kampus" />
       </div>
       <div class="form-group">
-        <label>Live Project URL</label>
-        <input type="url" id="f-link" placeholder="https://myproject.com" />
+        <label>Kategori *</label>
+        <input type="text" id="d-category" placeholder="Poster / Pamflet / UI..." list="cat-suggestions" />
+        <datalist id="cat-suggestions">
+          <option value="Poster">
+          <option value="Pamflet">
+          <option value="UI/UX">
+          <option value="Infografis">
+          <option value="Logo">
+          <option value="Banner">
+        </datalist>
       </div>
       <div class="form-group">
-        <label>GitHub URL</label>
-        <input type="url" id="f-github" placeholder="https://github.com/..." />
+        <label>Tahun *</label>
+        <input type="number" id="d-year" placeholder="2025" min="2000" max="2100" />
+      </div>
+      <div class="form-group full">
+        <label>Deskripsi <span class="label-opt">(opsional)</span></label>
+        <textarea id="d-desc" placeholder="Deskripsi singkat karya ini..."></textarea>
+      </div>
+      <div class="form-group full">
+        <label>Thumbnail / Gambar</label>
+        <!-- Upload lokal -->
+        <div class="upload-area" id="d-upload-area">
+          <input type="file" id="d-img-file" accept="image/*" onchange="handleDesignFileChange(event)" />
+          <div class="upload-icon"><i class='bx bx-cloud-upload'></i></div>
+          <div class="upload-text"><strong>Klik untuk pilih gambar</strong> atau drag &amp; drop</div>
+          <div class="upload-text">PNG, JPG, WEBP — maks 5MB</div>
+          <img id="d-img-preview" class="upload-preview" src="" alt="Preview" />
+          <div class="upload-filename" id="d-img-filename"></div>
+          <div class="upload-progress" id="d-upload-progress">
+            <div class="upload-progress-bar" id="d-upload-bar"></div>
+          </div>
+        </div>
+        <div class="upload-or">— atau gunakan URL langsung —</div>
+        <input type="url" id="d-img-url" placeholder="https://... (kosongkan jika upload file)" />
+        <span class="form-hint">Jika keduanya diisi, file upload akan diutamakan</span>
+        <span class="form-hint" id="d-current-img" style="color:var(--first-color);display:none;"></span>
       </div>
     </div>
     <div class="modal-footer">
-      <button class="button button-ghost" onclick="closeModal('modal-form')">Batal</button>
-      <button class="button" id="btn-save" onclick="saveProject()">
-        <i class='bx bx-check'></i> Simpan
-      </button>
+      <button class="button button-ghost" onclick="closeModal('modal-design-form')">Batal</button>
+      <button class="button" id="btn-save-design" onclick="saveDesign()"><i class='bx bx-check'></i> Simpan</button>
     </div>
   </div>
 </div>
 
-<!-- ── MODAL DELETE ── -->
+<!-- ═══════════ MODAL: VIDEO FORM ═══════════ -->
+<div class="modal-overlay" id="modal-video-form">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="video-form-title">Tambah Video Baru</h2>
+      <button class="modal-close" onclick="closeModal('modal-video-form')"><i class='bx bx-x'></i></button>
+    </div>
+    <input type="hidden" id="video-edit-id" />
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>Judul *</label>
+        <input type="text" id="v-title" placeholder="Contoh: Video Aftermovie UHO" />
+      </div>
+      <div class="form-group">
+        <label>Tahun *</label>
+        <input type="number" id="v-year" placeholder="2025" min="2000" max="2100" />
+      </div>
+      <div class="form-group">
+        <label>Link Video <span class="label-opt">(opsional)</span></label>
+        <input type="url" id="v-url" placeholder="https://instagram.com/..." />
+      </div>
+      <div class="form-group full">
+        <label>Deskripsi <span class="label-opt">(opsional)</span></label>
+        <textarea id="v-desc" placeholder="Deskripsi singkat video ini..."></textarea>
+      </div>
+      <div class="form-group full">
+        <label>Thumbnail</label>
+        <div class="upload-area" id="v-upload-area">
+          <input type="file" id="v-img-file" accept="image/*" onchange="handleVideoFileChange(event)" />
+          <div class="upload-icon"><i class='bx bx-cloud-upload'></i></div>
+          <div class="upload-text"><strong>Klik untuk pilih thumbnail</strong> atau drag &amp; drop</div>
+          <div class="upload-text">PNG, JPG, WEBP — maks 5MB</div>
+          <img id="v-img-preview" class="upload-preview" src="" alt="Preview" />
+          <div class="upload-filename" id="v-img-filename"></div>
+          <div class="upload-progress" id="v-upload-progress">
+            <div class="upload-progress-bar" id="v-upload-bar"></div>
+          </div>
+        </div>
+        <div class="upload-or">— atau gunakan URL langsung —</div>
+        <input type="url" id="v-img-url" placeholder="https://... (kosongkan jika upload file)" />
+        <span class="form-hint">Jika keduanya diisi, file upload akan diutamakan</span>
+        <span class="form-hint" id="v-current-img" style="color:var(--first-color);display:none;"></span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="button button-ghost" onclick="closeModal('modal-video-form')">Batal</button>
+      <button class="button" id="btn-save-video" onclick="saveVideo()"><i class='bx bx-check'></i> Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DELETE -->
 <div class="modal-overlay" id="modal-delete">
   <div class="modal" style="max-width:420px">
     <div class="modal-delete-body">
       <div class="delete-icon"><i class='bx bx-trash'></i></div>
-      <div class="delete-title">Hapus Project?</div>
-      <p class="delete-desc">Project "<strong id="delete-name"></strong>" akan dihapus permanen dan tidak bisa dikembalikan.</p>
+      <div class="delete-title">Hapus Item?</div>
+      <p class="delete-desc">Item "<strong id="delete-name"></strong>" akan dihapus permanen.</p>
       <div class="delete-footer">
         <button class="button button-ghost" onclick="closeModal('modal-delete')">Batal</button>
-        <button class="button button-red" onclick="confirmDelete()">
-          <i class='bx bx-trash'></i> Ya, Hapus
-        </button>
+        <button class="button button-red" onclick="confirmDelete()"><i class='bx bx-trash'></i> Hapus</button>
       </div>
     </div>
   </div>
@@ -833,237 +639,541 @@
 <div class="toast" id="toast"><i class='bx bx-check-circle'></i><span id="toast-msg"></span></div>
 
 <script>
-  /* ── AUTH GUARD ── */
-  if (!sessionStorage.getItem('fahril_admin')) {
-    window.location.href = 'login.html';
-  }
+/* ══════════════════════════════════════════
+   AUTH GUARD
+══════════════════════════════════════════ */
+if (!sessionStorage.getItem('fahril_admin')) window.location.href = 'login.html';
+function logout() { sessionStorage.removeItem('fahril_admin'); window.location.href = 'login.html'; }
 
-  function logout() {
-    sessionStorage.removeItem('fahril_admin');
-    window.location.href = 'login.html';
-  }
+/* ══════════════════════════════════════════
+   STATE
+══════════════════════════════════════════ */
+let SB_URL = localStorage.getItem('fahril_sb_url') || '';
+let SB_KEY = localStorage.getItem('fahril_sb_key') || '';
+let currentTab = 'design';
+let allDesigns = [], allVideos = [];
+let deleteId = null, deleteTable = null;
+let designEditMode = false, videoEditMode = false;
+let designFileToUpload = null, videoFileToUpload = null;
 
-  /* ── STATE ── */
-  let SB_URL = '', SB_KEY = '';
-  let allProjects = [];
-  let deleteId = null;
-  let editMode = false;
+/* Pre-fill banner if saved */
+if (SB_URL) document.getElementById('sb-url').value = SB_URL;
+if (SB_KEY) document.getElementById('sb-key').value = SB_KEY;
 
-  /* ── SUPABASE ── */
-  async function sbFetch(path, opts = {}) {
-    const res = await fetch(SB_URL + '/rest/v1/' + path, {
-      ...opts,
-      headers: {
-        'apikey': SB_KEY,
-        'Authorization': 'Bearer ' + SB_KEY,
-        'Content-Type': 'application/json',
-        'Prefer': opts.prefer || '',
-        ...(opts.headers || {})
-      }
-    });
-    if (!res.ok) {
-      const e = await res.json().catch(() => ({}));
-      throw new Error(e.message || 'Request gagal (' + res.status + ')');
+/* ══════════════════════════════════════════
+   TAB SWITCHING
+══════════════════════════════════════════ */
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  document.getElementById('tab-btn-' + tab).classList.add('active');
+  if (tab === 'design' && SB_URL) loadDesigns();
+  if (tab === 'video' && SB_URL) loadVideos();
+}
+
+/* ══════════════════════════════════════════
+   SUPABASE HELPERS
+══════════════════════════════════════════ */
+async function sbFetch(path, opts = {}) {
+  const res = await fetch(SB_URL + '/rest/v1/' + path, {
+    ...opts,
+    headers: {
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer ' + SB_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': opts.prefer || '',
+      ...(opts.headers || {})
     }
-    const txt = await res.text();
-    return txt ? JSON.parse(txt) : null;
+  });
+  if (!res.ok) {
+    const e = await res.json().catch(() => ({}));
+    throw new Error(e.message || 'Request gagal (' + res.status + ')');
+  }
+  const txt = await res.text();
+  return txt ? JSON.parse(txt) : null;
+}
+
+/* Upload file ke Supabase Storage */
+async function uploadToStorage(bucket, file, progressBarId, progressWrapId) {
+  const ext = file.name.split('.').pop();
+  const filename = Date.now() + '_' + Math.random().toString(36).slice(2) + '.' + ext;
+  const path = filename;
+
+  /* Show progress */
+  const progressWrap = document.getElementById(progressWrapId);
+  const progressBar = document.getElementById(progressBarId);
+  if (progressWrap) { progressWrap.classList.add('show'); progressBar.style.width = '20%'; }
+
+  const res = await fetch(`${SB_URL}/storage/v1/object/${bucket}/${path}`, {
+    method: 'POST',
+    headers: {
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer ' + SB_KEY,
+      'Content-Type': file.type,
+      'x-upsert': 'true'
+    },
+    body: file
+  });
+
+  if (progressBar) progressBar.style.width = '90%';
+
+  if (!res.ok) {
+    const e = await res.json().catch(() => ({}));
+    throw new Error(e.error || e.message || 'Upload gagal (' + res.status + ')');
   }
 
-  async function connectSupabase() {
-    const url = document.getElementById('sb-url').value.trim().replace(/\/$/, '');
-    const key = document.getElementById('sb-key').value.trim();
-    if (!url || !key) { showToast('URL dan Key wajib diisi!'); return; }
-    SB_URL = url; SB_KEY = key;
-    localStorage.setItem('fahril_sb_url', url);
-    localStorage.setItem('fahril_sb_key', key);
+  if (progressBar) progressBar.style.width = '100%';
+  setTimeout(() => { if (progressWrap) progressWrap.classList.remove('show'); }, 800);
+
+  /* Return public URL */
+  return `${SB_URL}/storage/v1/object/public/${bucket}/${path}`;
+}
+
+async function connectSupabase() {
+  const url = document.getElementById('sb-url').value.trim().replace(/\/$/, '');
+  const key = document.getElementById('sb-key').value.trim();
+  if (!url || !key) { showToast('URL dan Key wajib diisi!'); return; }
+  SB_URL = url; SB_KEY = key;
+  localStorage.setItem('fahril_sb_url', url);
+  localStorage.setItem('fahril_sb_key', key);
+  document.getElementById('status-text').textContent = 'Menghubungkan...';
+  try {
+    await Promise.all([loadDesigns(), loadVideos()]);
+    document.getElementById('status-dot').classList.add('on');
+    document.getElementById('status-text').textContent = 'Terhubung ke Supabase ✓';
+    showToast('Berhasil terhubung!');
+  } catch (e) {
+    document.getElementById('status-dot').classList.remove('on');
+    document.getElementById('status-text').textContent = 'Gagal: ' + e.message;
+    showToast('Koneksi gagal: ' + e.message);
+  }
+}
+
+/* Auto connect if saved */
+window.addEventListener('DOMContentLoaded', () => {
+  if (SB_URL && SB_KEY) {
+    document.getElementById('status-dot').classList.add('on');
     document.getElementById('status-text').textContent = 'Menghubungkan...';
-    try {
-      await loadProjects();
-      document.getElementById('status-dot').classList.add('on');
+    Promise.all([loadDesigns(), loadVideos()]).then(() => {
       document.getElementById('status-text').textContent = 'Terhubung ke Supabase ✓';
-      showToast('Berhasil terhubung ke Supabase!');
-    } catch (e) {
+    }).catch(e => {
       document.getElementById('status-dot').classList.remove('on');
       document.getElementById('status-text').textContent = 'Gagal: ' + e.message;
-      showToast('Koneksi gagal: ' + e.message);
+    });
+  }
+});
+
+/* ══════════════════════════════════════════
+   DESIGN — LOAD & RENDER
+══════════════════════════════════════════ */
+async function loadDesigns() {
+  if (!SB_URL) return;
+  setLoadingDesign(true);
+  try {
+    const data = await sbFetch('designs?select=*&order=created_at.desc');
+    allDesigns = data || [];
+    renderDesignTable(allDesigns);
+    updateDesignStats(allDesigns);
+  } catch (e) { showToast('Gagal memuat design: ' + e.message); setLoadingDesign(false); }
+}
+
+function setLoadingDesign(on) {
+  if (on) document.getElementById('design-tbody').innerHTML =
+    `<tr><td colspan="6" class="center-cell"><span class="spinner"></span>Memuat data...</td></tr>`;
+}
+
+function renderDesignTable(list) {
+  const tb = document.getElementById('design-tbody');
+  if (!list.length) {
+    tb.innerHTML = `<tr><td colspan="6" class="center-cell">
+      <div class="empty-icon"><i class='bx bx-palette'></i></div>
+      <div style="font-weight:700;margin-bottom:4px">Belum ada karya design</div>
+      <div style="margin-bottom:1rem;font-size:.8rem">Mulai tambahkan design pertama kamu.</div>
+      <button class="button" onclick="openDesignForm('add')"><i class='bx bx-plus'></i> Tambah Design</button>
+    </td></tr>`;
+    return;
+  }
+  tb.innerHTML = list.map(p => `<tr>
+    <td>
+      <div class="project-cell">
+        <div class="project-thumb">
+          ${p.image_url
+            ? `<img src="${esc(p.image_url)}" alt="${esc(p.title)}" onerror="this.parentElement.innerHTML='<i class=bx bx-image-alt style=font-size:1.2rem;color:hsl(224,89%,75%)></i>'" />`
+            : `<i class='bx bx-image-alt'></i>`}
+        </div>
+        <div class="project-name">${esc(p.title)}</div>
+      </div>
+    </td>
+    <td><span class="chip chip-cat">${esc(p.category || '—')}</span></td>
+    <td><span class="chip">${p.year || '—'}</span></td>
+    <td><div class="project-desc">${esc(p.description || '—')}</div></td>
+    <td><span class="date-text">${fmtDate(p.created_at)}</span></td>
+    <td>
+      <div class="action-group">
+        <button class="button button-ghost button-sm" onclick='openDesignForm("edit",${JSON.stringify(p)})'>
+          <i class='bx bx-edit-alt'></i> Edit
+        </button>
+        <button class="button button-danger button-sm" onclick='askDelete("${p.id}","designs","${esc(p.title)}")'>
+          <i class='bx bx-trash'></i> Hapus
+        </button>
+      </div>
+    </td>
+  </tr>`).join('');
+}
+
+function updateDesignStats(list) {
+  document.getElementById('design-stat-total').textContent = list.length;
+  const cats = new Set(list.map(p => p.category).filter(Boolean));
+  document.getElementById('design-stat-cat').textContent = cats.size;
+  const years = list.map(p => p.year).filter(Boolean);
+  document.getElementById('design-stat-year').textContent = years.length ? Math.max(...years) : '—';
+  document.getElementById('count-design').textContent = list.length;
+}
+
+function filterDesigns() {
+  const q = document.getElementById('design-search').value.toLowerCase();
+  renderDesignTable(allDesigns.filter(p =>
+    p.title.toLowerCase().includes(q) ||
+    (p.category || '').toLowerCase().includes(q) ||
+    (p.description || '').toLowerCase().includes(q)
+  ));
+}
+
+/* ── DESIGN FORM ── */
+function openDesignForm(mode, p = null) {
+  designEditMode = mode === 'edit';
+  designFileToUpload = null;
+  document.getElementById('design-form-title').textContent = designEditMode ? 'Edit Design' : 'Tambah Design Baru';
+  resetUploadUI('d');
+  if (designEditMode && p) {
+    document.getElementById('design-edit-id').value = p.id;
+    document.getElementById('d-title').value = p.title || '';
+    document.getElementById('d-category').value = p.category || '';
+    document.getElementById('d-year').value = p.year || new Date().getFullYear();
+    document.getElementById('d-desc').value = p.description || '';
+    document.getElementById('d-img-url').value = '';
+    const cur = document.getElementById('d-current-img');
+    if (p.image_url) { cur.textContent = 'Gambar saat ini tersimpan. Upload baru untuk mengganti.'; cur.style.display = 'block'; }
+    else { cur.style.display = 'none'; }
+  } else {
+    document.getElementById('design-edit-id').value = '';
+    ['d-title','d-category','d-desc','d-img-url'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('d-year').value = new Date().getFullYear();
+    document.getElementById('d-current-img').style.display = 'none';
+  }
+  document.getElementById('modal-design-form').classList.add('open');
+}
+
+function handleDesignFileChange(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) { showToast('Ukuran file maksimal 5MB!'); e.target.value = ''; return; }
+  designFileToUpload = file;
+  const preview = document.getElementById('d-img-preview');
+  preview.src = URL.createObjectURL(file);
+  preview.classList.add('show');
+  document.getElementById('d-img-filename').textContent = file.name;
+}
+
+async function saveDesign() {
+  const title = document.getElementById('d-title').value.trim();
+  const category = document.getElementById('d-category').value.trim();
+  const year = parseInt(document.getElementById('d-year').value);
+  if (!title) { showToast('Judul wajib diisi!'); return; }
+  if (!category) { showToast('Kategori wajib diisi!'); return; }
+  if (!year || isNaN(year)) { showToast('Tahun wajib diisi!'); return; }
+  if (!SB_URL) { showToast('Koneksikan Supabase terlebih dahulu!'); return; }
+
+  const btn = document.getElementById('btn-save-design');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
+
+  try {
+    let imageUrl = document.getElementById('d-img-url').value.trim() || null;
+
+    /* Upload file jika ada */
+    if (designFileToUpload) {
+      btn.innerHTML = '<span class="spinner"></span> Mengupload gambar...';
+      imageUrl = await uploadToStorage('designs', designFileToUpload, 'd-upload-bar', 'd-upload-progress');
     }
-  }
 
-  async function loadProjects() {
-    if (!SB_URL) return;
-    setLoading(true);
-    try {
-      const data = await sbFetch('projects?select=*&order=created_at.desc');
-      allProjects = data || [];
-      renderTable(allProjects);
-      updateStats(allProjects);
-    } catch (e) {
-      showToast('Gagal memuat: ' + e.message);
-      setLoading(false);
+    /* Jika edit dan tidak ada file/url baru, pertahankan yang lama */
+    if (designEditMode && !imageUrl) {
+      const existing = allDesigns.find(d => d.id === document.getElementById('design-edit-id').value);
+      if (existing) imageUrl = existing.image_url || null;
     }
-  }
-
-  /* ── RENDER ── */
-  function renderTable(list) {
-    const tb = document.getElementById('project-tbody');
-    if (!list.length) {
-      tb.innerHTML = `<tr><td colspan="6" class="center-cell">
-        <div class="empty-icon"><i class='bx bx-desktop'></i></div>
-        <div style="font-weight:600;color:var(--second-color);margin-bottom:4px">Belum ada project</div>
-        <div style="margin-bottom:1rem">Tambahkan project pertama kamu.</div>
-        <button class="button" onclick="openForm('add')"><i class='bx bx-plus'></i> Tambah Project</button>
-      </td></tr>`;
-      return;
-    }
-    tb.innerHTML = list.map(p => `
-      <tr>
-        <td>
-          <div class="project-cell">
-            <div class="project-thumb">
-              ${p.image_url
-                ? `<img src="${esc(p.image_url)}" alt="${esc(p.title)}" onerror="this.parentElement.innerHTML='<i class=bx bx-image-alt style=font-size:1.2rem;color:hsl(224,89%,75%)></i>'" />`
-                : `<i class='bx bx-image-alt'></i>`}
-            </div>
-            <div>
-              <div class="project-name">${esc(p.title)}</div>
-            </div>
-          </div>
-        </td>
-        <td><div class="project-desc">${esc(p.description || '—')}</div></td>
-        <td>${p.project_link ? `<a class="chip" href="${esc(p.project_link)}" target="_blank"><i class='bx bx-link-external'></i>Live</a>` : '<span class="chip chip-null">—</span>'}</td>
-        <td>${p.github_link ? `<a class="chip" href="${esc(p.github_link)}" target="_blank"><i class='bx bxl-github'></i>GitHub</a>` : '<span class="chip chip-null">—</span>'}</td>
-        <td><span class="date-text">${fmtDate(p.created_at)}</span></td>
-        <td>
-          <div class="action-group">
-            <button class="button button-ghost button-sm" onclick='openForm("edit",${JSON.stringify(p)})'>
-              <i class='bx bx-edit-alt'></i> Edit
-            </button>
-            <button class="button button-danger button-sm" onclick='askDelete("${p.id}","${esc(p.title)}")'>
-              <i class='bx bx-trash'></i> Hapus
-            </button>
-          </div>
-        </td>
-      </tr>`).join('');
-  }
-
-  function updateStats(list) {
-    document.getElementById('stat-total').textContent = list.length;
-    document.getElementById('stat-live').textContent = list.filter(p => p.project_link).length;
-    document.getElementById('stat-gh').textContent = list.filter(p => p.github_link).length;
-    document.getElementById('sidebar-count').textContent = list.length;
-  }
-
-  function setLoading(on) {
-    if (on) document.getElementById('project-tbody').innerHTML =
-      `<tr><td colspan="6" class="center-cell"><span class="spinner"></span>Memuat data...</td></tr>`;
-  }
-
-  /* ── FILTER ── */
-  function filterProjects() {
-    const q = document.getElementById('search-input').value.toLowerCase();
-    renderTable(allProjects.filter(p =>
-      p.title.toLowerCase().includes(q) || (p.description || '').toLowerCase().includes(q)
-    ));
-  }
-
-  /* ── FORM ── */
-  function openForm(mode, p = null) {
-    editMode = mode === 'edit';
-    document.getElementById('form-title').textContent = editMode ? 'Edit Project' : 'Tambah Project Baru';
-    if (editMode && p) {
-      document.getElementById('edit-id').value = p.id;
-      document.getElementById('f-title').value = p.title || '';
-      document.getElementById('f-desc').value = p.description || '';
-      document.getElementById('f-img').value = p.image_url || '';
-      document.getElementById('f-link').value = p.project_link || '';
-      document.getElementById('f-github').value = p.github_link || '';
-    } else {
-      document.getElementById('edit-id').value = '';
-      ['f-title','f-desc','f-img','f-link','f-github'].forEach(id => document.getElementById(id).value = '');
-    }
-    document.getElementById('modal-form').classList.add('open');
-  }
-
-  async function saveProject() {
-    const title = document.getElementById('f-title').value.trim();
-    const desc = document.getElementById('f-desc').value.trim();
-    if (!title || !desc) { showToast('Nama dan deskripsi wajib diisi!'); return; }
-    if (!SB_URL) { showToast('Koneksikan Supabase terlebih dahulu!'); return; }
 
     const payload = {
       title,
-      description: desc,
-      image_url: document.getElementById('f-img').value.trim() || null,
-      project_link: document.getElementById('f-link').value.trim() || null,
-      github_link: document.getElementById('f-github').value.trim() || null,
+      category,
+      year,
+      description: document.getElementById('d-desc').value.trim() || null,
+      image_url: imageUrl
     };
 
-    const btn = document.getElementById('btn-save');
-    btn.disabled = true;
     btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
-
-    try {
-      if (editMode) {
-        const id = document.getElementById('edit-id').value;
-        await sbFetch('projects?id=eq.' + id, { method: 'PATCH', body: JSON.stringify(payload), prefer: 'return=minimal' });
-        showToast('Project berhasil diupdate!');
-      } else {
-        await sbFetch('projects', { method: 'POST', body: JSON.stringify(payload), prefer: 'return=minimal' });
-        showToast('Project berhasil ditambahkan!');
-      }
-      closeModal('modal-form');
-      await loadProjects();
-    } catch (e) {
-      showToast('Error: ' + e.message);
-    } finally {
-      btn.disabled = false;
-      btn.innerHTML = '<i class="bx bx-check"></i> Simpan';
+    if (designEditMode) {
+      const id = document.getElementById('design-edit-id').value;
+      await sbFetch('designs?id=eq.' + id, { method: 'PATCH', body: JSON.stringify(payload), prefer: 'return=minimal' });
+      showToast('Design berhasil diupdate!');
+    } else {
+      await sbFetch('designs', { method: 'POST', body: JSON.stringify(payload), prefer: 'return=minimal' });
+      showToast('Design berhasil ditambahkan!');
     }
+    closeModal('modal-design-form');
+    await loadDesigns();
+  } catch (e) {
+    showToast('Error: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="bx bx-check"></i> Simpan';
   }
+}
 
-  /* ── DELETE ── */
-  function askDelete(id, name) {
-    deleteId = id;
-    document.getElementById('delete-name').textContent = name;
-    document.getElementById('modal-delete').classList.add('open');
+/* ══════════════════════════════════════════
+   VIDEO — LOAD & RENDER
+══════════════════════════════════════════ */
+async function loadVideos() {
+  if (!SB_URL) return;
+  setLoadingVideo(true);
+  try {
+    const data = await sbFetch('videos?select=*&order=created_at.desc');
+    allVideos = data || [];
+    renderVideoTable(allVideos);
+    updateVideoStats(allVideos);
+  } catch (e) { showToast('Gagal memuat video: ' + e.message); setLoadingVideo(false); }
+}
+
+function setLoadingVideo(on) {
+  if (on) document.getElementById('video-tbody').innerHTML =
+    `<tr><td colspan="6" class="center-cell"><span class="spinner"></span>Memuat data...</td></tr>`;
+}
+
+function renderVideoTable(list) {
+  const tb = document.getElementById('video-tbody');
+  if (!list.length) {
+    tb.innerHTML = `<tr><td colspan="6" class="center-cell">
+      <div class="empty-icon"><i class='bx bx-video'></i></div>
+      <div style="font-weight:700;margin-bottom:4px">Belum ada video</div>
+      <div style="margin-bottom:1rem;font-size:.8rem">Mulai tambahkan video pertama kamu.</div>
+      <button class="button" onclick="openVideoForm('add')"><i class='bx bx-plus'></i> Tambah Video</button>
+    </td></tr>`;
+    return;
   }
+  tb.innerHTML = list.map(p => `<tr>
+    <td>
+      <div class="project-cell">
+        <div class="project-thumb">
+          ${p.thumbnail_url
+            ? `<img src="${esc(p.thumbnail_url)}" alt="${esc(p.title)}" onerror="this.parentElement.innerHTML='<i class=bx bx-video style=font-size:1.2rem;color:hsl(224,89%,75%)></i>'" />`
+            : `<i class='bx bx-video'></i>`}
+        </div>
+        <div class="project-name">${esc(p.title)}</div>
+      </div>
+    </td>
+    <td><span class="chip">${p.year || '—'}</span></td>
+    <td><div class="project-desc">${esc(p.description || '—')}</div></td>
+    <td>${p.video_url
+      ? `<a class="chip" href="${esc(p.video_url)}" target="_blank"><i class='bx bx-link-external'></i>Buka</a>`
+      : '<span class="chip chip-null">—</span>'}</td>
+    <td><span class="date-text">${fmtDate(p.created_at)}</span></td>
+    <td>
+      <div class="action-group">
+        <button class="button button-ghost button-sm" onclick='openVideoForm("edit",${JSON.stringify(p)})'>
+          <i class='bx bx-edit-alt'></i> Edit
+        </button>
+        <button class="button button-danger button-sm" onclick='askDelete("${p.id}","videos","${esc(p.title)}")'>
+          <i class='bx bx-trash'></i> Hapus
+        </button>
+      </div>
+    </td>
+  </tr>`).join('');
+}
 
-  async function confirmDelete() {
-    if (!deleteId) return;
-    try {
-      await sbFetch('projects?id=eq.' + deleteId, { method: 'DELETE', prefer: 'return=minimal' });
-      showToast('Project dihapus!');
-      closeModal('modal-delete');
-      await loadProjects();
-    } catch (e) {
-      showToast('Gagal hapus: ' + e.message);
+function updateVideoStats(list) {
+  document.getElementById('video-stat-total').textContent = list.length;
+  document.getElementById('video-stat-link').textContent = list.filter(p => p.video_url).length;
+  const years = list.map(p => p.year).filter(Boolean);
+  document.getElementById('video-stat-year').textContent = years.length ? Math.max(...years) : '—';
+  document.getElementById('count-video').textContent = list.length;
+}
+
+function filterVideos() {
+  const q = document.getElementById('video-search').value.toLowerCase();
+  renderVideoTable(allVideos.filter(p =>
+    p.title.toLowerCase().includes(q) ||
+    (p.description || '').toLowerCase().includes(q)
+  ));
+}
+
+/* ── VIDEO FORM ── */
+function openVideoForm(mode, p = null) {
+  videoEditMode = mode === 'edit';
+  videoFileToUpload = null;
+  document.getElementById('video-form-title').textContent = videoEditMode ? 'Edit Video' : 'Tambah Video Baru';
+  resetUploadUI('v');
+  if (videoEditMode && p) {
+    document.getElementById('video-edit-id').value = p.id;
+    document.getElementById('v-title').value = p.title || '';
+    document.getElementById('v-year').value = p.year || new Date().getFullYear();
+    document.getElementById('v-url').value = p.video_url || '';
+    document.getElementById('v-desc').value = p.description || '';
+    document.getElementById('v-img-url').value = '';
+    const cur = document.getElementById('v-current-img');
+    if (p.thumbnail_url) { cur.textContent = 'Thumbnail saat ini tersimpan. Upload baru untuk mengganti.'; cur.style.display = 'block'; }
+    else { cur.style.display = 'none'; }
+  } else {
+    document.getElementById('video-edit-id').value = '';
+    ['v-title','v-url','v-desc','v-img-url'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('v-year').value = new Date().getFullYear();
+    document.getElementById('v-current-img').style.display = 'none';
+  }
+  document.getElementById('modal-video-form').classList.add('open');
+}
+
+function handleVideoFileChange(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) { showToast('Ukuran file maksimal 5MB!'); e.target.value = ''; return; }
+  videoFileToUpload = file;
+  const preview = document.getElementById('v-img-preview');
+  preview.src = URL.createObjectURL(file);
+  preview.classList.add('show');
+  document.getElementById('v-img-filename').textContent = file.name;
+}
+
+async function saveVideo() {
+  const title = document.getElementById('v-title').value.trim();
+  const year = parseInt(document.getElementById('v-year').value);
+  if (!title) { showToast('Judul wajib diisi!'); return; }
+  if (!year || isNaN(year)) { showToast('Tahun wajib diisi!'); return; }
+  if (!SB_URL) { showToast('Koneksikan Supabase terlebih dahulu!'); return; }
+
+  const btn = document.getElementById('btn-save-video');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
+
+  try {
+    let thumbnailUrl = document.getElementById('v-img-url').value.trim() || null;
+
+    if (videoFileToUpload) {
+      btn.innerHTML = '<span class="spinner"></span> Mengupload thumbnail...';
+      thumbnailUrl = await uploadToStorage('videos', videoFileToUpload, 'v-upload-bar', 'v-upload-progress');
     }
+
+    if (videoEditMode && !thumbnailUrl) {
+      const existing = allVideos.find(v => v.id === document.getElementById('video-edit-id').value);
+      if (existing) thumbnailUrl = existing.thumbnail_url || null;
+    }
+
+    const payload = {
+      title,
+      year,
+      video_url: document.getElementById('v-url').value.trim() || null,
+      description: document.getElementById('v-desc').value.trim() || null,
+      thumbnail_url: thumbnailUrl
+    };
+
+    btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
+    if (videoEditMode) {
+      const id = document.getElementById('video-edit-id').value;
+      await sbFetch('videos?id=eq.' + id, { method: 'PATCH', body: JSON.stringify(payload), prefer: 'return=minimal' });
+      showToast('Video berhasil diupdate!');
+    } else {
+      await sbFetch('videos', { method: 'POST', body: JSON.stringify(payload), prefer: 'return=minimal' });
+      showToast('Video berhasil ditambahkan!');
+    }
+    closeModal('modal-video-form');
+    await loadVideos();
+  } catch (e) {
+    showToast('Error: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="bx bx-check"></i> Simpan';
   }
+}
 
-  /* ── UTILS ── */
-  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+/* ══════════════════════════════════════════
+   DELETE
+══════════════════════════════════════════ */
+function askDelete(id, table, name) {
+  deleteId = id; deleteTable = table;
+  document.getElementById('delete-name').textContent = name;
+  document.getElementById('modal-delete').classList.add('open');
+}
 
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    document.getElementById('toast-msg').textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3000);
-  }
+async function confirmDelete() {
+  if (!deleteId) return;
+  try {
+    await sbFetch(deleteTable + '?id=eq.' + deleteId, { method: 'DELETE', prefer: 'return=minimal' });
+    showToast('Item berhasil dihapus!');
+    closeModal('modal-delete');
+    if (deleteTable === 'designs') await loadDesigns();
+    if (deleteTable === 'videos') await loadVideos();
+  } catch (e) { showToast('Gagal hapus: ' + e.message); }
+}
 
-  function fmtDate(iso) {
-    if (!iso) return '—';
-    return new Date(iso).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
-  }
+/* ══════════════════════════════════════════
+   UPLOAD UI HELPERS
+══════════════════════════════════════════ */
+function resetUploadUI(prefix) {
+  document.getElementById(prefix + '-img-preview').classList.remove('show');
+  document.getElementById(prefix + '-img-preview').src = '';
+  document.getElementById(prefix + '-img-filename').textContent = '';
+  document.getElementById(prefix + '-upload-progress').classList.remove('show');
+  document.getElementById(prefix + '-upload-bar').style.width = '0';
+  document.getElementById(prefix + '-img-file').value = '';
+  /* Reset file variable */
+  if (prefix === 'd') designFileToUpload = null;
+  if (prefix === 'v') videoFileToUpload = null;
+}
 
-  function esc(s) {
-    if (!s) return '';
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  /* Close on backdrop click */
-  document.querySelectorAll('.modal-overlay').forEach(el => {
-    el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
+/* Drag & drop */
+['d-upload-area','v-upload-area'].forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('dragover', e => { e.preventDefault(); el.classList.add('drag-over'); });
+  el.addEventListener('dragleave', () => el.classList.remove('drag-over'));
+  el.addEventListener('drop', e => {
+    e.preventDefault(); el.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (!file || !file.type.startsWith('image/')) return;
+    const prefix = id.startsWith('d') ? 'd' : 'v';
+    const input = document.getElementById(prefix + '-img-file');
+    const dt = new DataTransfer(); dt.items.add(file);
+    input.files = dt.files;
+    input.dispatchEvent(new Event('change'));
   });
+});
+
+/* ══════════════════════════════════════════
+   UTILS
+══════════════════════════════════════════ */
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+function fmtDate(iso) {
+  if (!iso) return '—';
+  return new Date(iso).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* Close modal on backdrop click */
+document.querySelectorAll('.modal-overlay').forEach(el => {
+  el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
+});
 </script>
 </body>
 </html>
