@@ -4,70 +4,47 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="assets/css/styles.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Design Portfolio</title>
+    <title>Design Portfolio — Fahril</title>
     <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
-    <style>
-        /* ── LOADING STATE ── */
-        .loading-wrap {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 200px;
-            gap: 1rem;
-            color: #aaa;
-        }
-        .spinner {
-            width: 36px;
-            height: 36px;
-            border: 3px solid hsl(224, 89%, 90%);
-            border-top-color: hsl(224, 89%, 60%);
-            border-radius: 50%;
-            animation: spin .7s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* ── EMPTY STATE ── */
-        .empty-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 200px;
-            gap: .75rem;
-            color: #bbb;
-            font-size: .9rem;
-        }
-        .empty-state i {
-            font-size: 3rem;
-            color: hsl(224, 89%, 80%);
-        }
-
-        /* ── ERROR STATE ── */
-        .error-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 200px;
-            gap: .5rem;
-            color: #ef4444;
-            font-size: .85rem;
-            text-align: center;
-        }
-        .error-state i { font-size: 2.5rem; }
-
-        /* ── YEAR SECTION HIDDEN INITIALLY ── */
-        .year-section { display: none; }
-        .year-section.visible { display: block; }
-    </style>
 </head>
 <body>
-    <a href="index.html" class="back-button"><i class="bx bx-left-arrow-alt"></i> Back</a>
-    <section class="design-section">
-        <h1 class="design-title">Design Portfolio</h1>
+    <!--===== HEADER =====-->
+    <header class="l-header">
+        <nav class="nav bd-grid">
+            <div>
+                <a href="index.html" class="nav__logo"><h2>Fahril</h2></a>
+            </div>
 
-        <!-- Dynamic content rendered here -->
+            <div class="nav__menu" id="nav-menu">
+                <ul class="nav__list">
+                    <li class="nav__item"><a href="index.html#home" class="nav__link">Home</a></li>
+                    <li class="nav__item"><a href="index.html#about" class="nav__link">About</a></li>
+                    <li class="nav__item"><a href="index.html#work" class="nav__link active-link">Work</a></li>
+                    <li class="nav__item"><a href="index.html#contact" class="nav__link">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="nav__toggle" id="nav-toggle">
+                <i class='bx bx-menu'></i>
+            </div>
+        </nav>
+    </header>
+
+    <section class="design-section">
+
+        <!-- ══ HERO ══ -->
+        <div class="design-hero">
+            <div class="design-hero__content">
+                <h1 class="hero-title">Design <span class="hero-title--accent">Portfolio</span></h1>
+                <p class="hero-sub">Kumpulan karya desain grafis, poster, dan UI/UX yang telah dibuat.</p>
+            </div>
+        </div>
+
+        <!-- Filter kategori — diisi dinamis -->
+        <div class="filter-bar" id="filter-bar" style="display:none;"></div>
+
+        <!-- Dynamic content -->
         <div id="design-content">
             <div style="margin-top:80px">
                 <div class="loading-wrap">
@@ -78,200 +55,409 @@
         </div>
     </section>
 
-    <!-- MODAL PREVIEW -->
-    <div class="design-modal" aria-hidden="true">
-        <div class="design-modal__overlay"></div>
+    <!-- ══ MODAL PREVIEW ══ -->
+    <div class="design-modal" aria-hidden="true" id="design-modal">
+        <div class="design-modal__overlay" id="modal-overlay"></div>
         <div class="design-modal__content" role="dialog" aria-modal="true" aria-label="Image preview">
-            <button type="button" class="design-modal__close" aria-label="Close preview">
+            <!-- Loader tampil sementara gambar full ukuran dimuat -->
+            <div class="design-modal__loader" id="modal-loader">
+                <div class="spinner"></div>
+            </div>
+            <button type="button" class="design-modal__close" id="modal-close" aria-label="Close preview">
                 <i class="bx bx-x"></i>
             </button>
-            <img class="design-modal__img" src="" alt="Preview">
+            <img class="design-modal__img" id="modal-img" src="" alt="Preview">
+            <div class="design-modal__bar" id="modal-bar"></div>
         </div>
     </div>
 
     <!--===== FOOTER =====-->
     <footer class="footer">
-        <div class="footer__container bd-grid">
-            <div class="footer__column">
-                <h2 class="footer__title">Muh. Fahril</h2>
-                <p class="footer__text">Seorang mahasiswa yang hobi bermain game.</p>
-                <div class="footer__social footer__social--column">
-                    <a href="https://www.instagram.com/m.fahrill/" class="footer__icon"><i class='bx bxl-instagram'></i></a>
-                    <a href="https://www.linkedin.com/in/muh-fahril-812b11209/" class="footer__icon"><i class='bx bxl-linkedin'></i></a>
-                    <a href="https://github.com/fahril168" class="footer__icon"><i class='bx bxl-github'></i></a>
+        <div class="footer__inner">
+
+            <!-- ROW ATAS: Brand + Nav kolom-kolom -->
+            <div class="footer__top">
+
+                <!-- Kolom 1: Brand -->
+                <div class="footer__brand">
+                    <a href="index.html" class="footer__logo">Fahril<span>.</span></a>
+                    <p class="footer__tagline">Mahasiswa Teknik Informatika yang berfokus pada videografi, desain grafis, dan pengembangan web.</p>
+                    <div class="footer__socials">
+                        <a href="https://www.instagram.com/m.fahrill/" class="footer__social-link" aria-label="Instagram" target="_blank" rel="noopener">
+                            <i class='bx bxl-instagram'></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/muh-fahril-812b11209/" class="footer__social-link" aria-label="LinkedIn" target="_blank" rel="noopener">
+                            <i class='bx bxl-linkedin'></i>
+                        </a>
+                        <a href="https://github.com/fahril168" class="footer__social-link" aria-label="GitHub" target="_blank" rel="noopener">
+                            <i class='bx bxl-github'></i>
+                        </a>
+                        <a href="https://wa.me/6282271591208" class="footer__social-link" aria-label="WhatsApp" target="_blank" rel="noopener">
+                            <i class='bx bxl-whatsapp'></i>
+                        </a>
+                    </div>
                 </div>
+
+                <!-- Kolom 2: Navigasi -->
+                <div class="footer__col">
+                    <h4 class="footer__col-title">Navigasi</h4>
+                    <ul class="footer__nav">
+                        <li><a href="index.html#home">Home</a></li>
+                        <li><a href="index.html#about">About</a></li>
+                        <li><a href="index.html#work">Work</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Kolom 3: Portfolio -->
+                <div class="footer__col">
+                    <h4 class="footer__col-title">Portfolio</h4>
+                    <ul class="footer__nav">
+                        <li><a href="design.html">Design Graphics</a></li>
+                        <li><a href="video.html">Video Editing</a></li>
+                    </ul>
+                </div>
+
+                <!-- Kolom 4: Kontak -->
+                <div class="footer__col">
+                    <h4 class="footer__col-title">Kontak</h4>
+                    <ul class="footer__contact-list">
+                        <li>
+                            <i class='bx bxs-envelope'></i>
+                            <a href="mailto:muh.fahril.uho@gmail.com">muh.fahril.uho@gmail.com</a>
+                        </li>
+                        <li>
+                            <i class='bx bxl-whatsapp'></i>
+                            <a href="https://wa.me/6282271591208">+62 822-7159-1208</a>
+                        </li>
+                        <li>
+                            <i class='bx bxs-map'></i>
+                            <span>Kendari, Sulawesi Tenggara</span>
+                        </li>
+                    </ul>
+                </div>
+
             </div>
-            <div class="footer__column">
-                <h3>Video Editing</h3>
-                <ul class="footer__list">
-                    <li>Adobe Premiere Pro</li>
-                    <li>Adobe After Effects</li>
-                    <li>Capcut</li>
-                    <li>DaVinci Resolve</li>
-                </ul>
+
+            <!-- DIVIDER -->
+            <div class="footer__divider"></div>
+
+            <!-- ROW BAWAH: copyright + back to top -->
+            <div class="footer__bottom">
+                <p class="footer__copy">&copy; 2026 Muh. Fahril. All rights reserved.</p>
+                <a href="#" class="footer__totop" aria-label="Kembali ke atas">
+                    <i class='bx bx-chevron-up'></i>
+                </a>
             </div>
-            <div class="footer__column">
-                <h3>Design Graphics</h3>
-                <ul class="footer__list">
-                    <li>Canva</li>
-                    <li>Figma</li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer__bottom">
-            <p class="footer__copy">&copy; 2026 Muh. Fahril. All rights reserved.</p>
+
         </div>
     </footer>
 
     <script>
-        /* ── SUPABASE CONFIG ── */
-        /* Ambil dari localStorage (disimpan oleh admin.html) */
-        const SB_URL = localStorage.getItem('fahril_sb_url') || '';
-        const SB_KEY = localStorage.getItem('fahril_sb_key') || '';
+    /* ══════════════════════════════════════════════════
+       SUPABASE CONFIG
+    ══════════════════════════════════════════════════ */
+    const SB_URL = localStorage.getItem('fahril_sb_url') || '';
+    const SB_KEY = localStorage.getItem('fahril_sb_key') || '';
 
-        /* ── HELPERS ── */
-        function esc(s) {
-            if (!s) return '';
-            return String(s)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;');
-        }
+    /* ══════════════════════════════════════════════════
+       HELPERS
+    ══════════════════════════════════════════════════ */
+    function esc(s) {
+        if (!s) return '';
+        return String(s)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
 
-        async function sbFetch(path) {
-            const res = await fetch(SB_URL + '/rest/v1/' + path, {
-                headers: {
-                    'apikey': SB_KEY,
-                    'Authorization': 'Bearer ' + SB_KEY,
-                    'Content-Type': 'application/json'
-                }
-            });
-            if (!res.ok) {
-                const e = await res.json().catch(() => ({}));
-                throw new Error(e.message || 'Request gagal (' + res.status + ')');
+    async function sbFetch(path) {
+        const res = await fetch(SB_URL + '/rest/v1/' + path, {
+            headers: {
+                'apikey': SB_KEY,
+                'Authorization': 'Bearer ' + SB_KEY,
+                'Content-Type': 'application/json'
             }
-            const txt = await res.text();
-            return txt ? JSON.parse(txt) : [];
+        });
+        if (!res.ok) {
+            const e = await res.json().catch(() => ({}));
+            throw new Error(e.message || 'Request gagal (' + res.status + ')');
         }
+        const txt = await res.text();
+        return txt ? JSON.parse(txt) : [];
+    }
 
-        /* ── MODAL ── */
-        const modal = document.querySelector('.design-modal');
-        const modalImg = document.querySelector('.design-modal__img');
-        const overlay = document.querySelector('.design-modal__overlay');
-        const closeBtn = document.querySelector('.design-modal__close');
+    /* ══════════════════════════════════════════════════
+       THUMBNAIL URL — tambahkan transform resize Supabase
+       agar di thumbnail hanya load 400px wide, bukan full.
+       Saat modal: gunakan URL asli.
+    ══════════════════════════════════════════════════ */
+    function thumbUrl(url, width = 400) {
+        if (!url) return '';
+        // Supabase Storage Image Transformation:
+        // /storage/v1/object/public/bucket/file
+        // → /storage/v1/render/image/public/bucket/file?width=400&quality=75
+        try {
+            const u = new URL(url);
+            // Hanya apply transform kalau domain Supabase
+            if (u.pathname.includes('/storage/v1/object/public/')) {
+                u.pathname = u.pathname.replace(
+                    '/storage/v1/object/public/',
+                    '/storage/v1/render/image/public/'
+                );
+                u.searchParams.set('width', width);
+                u.searchParams.set('quality', '75');
+                u.searchParams.set('resize', 'contain');
+                return u.toString();
+            }
+        } catch (_) {}
+        // Kalau URL eksternal / tidak bisa diparse, kembalikan asli
+        return url;
+    }
 
-        function openModal(src) {
-            modalImg.src = src;
-            modal.classList.add('is-active');
-            modal.setAttribute('aria-hidden', 'false');
-            document.body.style.overflow = 'hidden';
-        }
+    /* ══════════════════════════════════════════════════
+       MODAL
+    ══════════════════════════════════════════════════ */
+    const modal      = document.getElementById('design-modal');
+    const modalImg   = document.getElementById('modal-img');
+    const modalBar   = document.getElementById('modal-bar');
+    const modalLoader= document.getElementById('modal-loader');
+    const overlay    = document.getElementById('modal-overlay');
+    const closeBtn   = document.getElementById('modal-close');
 
-        function closeModal() {
-            modal.classList.remove('is-active');
-            modal.setAttribute('aria-hidden', 'true');
-            modalImg.src = '';
-            document.body.style.overflow = '';
-        }
+    function openModal(fullSrc, title) {
+        // Tampilkan loader, sembunyikan gambar lama
+        modalLoader.classList.remove('hidden');
+        modalImg.style.opacity = '0';
+        modalBar.textContent   = title || '';
 
-        overlay.addEventListener('click', closeModal);
-        closeBtn.addEventListener('click', closeModal);
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Escape' && modal.classList.contains('is-active')) closeModal();
+        modal.classList.add('is-active');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+
+        // Muat gambar FULL SIZE (URL asli, bukan thumb)
+        const tempImg = new Image();
+        tempImg.onload = () => {
+            modalImg.src = fullSrc;
+            modalImg.style.opacity = '1';
+            modalLoader.classList.add('hidden');
+        };
+        tempImg.onerror = () => {
+            modalLoader.classList.add('hidden');
+            modalImg.src = fullSrc; // fallback tetap tampilkan
+            modalImg.style.opacity = '1';
+        };
+        tempImg.src = fullSrc;
+    }
+
+    function closeModal() {
+        modal.classList.remove('is-active');
+        modal.setAttribute('aria-hidden', 'true');
+        modalImg.src = '';
+        document.body.style.overflow = '';
+    }
+
+    overlay.addEventListener('click', closeModal);
+    closeBtn.addEventListener('click', closeModal);
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && modal.classList.contains('is-active')) closeModal();
+    });
+
+    /* ══════════════════════════════════════════════════
+       FILTER
+    ══════════════════════════════════════════════════ */
+    let currentFilter = 'all';
+
+    function buildFilters(categories) {
+        const bar = document.getElementById('filter-bar');
+        bar.style.display = '';
+
+        const allBtn = document.createElement('button');
+        allBtn.className = 'filter-btn active';
+        allBtn.dataset.cat = 'all';
+        allBtn.textContent = 'Semua';
+        bar.appendChild(allBtn);
+
+        categories.forEach(cat => {
+            const btn = document.createElement('button');
+            btn.className = 'filter-btn';
+            btn.dataset.cat = cat;
+            btn.textContent = cat;
+            bar.appendChild(btn);
         });
 
-        /* ── RENDER ── */
-        function renderDesigns(data) {
-            const container = document.getElementById('design-content');
+        bar.addEventListener('click', e => {
+            const btn = e.target.closest('.filter-btn');
+            if (!btn) return;
+            bar.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentFilter = btn.dataset.cat;
+            applyFilter();
+        });
+    }
 
-            if (!data || data.length === 0) {
-                container.innerHTML = `
-                    <div style="margin-top:80px">
-                        <div class="empty-state">
-                            <i class='bx bx-image'></i>
-                            <p>Belum ada karya design yang ditampilkan.</p>
-                        </div>
-                    </div>`;
-                return;
+    function applyFilter() {
+        document.querySelectorAll('.year-section').forEach(sec => {
+            if (currentFilter === 'all') {
+                sec.classList.add('visible');
+            } else {
+                sec.classList.toggle('visible', sec.dataset.cat === currentFilter);
             }
+        });
+    }
 
-            /* Kelompokkan by category */
-            const categories = {};
-            data.forEach(item => {
-                const cat = item.category || 'Lainnya';
-                if (!categories[cat]) categories[cat] = [];
-                categories[cat].push(item);
-            });
+    /* ══════════════════════════════════════════════════
+       INTERSECTION OBSERVER — Lazy load thumbnail
+       Gambar hanya di-load saat card masuk viewport
+    ══════════════════════════════════════════════════ */
+    const imgObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            const img = entry.target;
+            const src = img.dataset.src;
+            if (!src) return;
+            img.src = src;
+            img.addEventListener('load',  () => img.classList.add('loaded'), { once: true });
+            img.addEventListener('error', () => img.classList.add('loaded'), { once: true });
+            imgObserver.unobserve(img);
+        });
+    }, { rootMargin: '200px' }); // mulai load 200px sebelum masuk viewport
 
-            let html = '';
-            for (const [cat, items] of Object.entries(categories)) {
-                html += `
-                <div class="year-section visible">
-                    <h2>${esc(cat)}</h2>
-                    <div class="design-grid">
-                        ${items.map(item => `
+    /* ══════════════════════════════════════════════════
+       RENDER
+    ══════════════════════════════════════════════════ */
+    function renderDesigns(data) {
+        const container = document.getElementById('design-content');
+
+        if (!data || data.length === 0) {
+            container.innerHTML = `
+                <div style="margin-top:80px">
+                    <div class="empty-state">
+                        <i class='bx bx-image'></i>
+                        <p>Belum ada karya design yang ditampilkan.</p>
+                    </div>
+                </div>`;
+            return;
+        }
+
+        /* Kelompokkan by category */
+        const catMap = {};
+        data.forEach(item => {
+            const cat = item.category || 'Lainnya';
+            if (!catMap[cat]) catMap[cat] = [];
+            catMap[cat].push(item);
+        });
+
+        const categories = Object.keys(catMap).sort();
+
+        /* Bangun filter bar */
+        buildFilters(categories);
+
+        /* Bangun HTML grid per kategori */
+        let html = '';
+        categories.forEach(cat => {
+            const items = catMap[cat];
+            html += `
+            <div class="year-section visible" data-cat="${esc(cat)}">
+                <h2>${esc(cat)} <span class="cat-count">${items.length}</span></h2>
+                <div class="design-grid">
+                    ${items.map(item => {
+                        const fullSrc  = esc(item.image_url || '');
+                        const tSrc     = esc(thumbUrl(item.image_url, 400));
+                        const titleVal = esc(item.title || 'Design');
+                        return `
                         <button
                             type="button"
                             class="design-card"
-                            data-preview="${esc(item.image_url || '')}"
-                            data-title="${esc(item.title || '')}"
-                            title="${esc(item.title || '')}"
+                            data-full="${fullSrc}"
+                            data-title="${titleVal}"
+                            aria-label="Lihat ${titleVal}"
                         >
                             <img
-                                src="${esc(item.image_url || '')}"
-                                alt="${esc(item.title || 'Design')}"
-                                loading="lazy"
-                                onerror="this.style.minHeight='120px';this.style.background='#f0f0f0'"
+                                class="thumb"
+                                src=""
+                                data-src="${tSrc}"
+                                alt="${titleVal}"
                             >
-                        </button>`).join('')}
+                            <div class="design-card__overlay">
+                                <div class="design-card__zoom">
+                                    <i class='bx bx-zoom-in'></i>
+                                </div>
+                            </div>
+                            <div class="design-card__label">${titleVal}</div>
+                        </button>`;
+                    }).join('')}
+                </div>
+            </div>`;
+        });
+
+        container.innerHTML = html;
+
+        /* Daftarkan observer ke semua thumbnail */
+        container.querySelectorAll('img.thumb').forEach(img => imgObserver.observe(img));
+
+        /* Click handler buka modal dengan URL ASLI (full size) */
+        container.querySelectorAll('.design-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const fullSrc = card.getAttribute('data-full');
+                const title   = card.getAttribute('data-title');
+                if (fullSrc) openModal(fullSrc, title);
+            });
+        });
+    }
+
+    /* ══════════════════════════════════════════════════
+       LOAD DATA
+    ══════════════════════════════════════════════════ */
+    async function loadDesigns() {
+        const container = document.getElementById('design-content');
+
+        if (!SB_URL || !SB_KEY) {
+            container.innerHTML = `
+                <div style="margin-top:80px">
+                    <div class="error-state">
+                        <i class='bx bx-plug'></i>
+                        <p>Supabase belum dikonfigurasi.<br>
+                        Silakan hubungkan melalui halaman
+                        <a href="admin.html" style="color:hsl(224,89%,60%)">Admin</a>.</p>
                     </div>
                 </div>`;
-            }
-
-            container.innerHTML = html;
-
-            /* Attach click events */
-            document.querySelectorAll('.design-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    const src = card.getAttribute('data-preview');
-                    if (src) openModal(src);
-                });
-            });
+            return;
         }
 
-        /* ── LOAD ── */
-        async function loadDesigns() {
-            const container = document.getElementById('design-content');
-
-            if (!SB_URL || !SB_KEY) {
-                container.innerHTML = `
-                    <div style="margin-top:80px">
-                        <div class="error-state">
-                            <i class='bx bx-plug'></i>
-                            <p>Supabase belum dikonfigurasi.<br>
-                            Silakan hubungkan Supabase melalui halaman <a href="admin.html" style="color:hsl(224,89%,60%)">Admin</a>.</p>
-                        </div>
-                    </div>`;
-                return;
-            }
-
-            try {
-                /* Fetch semua designs, urutkan by category lalu created_at */
-                const data = await sbFetch('designs?select=*&order=category.asc,created_at.desc');
-                renderDesigns(data);
-            } catch (err) {
-                container.innerHTML = `
-                    <div style="margin-top:80px">
-                        <div class="error-state">
-                            <i class='bx bx-error-circle'></i>
-                            <p>Gagal memuat data: ${esc(err.message)}</p>
-                        </div>
-                    </div>`;
-            }
+        try {
+            const data = await sbFetch('designs?select=*&order=category.asc,created_at.desc');
+            renderDesigns(data);
+        } catch (err) {
+            container.innerHTML = `
+                <div style="margin-top:80px">
+                    <div class="error-state">
+                        <i class='bx bx-error-circle'></i>
+                        <p>Gagal memuat data: ${esc(err.message)}</p>
+                    </div>
+                </div>`;
         }
+    }
 
-        loadDesigns();
+    loadDesigns();
+
+    /* ══════════════════════════════════════════════════
+       NAV TOGGLE (mobile) — sama seperti main.js
+    ══════════════════════════════════════════════════ */
+    const navToggle = document.getElementById('nav-toggle');
+    const navMenu   = document.getElementById('nav-menu');
+
+    if (navToggle) {
+        navToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('show');
+        });
+    }
+
+    /* Tutup menu saat link diklik (mobile) */
+    document.querySelectorAll('.nav__link').forEach(link => {
+        link.addEventListener('click', () => navMenu.classList.remove('show'));
+    });
     </script>
 </body>
 </html>
