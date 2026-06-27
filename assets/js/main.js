@@ -693,6 +693,201 @@ if (
 
         container.innerHTML =
             html;
+                                    .full,
+                                card.dataset
+                                    .title
+                            );
+                        }
+                    );
+                }
+            );
+    }
+
+    async function loadDesigns() {
+
+        const container =
+            document.getElementById(
+                'design-content'
+            );
+
+        try {
+            const data =
+                await sbFetch(
+                    'designs?select=*&order=category.asc,created_at.desc'
+                );
+
+            renderDesigns(
+                data
+            );
+
+        } catch (
+            err
+        ) {
+            container.innerHTML =
+                `
+                <div class="error-state">
+                    <p>${esc(err.message)}</p>
+                </div>
+            `;
+        }
+    }
+
+    loadDesigns();
+}
+
+/* ==========================================================
+   VIDEO PAGE
+========================================================== */
+
+if (
+    document.getElementById(
+        'video-content'
+    )
+) {
+
+    async function loadVideos() {
+
+        const container =
+            document.getElementById(
+                'video-content'
+            );
+
+        try {
+            const data =
+                await sbFetch(
+                    'videos?select=*&order=year.desc,created_at.desc'
+                );
+
+            renderVideos(
+                data
+            );
+
+        } catch (
+            err
+        ) {
+            container.innerHTML =
+                `
+                <div class="error-state">
+                    <p>Gagal memuat:
+                    ${esc(err.message)}</p>
+                </div>
+            `;
+        }
+    }
+
+    function renderVideos(
+        data
+    ) {
+
+        const container =
+            document.getElementById(
+                'video-content'
+            );
+
+        if (
+            !data?.length
+        ) {
+            container.innerHTML =
+                `
+                <div class="empty-state">
+                    <i class='bx bx-video'></i>
+                    <p>Belum ada video.</p>
+                </div>
+            `;
+            return;
+        }
+
+        const years =
+            {};
+
+        data.forEach(
+            item => {
+
+                const y =
+                    item.year ||
+                    'Lainnya';
+
+                if (
+                    !years[y]
+                ) {
+                    years[
+                        y
+                    ] = [];
+                }
+
+                years[
+                    y
+                ].push(
+                    item
+                );
+            }
+        );
+
+        let html =
+            '';
+
+        Object.keys(
+            years
+        )
+            .sort(
+                (
+                    a,
+                    b
+                ) =>
+                    b -
+                    a
+            )
+            .forEach(
+                year => {
+
+                    html += `
+                    <div class="year-section visible">
+
+                        <h2>${year}</h2>
+
+                        <div class="design-grid">
+
+                        ${years[
+                            year
+                        ]
+                            .map(
+                                item => `
+                                <a
+                                    href="${item.video_url}"
+                                    target="_blank"
+                                    class="design-card">
+
+                                    <img
+                                        class="thumb loaded"
+                                        src="${item.thumbnail_url}"
+                                        alt="${item.title || 'Video'}">
+
+                                    <div class="design-card__overlay">
+                                        <div class="design-card__zoom">
+                                            <i class='bx bx-play'></i>
+                                        </div>
+                                    </div>
+
+                                    <div class="design-card__label">
+                                        ${item.title || 'Video'}
+                                    </div>
+
+                                </a>
+                            `
+                            )
+                            .join(
+                                ''
+                            )}
+
+                        </div>
+
+                    </div>
+                `;
+                }
+            );
+
+        container.innerHTML =
+            html;
     }
 
     loadVideos();
@@ -734,7 +929,39 @@ if (document.getElementById('website-content')) {
     async function loadWebsites() {
         const container = document.getElementById('website-content');
         try {
-            const data = await sbFetch('projects?select=*&order=created_at.desc');
+            let data = await sbFetch('projects?select=*&order=created_at.desc');
+            
+            // --- INJEKSI DATA DUMMY SEMENTARA ---
+            if (!data || data.length === 0) {
+                data = [
+                    {
+                        title: "E-Commerce SportApp",
+                        description: "Website e-commerce untuk perlengkapan olahraga dengan fitur payment gateway terintegrasi.",
+                        image_url: "assets/img/work1.jpg",
+                        project_link: "https://example.com",
+                        github_link: "https://github.com",
+                        created_at: new Date().toISOString()
+                    },
+                    {
+                        title: "Dashboard Admin Pro",
+                        description: "Sistem manajemen inventaris berbasis web dengan analitik real-time dan dark mode.",
+                        image_url: "assets/img/work2.jpg",
+                        project_link: "https://example.com",
+                        github_link: null,
+                        created_at: new Date(Date.now() - 86400000).toISOString()
+                    },
+                    {
+                        title: "Landing Page SaaS",
+                        description: "Desain landing page modern untuk perusahaan Software as a Service.",
+                        image_url: "assets/img/work3.jpg",
+                        project_link: null,
+                        github_link: "https://github.com",
+                        created_at: new Date(Date.now() - 172800000).toISOString()
+                    }
+                ];
+            }
+            // ------------------------------------
+            
             renderWebsites(data);
         } catch (err) {
             container.innerHTML = `<div class="error-state"><p>${esc(err.message)}</p></div>`;
