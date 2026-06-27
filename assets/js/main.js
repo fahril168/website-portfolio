@@ -51,28 +51,10 @@ async function sbFetch(path) {
 
 function thumbUrl(url, width = 400) {
     if (!url) return '';
-
-    try {
-        const u = new URL(url);
-
-        if (
-            u.pathname.includes(
-                '/storage/v1/object/public/'
-            )
-        ) {
-            u.pathname = u.pathname.replace(
-                '/storage/v1/object/public/',
-                '/storage/v1/render/image/public/'
-            );
-
-            u.searchParams.set('width', width);
-            u.searchParams.set('quality', '75');
-            u.searchParams.set('resize', 'contain');
-
-            return u.toString();
-        }
-    } catch (_) {}
-
+    
+    // Fitur Image Transformation Supabase (/render/image/public/) berbayar (Pro Plan) 
+    // atau memiliki limit ketat di Free Plan. Jika gagal, gambar akan rusak.
+    // Solusi: Kembalikan URL asli agar browser memuat gambar ukuran penuh (original).
     return url;
 }
 
