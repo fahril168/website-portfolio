@@ -489,10 +489,20 @@ if (
 
         container.querySelectorAll('.thumb').forEach(img => {
             imgObserver.observe(img);
-            img.addEventListener('load', () => {
+
+            const onImageReady = () => {
                 img.classList.add('loaded');
-                img.closest('.design-card').classList.add('img-loaded');
-            }, { once: true });
+                const card = img.closest('.design-card');
+                if (card) card.classList.add('img-loaded');
+            };
+
+            img.addEventListener('load', onImageReady, { once: true });
+            img.addEventListener('error', onImageReady, { once: true });
+            
+            // Jika gambar sudah ter-cache dan selesai dimuat seketika
+            if (img.complete) {
+                onImageReady();
+            }
         });
 
         container
