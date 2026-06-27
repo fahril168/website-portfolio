@@ -367,6 +367,10 @@
         <i class='bx bx-video'></i> Video Editing
         <span class="sidebar-count" id="count-video">0</span>
       </button>
+      <button class="sidebar-link" id="tab-btn-website" onclick="switchTab('website')">
+        <i class='bx bx-laptop'></i> Websites
+        <span class="sidebar-count" id="count-website">0</span>
+      </button>
       <div class="sidebar-section-label">Navigasi</div>
       <a href="index.html" class="sidebar-link">
         <i class='bx bx-home'></i> Lihat Portfolio
@@ -443,6 +447,60 @@
               </tr>
             </thead>
             <tbody id="design-tbody">
+              <tr><td colspan="6" class="center-cell"><div class="empty-icon"><i class='bx bx-plug'></i></div>Hubungkan ke Supabase untuk memuat data</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════ TAB: WEBSITE ═══════════════════════ -->
+    <div class="tab-panel" id="panel-website">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Manajemen Website</h1>
+          <p class="page-sub">Kelola portofolio website dan web apps</p>
+        </div>
+        <button class="button" onclick="openWebsiteForm('add')"><i class='bx bx-plus'></i> Tambah Website</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon"><i class='bx bx-laptop'></i></div>
+          <div><div class="stat-label">Total Website</div><div class="stat-value" id="website-stat-total">0</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class='bx bx-link-external'></i></div>
+          <div><div class="stat-label">Dengan Demo</div><div class="stat-value" id="website-stat-demo">0</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class='bx bx-calendar'></i></div>
+          <div><div class="stat-label">Terbaru</div><div class="stat-value" id="website-stat-year">—</div></div>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <div class="search-wrap">
+          <i class='bx bx-search'></i>
+          <input type="text" class="search-input" id="website-search" placeholder="Cari website..." oninput="filterWebsites()" />
+        </div>
+        <button class="button button-ghost" onclick="loadWebsites()"><i class='bx bx-refresh'></i> Refresh</button>
+      </div>
+
+      <div class="table-card">
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Website</th>
+                <th>Link Demo</th>
+                <th>Link Source</th>
+                <th>Deskripsi</th>
+                <th>Tanggal</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="website-tbody">
               <tr><td colspan="6" class="center-cell"><div class="empty-icon"><i class='bx bx-plug'></i></div>Hubungkan ke Supabase untuk memuat data</td></tr>
             </tbody>
           </table>
@@ -569,6 +627,53 @@
   </div>
 </div>
 
+<!-- ═══════════ MODAL: WEBSITE FORM ═══════════ -->
+<div class="modal-overlay" id="modal-website-form">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="website-form-title">Tambah Website Baru</h2>
+      <button class="modal-close" onclick="closeModal('modal-website-form')"><i class='bx bx-x'></i></button>
+    </div>
+    <input type="hidden" id="website-edit-id" />
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>Judul Website <span style="color:#ef4444">*</span></label>
+        <input type="text" id="w-title" placeholder="Contoh: Portofolio Personal" />
+      </div>
+      <div class="form-group">
+        <label>Link Demo / Live <span class="label-opt">(opsional)</span></label>
+        <input type="url" id="w-link" placeholder="https://" />
+      </div>
+      <div class="form-group">
+        <label>Link Source / GitHub <span class="label-opt">(opsional)</span></label>
+        <input type="url" id="w-github" placeholder="https://github.com/..." />
+      </div>
+      <div class="form-group full">
+        <label>Deskripsi <span class="label-opt">(opsional)</span></label>
+        <textarea id="w-desc" placeholder="Deskripsi singkat website ini..."></textarea>
+      </div>
+      <div class="form-group full">
+        <label>Thumbnail Website <span style="color:#ef4444">*</span></label>
+        <div class="upload-area" id="w-upload-area" onclick="document.getElementById('w-img-file').click()">
+          <input type="file" id="w-img-file" accept="image/*" onchange="handleWebsiteFileChange(event)" />
+          <i class='bx bx-image-add upload-icon'></i>
+          <div class="upload-text">Klik untuk <strong>pilih gambar</strong></div>
+          <div class="form-hint" style="margin-top:4px">Rekomendasi: 16:9, Max 2MB</div>
+        </div>
+        <img class="upload-preview" id="w-upload-preview" />
+        <div class="upload-filename" id="w-upload-filename"></div>
+        <div class="upload-progress" id="w-upload-progress-container">
+          <div class="upload-progress-bar" id="w-upload-progress"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="button button-ghost" onclick="closeModal('modal-website-form')">Batal</button>
+      <button class="button" id="btn-save-website" onclick="saveWebsite()"><i class='bx bx-check'></i> Simpan</button>
+    </div>
+  </div>
+</div>
+
 <!-- ═══════════ MODAL: VIDEO FORM ═══════════ -->
 <div class="modal-overlay" id="modal-video-form">
   <div class="modal">
@@ -651,10 +756,10 @@ function logout() { sessionStorage.removeItem('fahril_admin'); window.location.h
 let SB_URL = localStorage.getItem('fahril_sb_url') || '';
 let SB_KEY = localStorage.getItem('fahril_sb_key') || '';
 let currentTab = 'design';
-let allDesigns = [], allVideos = [];
+let allDesigns = [], allVideos = [], allWebsites = [];
 let deleteId = null, deleteTable = null;
-let designEditMode = false, videoEditMode = false;
-let designFileToUpload = null, videoFileToUpload = null;
+let designEditMode = false, videoEditMode = false, websiteEditMode = false;
+let designFileToUpload = null, videoFileToUpload = null, websiteFileToUpload = null;
 
 /* Pre-fill banner if saved */
 if (SB_URL) document.getElementById('sb-url').value = SB_URL;
@@ -671,6 +776,7 @@ function switchTab(tab) {
   document.getElementById('tab-btn-' + tab).classList.add('active');
   if (tab === 'design' && SB_URL) loadDesigns();
   if (tab === 'video' && SB_URL) loadVideos();
+  if (tab === 'website' && SB_URL) loadWebsites();
 }
 
 /* ══════════════════════════════════════════
@@ -740,7 +846,7 @@ async function connectSupabase() {
   localStorage.setItem('fahril_sb_key', key);
   document.getElementById('status-text').textContent = 'Menghubungkan...';
   try {
-    await Promise.all([loadDesigns(), loadVideos()]);
+    await Promise.all([loadDesigns(), loadVideos(), loadWebsites()]);
     document.getElementById('status-dot').classList.add('on');
     document.getElementById('status-text').textContent = 'Terhubung ke Supabase ✓';
     showToast('Berhasil terhubung!');
@@ -756,7 +862,7 @@ window.addEventListener('DOMContentLoaded', () => {
   if (SB_URL && SB_KEY) {
     document.getElementById('status-dot').classList.add('on');
     document.getElementById('status-text').textContent = 'Menghubungkan...';
-    Promise.all([loadDesigns(), loadVideos()]).then(() => {
+    Promise.all([loadDesigns(), loadVideos(), loadWebsites()]).then(() => {
       document.getElementById('status-text').textContent = 'Terhubung ke Supabase ✓';
     }).catch(e => {
       document.getElementById('status-dot').classList.remove('on');
@@ -1096,6 +1202,167 @@ async function saveVideo() {
 }
 
 /* ══════════════════════════════════════════
+   WEBSITE — LOAD & RENDER
+══════════════════════════════════════════ */
+async function loadWebsites() {
+  setLoadingWebsite(true);
+  try {
+    const data = await sbFetch('projects?select=*&order=created_at.desc');
+    allWebsites = data || [];
+    renderWebsiteTable(allWebsites);
+    updateWebsiteStats(allWebsites);
+  } catch (e) { showToast('Gagal memuat website: ' + e.message); setLoadingWebsite(false); }
+}
+
+function setLoadingWebsite(on) {
+  if (on) document.getElementById('website-tbody').innerHTML = 
+    `<tr><td colspan="6" class="center-cell"><span class="spinner"></span> Memuat...</td></tr>`;
+}
+
+function renderWebsiteTable(list) {
+  const tb = document.getElementById('website-tbody');
+  if (!list.length) {
+    tb.innerHTML = `<tr><td colspan="6" class="center-cell">
+      <div class="empty-icon"><i class='bx bx-laptop'></i></div>
+      <div style="font-weight:700;margin-bottom:4px">Belum ada website</div>
+      <div style="margin-bottom:1rem;font-size:.8rem">Mulai tambahkan website portofolio kamu.</div>
+      <button class="button" onclick="openWebsiteForm('add')"><i class='bx bx-plus'></i> Tambah Website</button>
+    </td></tr>`;
+    return;
+  }
+
+  let html = '';
+  list.forEach(item => {
+    const thumb = item.image_url ? `<img src="${item.image_url}">` : `<i class='bx bx-image'></i>`;
+    const date = item.created_at ? new Date(item.created_at).toLocaleDateString('id-ID', {day:'numeric',month:'short',year:'numeric'}) : '—';
+    const demoLink = item.project_link ? `<a href="${item.project_link}" target="_blank" class="chip chip-cat"><i class='bx bx-link-external'></i> Buka</a>` : `<span class="chip chip-null">Tidak ada</span>`;
+    const githubLink = item.github_link ? `<a href="${item.github_link}" target="_blank" class="chip chip-cat"><i class='bx bxl-github'></i> Kode</a>` : `<span class="chip chip-null">Tidak ada</span>`;
+    
+    html += `<tr>
+      <td>
+        <div class="project-cell">
+          <div class="project-thumb">${thumb}</div>
+          <div><div class="project-name">${esc(item.title || 'Untitled')}</div></div>
+        </div>
+      </td>
+      <td>${demoLink}</td>
+      <td>${githubLink}</td>
+      <td><div class="project-desc">${esc(item.description || '—')}</div></td>
+      <td><span class="date-text">${date}</span></td>
+      <td>
+        <div class="action-group">
+          <button class="button button-ghost" style="padding:5px 8px;font-size:.8rem" onclick="openWebsiteForm('edit', '${item.id}')"><i class='bx bx-edit'></i></button>
+          <button class="button button-ghost" style="padding:5px 8px;font-size:.8rem;color:#ef4444;border-color:#fef2f2;background:#fef2f2" onclick="askDelete('${item.id}', 'projects', '${esc(item.title).replace(/'/g, "\\'")}')"><i class='bx bx-trash'></i></button>
+        </div>
+      </td>
+    </tr>`;
+  });
+  tb.innerHTML = html;
+}
+
+function updateWebsiteStats(list) {
+  document.getElementById('website-stat-total').textContent = list.length;
+  document.getElementById('website-stat-demo').textContent = list.filter(p => p.project_link).length;
+  const dates = list.map(p => new Date(p.created_at).getTime()).filter(Boolean);
+  document.getElementById('website-stat-year').textContent = dates.length ? new Date(Math.max(...dates)).getFullYear() : '—';
+  document.getElementById('count-website').textContent = list.length;
+}
+
+function filterWebsites() {
+  const q = document.getElementById('website-search').value.toLowerCase();
+  renderWebsiteTable(allWebsites.filter(p =>
+    p.title.toLowerCase().includes(q) ||
+    (p.description || '').toLowerCase().includes(q)
+  ));
+}
+
+/* ── WEBSITE FORM ── */
+function openWebsiteForm(mode, id = null) {
+  websiteEditMode = mode === 'edit';
+  websiteFileToUpload = null;
+  document.getElementById('website-form-title').textContent = websiteEditMode ? 'Edit Website' : 'Tambah Website Baru';
+  resetUploadUI('w');
+  
+  if (websiteEditMode && id) {
+    const p = allWebsites.find(w => w.id === id);
+    if(p) {
+      document.getElementById('website-edit-id').value = p.id;
+      document.getElementById('w-title').value = p.title || '';
+      document.getElementById('w-link').value = p.project_link || '';
+      document.getElementById('w-github').value = p.github_link || '';
+      document.getElementById('w-desc').value = p.description || '';
+      if (p.image_url) { 
+        document.getElementById('w-upload-preview').src = p.image_url;
+        document.getElementById('w-upload-preview').classList.add('show');
+      }
+    }
+  } else {
+    document.getElementById('website-edit-id').value = '';
+    ['w-title','w-link','w-github','w-desc'].forEach(i => document.getElementById(i).value = '');
+  }
+  document.getElementById('modal-website-form').classList.add('open');
+}
+
+function handleWebsiteFileChange(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) { showToast('Ukuran file maksimal 5MB!'); e.target.value = ''; return; }
+  websiteFileToUpload = file;
+  const preview = document.getElementById('w-upload-preview');
+  preview.src = URL.createObjectURL(file);
+  preview.classList.add('show');
+  document.getElementById('w-upload-filename').textContent = file.name;
+}
+
+async function saveWebsite() {
+  const title = document.getElementById('w-title').value.trim();
+  if (!title) { showToast('Judul wajib diisi!'); return; }
+  if (!SB_URL) { showToast('Koneksikan Supabase terlebih dahulu!'); return; }
+
+  const btn = document.getElementById('btn-save-website');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
+
+  try {
+    let imageUrl = null;
+    if (websiteFileToUpload) {
+      btn.innerHTML = '<span class="spinner"></span> Mengupload gambar...';
+      imageUrl = await uploadToStorage('designs', websiteFileToUpload, 'w-upload-progress', 'w-upload-progress-container'); // Using designs bucket for images
+    }
+
+    if (websiteEditMode && !imageUrl) {
+      const existing = allWebsites.find(w => w.id === document.getElementById('website-edit-id').value);
+      if (existing) imageUrl = existing.image_url || null;
+    }
+
+    const payload = {
+      title,
+      project_link: document.getElementById('w-link').value.trim() || null,
+      github_link: document.getElementById('w-github').value.trim() || null,
+      description: document.getElementById('w-desc').value.trim() || null,
+      image_url: imageUrl
+    };
+
+    btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
+    if (websiteEditMode) {
+      const id = document.getElementById('website-edit-id').value;
+      await sbFetch('projects?id=eq.' + id, { method: 'PATCH', body: JSON.stringify(payload), prefer: 'return=minimal' });
+      showToast('Website berhasil diupdate!');
+    } else {
+      await sbFetch('projects', { method: 'POST', body: JSON.stringify(payload), prefer: 'return=minimal' });
+      showToast('Website berhasil ditambahkan!');
+    }
+    closeModal('modal-website-form');
+    await loadWebsites();
+  } catch (e) {
+    showToast('Error: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="bx bx-check"></i> Simpan';
+  }
+}
+
+/* ══════════════════════════════════════════
    DELETE
 ══════════════════════════════════════════ */
 function askDelete(id, table, name) {
@@ -1112,6 +1379,7 @@ async function confirmDelete() {
     closeModal('modal-delete');
     if (deleteTable === 'designs') await loadDesigns();
     if (deleteTable === 'videos') await loadVideos();
+    if (deleteTable === 'projects') await loadWebsites();
   } catch (e) { showToast('Gagal hapus: ' + e.message); }
 }
 
@@ -1128,10 +1396,11 @@ function resetUploadUI(prefix) {
   /* Reset file variable */
   if (prefix === 'd') designFileToUpload = null;
   if (prefix === 'v') videoFileToUpload = null;
+  if (prefix === 'w') websiteFileToUpload = null;
 }
 
 /* Drag & drop */
-['d-upload-area','v-upload-area'].forEach(id => {
+['d-upload-area','v-upload-area','w-upload-area'].forEach(id => {
   const el = document.getElementById(id);
   if (!el) return;
   el.addEventListener('dragover', e => { e.preventDefault(); el.classList.add('drag-over'); });

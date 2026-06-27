@@ -697,3 +697,49 @@ if (
 
     loadVideos();
 }
+
+/* ==========================================================
+   WEBSITE — LOAD & RENDER
+========================================================= */
+if (document.getElementById('website-content')) {
+    function renderWebsites(data) {
+        const container = document.getElementById('website-content');
+        if (!data?.length) {
+            container.innerHTML = `<div class="empty-state"><p>Belum ada karya website.</p></div>`;
+            return;
+        }
+
+        let html = '<div class="year-section visible"><div class="design-grid">';
+        data.forEach(item => {
+            const imgSrc = item.image_url ? item.image_url : 'assets/img/work4.jpg'; // default
+            
+            // Layout card untuk website: Menampilkan link demo dan github jika ada
+            html += `
+                <div class="design-card" style="cursor: default; padding-bottom: 50px;">
+                    <img class="thumb loaded" src="${imgSrc}" alt="${item.title || 'Website'}">
+                    <div class="design-card__label" style="bottom: 45px;">
+                        ${item.title || 'Website'}
+                    </div>
+                    <div style="position: absolute; bottom: 10px; width: 100%; display: flex; justify-content: center; gap: 10px; z-index: 5;">
+                        ${item.project_link ? `<a href="${item.project_link}" target="_blank" class="button" style="padding: 5px 15px; font-size: 0.8rem;"><i class='bx bx-link-external'></i> Visit</a>` : ''}
+                        ${item.github_link ? `<a href="${item.github_link}" target="_blank" class="button button-ghost" style="padding: 5px 15px; font-size: 0.8rem;"><i class='bx bxl-github'></i> Code</a>` : ''}
+                    </div>
+                </div>
+            `;
+        });
+        html += '</div></div>';
+        container.innerHTML = html;
+    }
+
+    async function loadWebsites() {
+        const container = document.getElementById('website-content');
+        try {
+            const data = await sbFetch('projects?select=*&order=created_at.desc');
+            renderWebsites(data);
+        } catch (err) {
+            container.innerHTML = `<div class="error-state"><p>${esc(err.message)}</p></div>`;
+        }
+    }
+
+    loadWebsites();
+}
