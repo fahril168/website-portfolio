@@ -869,7 +869,6 @@ if (document.getElementById('portfolio-grid')) {
                 order = 'year.desc,created_at.desc';
             } else if (category === 'design') {
                 order = 'created_at.desc';
-                query += '&category=eq.desain'; 
             }
             query += `&order=${order}`;
 
@@ -877,9 +876,12 @@ if (document.getElementById('portfolio-grid')) {
             if (SB_URL) {
                 data = await sbFetch(query);
                 
-                // Coba ambil dari tabel projects jika tidak ada di designs
+                // Coba cari di tabel projects jika designs kosong atau user menaruhnya di tabel projects
                 if ((!data || data.length === 0) && category === 'design') {
-                    data = await sbFetch(`projects?select=*&category=eq.desain&order=created_at.desc`);
+                    let proj = await sbFetch(`projects?select=*&order=created_at.desc`);
+                    if (proj && proj.length > 0) {
+                        data = proj.filter(p => p.category && (p.category.toLowerCase().includes('desain') || p.category.toLowerCase().includes('design')));
+                    }
                 }
             }
             
