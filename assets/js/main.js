@@ -736,7 +736,7 @@ if (document.getElementById('website-content')) {
         let data = [];
         try {
             if (SB_URL) {
-                data = await sbFetch('projects?select=*&order=created_at.desc');
+                data = await sbFetch('websites?select=*&order=created_at.desc');
             }
         } catch (err) {
             console.warn("Gagal mengambil data dari Supabase:", err.message);
@@ -789,7 +789,7 @@ if (document.getElementById('portfolio-grid')) {
     const seeAllLink = document.getElementById('see-all-link');
 
     const categoryMap = {
-        'website': { url: 'website.html', text: 'Lihat Semua Website', table: 'projects' },
+        'website': { url: 'website.html', text: 'Lihat Semua Website', table: 'websites' },
         'design': { url: 'design.html', text: 'Lihat Semua Design', table: 'designs' },
         'video': { url: 'video.html', text: 'Lihat Semua Video', table: 'videos' },
         'dokumentasi': { url: '#', text: 'Lihat Semua Dokumentasi', table: null }
@@ -806,10 +806,14 @@ if (document.getElementById('portfolio-grid')) {
 
     if (prevBtn && nextBtn) {
         prevBtn.addEventListener('click', () => {
-            grid.scrollBy({ left: -320, behavior: 'smooth' });
+            const cardWidth = grid.querySelector('.portfolio-card')?.offsetWidth || 320;
+            const gap = 32; // 2rem = 32px
+            grid.scrollBy({ left: -(cardWidth + gap), behavior: 'smooth' });
         });
         nextBtn.addEventListener('click', () => {
-            grid.scrollBy({ left: 320, behavior: 'smooth' });
+            const cardWidth = grid.querySelector('.portfolio-card')?.offsetWidth || 320;
+            const gap = 32;
+            grid.scrollBy({ left: (cardWidth + gap), behavior: 'smooth' });
         });
     }
 
@@ -887,9 +891,9 @@ if (document.getElementById('portfolio-grid')) {
         if (SB_URL) {
             data = await sbFetch(query);
             
-            // Coba cari di tabel projects jika designs kosong atau user menaruhnya di tabel projects
+            // Coba cari di tabel websites jika designs kosong atau user menaruhnya di tabel websites
             if ((!data || data.length === 0) && category === 'design') {
-                let proj = await sbFetch(`projects?select=*&order=created_at.desc`);
+                let proj = await sbFetch(`websites?select=*&order=created_at.desc`);
                 if (proj && proj.length > 0) {
                     data = proj.filter(p => p.category && (p.category.toLowerCase().includes('desain') || p.category.toLowerCase().includes('design'))).slice(offset, offset + 5);
                 }
@@ -956,7 +960,7 @@ if (document.getElementById('portfolio-grid')) {
             let dummyData = [];
             if (category === 'website') {
                 dummyData = [
-                    { title: "Terang Bulan Mama Arya", description: "Website bisnis martabak manis.", image_url: "assets/img/work4.jpg", project_link: "https://example.com", github_link: "#" },
+                    { title: "E-Commerce SportApp", description: "Website e-commerce untuk perlengkapan olahraga dengan fitur payment gateway.", image_url: "assets/img/work1.jpg", project_link: "https://example.com", github_link: "#" },
                     { title: "Dashboard Admin", description: "Sistem inventaris.", image_url: "assets/img/work2.jpg", project_link: "#" }
                 ];
             } else if (category === 'design') {

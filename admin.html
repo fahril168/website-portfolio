@@ -1207,7 +1207,7 @@ async function saveVideo() {
 async function loadWebsites() {
   setLoadingWebsite(true);
   try {
-    const data = await sbFetch('projects?select=*&order=created_at.desc');
+    const data = await sbFetch('websites?select=*&order=created_at.desc');
     allWebsites = data || [];
     renderWebsiteTable(allWebsites);
     updateWebsiteStats(allWebsites);
@@ -1252,7 +1252,7 @@ function renderWebsiteTable(list) {
       <td>
         <div class="action-group">
           <button class="button button-ghost" style="padding:5px 8px;font-size:.8rem" onclick="openWebsiteForm('edit', '${item.id}')"><i class='bx bx-edit'></i></button>
-          <button class="button button-ghost" style="padding:5px 8px;font-size:.8rem;color:#ef4444;border-color:#fef2f2;background:#fef2f2" onclick="askDelete('${item.id}', 'projects', '${esc(item.title).replace(/'/g, "\\'")}')"><i class='bx bx-trash'></i></button>
+          <button class="button button-ghost" style="padding:5px 8px;font-size:.8rem;color:#ef4444;border-color:#fef2f2;background:#fef2f2" onclick="askDelete('${item.id}', 'websites', '${esc(item.title).replace(/'/g, "\\'")}')"><i class='bx bx-trash'></i></button>
         </div>
       </td>
     </tr>`;
@@ -1346,10 +1346,10 @@ async function saveWebsite() {
     btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
     if (websiteEditMode) {
       const id = document.getElementById('website-edit-id').value;
-      await sbFetch('projects?id=eq.' + id, { method: 'PATCH', body: JSON.stringify(payload), prefer: 'return=minimal' });
+      await sbFetch('websites?id=eq.' + id, { method: 'PATCH', body: JSON.stringify(payload), prefer: 'return=minimal' });
       showToast('Website berhasil diupdate!');
     } else {
-      await sbFetch('projects', { method: 'POST', body: JSON.stringify(payload), prefer: 'return=minimal' });
+      await sbFetch('websites', { method: 'POST', body: JSON.stringify(payload), prefer: 'return=minimal' });
       showToast('Website berhasil ditambahkan!');
     }
     closeModal('modal-website-form');
@@ -1379,7 +1379,7 @@ async function confirmDelete() {
     closeModal('modal-delete');
     if (deleteTable === 'designs') await loadDesigns();
     if (deleteTable === 'videos') await loadVideos();
-    if (deleteTable === 'projects') await loadWebsites();
+    if (deleteTable === 'websites') await loadWebsites();
   } catch (e) { showToast('Gagal hapus: ' + e.message); }
 }
 
