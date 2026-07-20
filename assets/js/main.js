@@ -795,16 +795,42 @@ if (document.getElementById('portfolio-grid')) {
         'dokumentasi': { url: '#', text: 'Lihat Semua Dokumentasi', table: null }
     };
 
-    const renderCards = (items, category) => {
+    let currentCategory = 'website';
+    let currentOffset = 0;
+    let isLoadingMore = false;
+    let hasMoreData = true;
+
+    // Navigation buttons logic
+    const prevBtn = document.getElementById('slider-prev');
+    const nextBtn = document.getElementById('slider-next');
+
+    if (prevBtn && nextBtn) {
+        prevBtn.addEventListener('click', () => {
+            grid.scrollBy({ left: -320, behavior: 'smooth' });
+        });
+        nextBtn.addEventListener('click', () => {
+            grid.scrollBy({ left: 320, behavior: 'smooth' });
+        });
+    }
+
+    // Infinite scroll listener
+    grid.addEventListener('scroll', () => {
+        if (isLoadingMore || !hasMoreData) return;
+        if (grid.scrollLeft + grid.clientWidth >= grid.scrollWidth - 100) {
+            loadMore();
+        }
+    });
+
+    const renderCards = (items, category, append = false) => {
         if (!items || items.length === 0) {
-            grid.innerHTML = `<div style="text-align:center; padding:2rem; width:100%; color:#6b7280;"><p>Belum ada data untuk kategori ini.</p></div>`;
+            if (!append) {
+                grid.innerHTML = `<div style="text-align:center; padding:2rem; width:100%; color:#6b7280;"><p>Belum ada data untuk kategori ini.</p></div>`;
+            }
             return;
         }
 
-        const displayItems = items.slice(0, 4);
         let html = '';
-
-        displayItems.forEach(item => {
+        items.forEach(item => {
             const title = item.title || 'Portfolio Item';
             const desc = item.description || (category === 'video' ? 'Karya video kreatif.' : 'Deskripsi portofolio.');
             const img = item.image_url || item.thumbnail_url || 'assets/img/work1.jpg';
@@ -838,10 +864,66 @@ if (document.getElementById('portfolio-grid')) {
             `;
         });
 
-        grid.innerHTML = html;
+        if (append) {
+            grid.insertAdjacentHTML('beforeend', html);
+        } else {
+            grid.innerHTML = html;
+        }
+    };
+
+    const fetchCategoryData = async (category, offset) => {
+        const mapping = categoryMap[category];
+        let order = 'created_at.desc';
+        let query = `${mapping.table}?select=*`;
+        
+        if (category === 'video') {
+            order = 'year.desc,created_at.desc';
+        } else if (category === 'design') {
+            order = 'created_at.desc';
+        }
+        query += `&order=${order}&limit=5&offset=${offset}`;
+
+        let data = [];
+        if (SB_URL) {
+            data = await sbFetch(query);
+            
+            // Coba cari di tabel projects jika designs kosong atau user menaruhnya di tabel projects
+            if ((!data || data.length === 0) && category === 'design') {
+                let proj = await sbFetch(`projects?select=*&order=created_at.desc`);
+                if (proj && proj.length > 0) {
+                    data = proj.filter(p => p.category && (p.category.toLowerCase().includes('desain') || p.category.toLowerCase().includes('design'))).slice(offset, offset + 5);
+                }
+            }
+        }
+        return data;
+    };
+
+    const loadMore = async () => {
+        if (!hasMoreData) return;
+        isLoadingMore = true;
+
+        try {
+            const data = await fetchCategoryData(currentCategory, currentOffset);
+            if (data && data.length > 0) {
+                renderCards(data, currentCategory, true);
+                currentOffset += data.length;
+                if (data.length < 5) hasMoreData = false;
+            } else {
+                hasMoreData = false;
+            }
+        } catch (e) {
+            hasMoreData = false;
+        } finally {
+            isLoadingMore = false;
+        }
     };
 
     const loadCategory = async (category) => {
+        currentCategory = category;
+        currentOffset = 0;
+        hasMoreData = true;
+        isLoadingMore = false;
+
         const mapping = categoryMap[category];
         if (!mapping) return;
 
@@ -862,32 +944,14 @@ if (document.getElementById('portfolio-grid')) {
         }
 
         try {
-            let order = 'created_at.desc';
-            let query = `${mapping.table}?select=*`;
-            
-            if (category === 'video') {
-                order = 'year.desc,created_at.desc';
-            } else if (category === 'design') {
-                order = 'created_at.desc';
-            }
-            query += `&order=${order}`;
-
-            let data = [];
-            if (SB_URL) {
-                data = await sbFetch(query);
-                
-                // Coba cari di tabel projects jika designs kosong atau user menaruhnya di tabel projects
-                if ((!data || data.length === 0) && category === 'design') {
-                    let proj = await sbFetch(`projects?select=*&order=created_at.desc`);
-                    if (proj && proj.length > 0) {
-                        data = proj.filter(p => p.category && (p.category.toLowerCase().includes('desain') || p.category.toLowerCase().includes('design')));
-                    }
-                }
-            }
+            const data = await fetchCategoryData(category, currentOffset);
             
             if (!data || data.length === 0) throw new Error("No data");
             
-            renderCards(data, category);
+            if (data.length < 5) hasMoreData = false;
+            
+            renderCards(data, category, false);
+            currentOffset += data.length;
         } catch (err) {
             let dummyData = [];
             if (category === 'website') {
@@ -905,7 +969,8 @@ if (document.getElementById('portfolio-grid')) {
                     { title: "Motion Graphics Ad", thumbnail_url: "assets/img/work2.jpg", video_url: "#" }
                 ];
             }
-            renderCards(dummyData, category);
+            renderCards(dummyData, category, false);
+            hasMoreData = false;
         }
     };
 
