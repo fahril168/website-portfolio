@@ -779,3 +779,140 @@ if (document.getElementById('website-content')) {
 
     loadWebsites();
 }
+
+/* ==========================================================
+   PORTFOLIO DYNAMIC FETCH LOGIC (INDEX.HTML)
+========================================================== */
+if (document.getElementById('portfolio-grid')) {
+    const grid = document.getElementById('portfolio-grid');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const seeAllLink = document.getElementById('see-all-link');
+
+    const categoryMap = {
+        'website': { url: 'website.html', text: 'Lihat Semua Website', table: 'projects' },
+        'design': { url: 'design.html', text: 'Lihat Semua Design', table: 'designs' },
+        'video': { url: 'video.html', text: 'Lihat Semua Video', table: 'videos' },
+        'dokumentasi': { url: '#', text: 'Lihat Semua Dokumentasi', table: null }
+    };
+
+    const renderCards = (items, category) => {
+        if (!items || items.length === 0) {
+            grid.innerHTML = `<div style="text-align:center; padding:2rem; width:100%; color:#6b7280;"><p>Belum ada data untuk kategori ini.</p></div>`;
+            return;
+        }
+
+        const displayItems = items.slice(0, 4);
+        let html = '';
+
+        displayItems.forEach(item => {
+            const title = item.title || 'Portfolio Item';
+            const desc = item.description || (category === 'video' ? 'Karya video kreatif.' : 'Deskripsi portofolio.');
+            const img = item.image_url || item.thumbnail_url || 'assets/img/work1.jpg';
+            
+            let tagsHtml = `<span>${category.toUpperCase()}</span>`;
+            
+            let footerHtml = '';
+            if (item.github_link) {
+                footerHtml += `<a href="${item.github_link}" target="_blank" class="portfolio-card__link"><i class='bx bxl-github'></i> Code</a>`;
+            }
+            let demoLink = item.project_link || item.video_url || item.image_url;
+            if (demoLink) {
+                footerHtml += `<a href="${demoLink}" target="_blank" class="portfolio-card__link"><i class='bx bx-link-external'></i> View</a>`;
+            }
+
+            html += `
+                <div class="portfolio-card">
+                    <div class="portfolio-card__img">
+                        <img src="${img}" alt="${title}">
+                        <span class="portfolio-card__tag-overlay">${category.toUpperCase()}</span>
+                    </div>
+                    <div class="portfolio-card__body">
+                        <h3 class="portfolio-card__title">${title}</h3>
+                        <p class="portfolio-card__desc">${desc}</p>
+                        <div class="portfolio-card__tags">${tagsHtml}</div>
+                        <div class="portfolio-card__footer">
+                            ${footerHtml || '<span style="color:#d1d5db;font-size:0.8rem;">No Links</span>'}
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        grid.innerHTML = html;
+    };
+
+    const loadCategory = async (category) => {
+        const mapping = categoryMap[category];
+        if (!mapping) return;
+
+        filterBtns.forEach(b => b.classList.remove('active'));
+        const activeBtn = document.querySelector(`.filter-btn[data-filter="${category}"]`);
+        if (activeBtn) activeBtn.classList.add('active');
+
+        if (seeAllLink) {
+            seeAllLink.href = mapping.url;
+            seeAllLink.innerHTML = `${mapping.text} <i class='bx bx-right-arrow-alt'></i>`;
+        }
+
+        grid.innerHTML = `<div style="text-align:center; padding:2rem; width:100%; color:#6b7280;"><p>Memuat data...</p></div>`;
+
+        if (!mapping.table) {
+            grid.innerHTML = `<div style="text-align:center; padding:2rem; width:100%; color:#6b7280;"><p>Data segera hadir.</p></div>`;
+            return;
+        }
+
+        try {
+            let order = 'created_at.desc';
+            let query = `${mapping.table}?select=*`;
+            
+            if (category === 'video') {
+                order = 'year.desc,created_at.desc';
+            } else if (category === 'design') {
+                order = 'created_at.desc';
+                query += '&category=eq.desain'; 
+            }
+            query += `&order=${order}`;
+
+            let data = [];
+            if (SB_URL) {
+                data = await sbFetch(query);
+                
+                // Coba ambil dari tabel projects jika tidak ada di designs
+                if ((!data || data.length === 0) && category === 'design') {
+                    data = await sbFetch(`projects?select=*&category=eq.desain&order=created_at.desc`);
+                }
+            }
+            
+            if (!data || data.length === 0) throw new Error("No data");
+            
+            renderCards(data, category);
+        } catch (err) {
+            let dummyData = [];
+            if (category === 'website') {
+                dummyData = [
+                    { title: "Terang Bulan Mama Arya", description: "Website bisnis martabak manis.", image_url: "assets/img/work4.jpg", project_link: "https://example.com", github_link: "#" },
+                    { title: "Dashboard Admin", description: "Sistem inventaris.", image_url: "assets/img/work2.jpg", project_link: "#" }
+                ];
+            } else if (category === 'design') {
+                dummyData = [
+                    { title: "Ocular Sentinel", description: "Deteksi gangguan proyek.", image_url: "assets/img/work1.jpg", project_link: "#" },
+                    { title: "UI/UX Mobile App", description: "Desain antarmuka pengguna.", image_url: "assets/img/work3.jpg", project_link: "#" }
+                ];
+            } else if (category === 'video') {
+                dummyData = [
+                    { title: "Motion Graphics Ad", thumbnail_url: "assets/img/work2.jpg", video_url: "#" }
+                ];
+            }
+            renderCards(dummyData, category);
+        }
+    };
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const cat = btn.getAttribute('data-filter');
+            loadCategory(cat);
+        });
+    });
+
+    loadCategory('website');
+}

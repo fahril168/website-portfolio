@@ -1,278 +1,248 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <link rel="stylesheet" href="assets/css/styles.css">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <!-- =====BOX ICONS===== -->
-        <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="assets/css/styles.css">
 
-        <title>Portfolio</title>
-    </head>
-    <body>
-        <!--===== HEADER =====-->
-        <header class="l-header">
-            <nav class="nav bd-grid">
-                <div>
-                    <a href="#" class="nav__logo"><h2>Fahril</h2></a>
+    <!-- =====BOX ICONS===== -->
+    <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
+
+    <title>Portfolio</title>
+</head>
+
+<body>
+    <!--===== HEADER =====-->
+    <header class="l-header">
+        <nav class="nav bd-grid">
+            <div>
+                <a href="#" class="nav__logo">
+                    <h2>Fahril</h2>
+                </a>
+            </div>
+
+            <div class="nav__menu" id="nav-menu">
+                <ul class="nav__list">
+                    <li class="nav__item"><a href="#home" class="nav__link active-link">Home</a></li>
+                    <li class="nav__item"><a href="#about" class="nav__link">About</a></li>
+                    <li class="nav__item"><a href="#work" class="nav__link">Work</a></li>
+                    <li class="nav__item"><a href="#contact" class="nav__link">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="nav__toggle" id="nav-toggle">
+                <i class='bx bx-menu'></i>
+            </div>
+        </nav>
+    </header>
+
+    <main class="l-main">
+        <!--===== HOME =====-->
+        <section class="home bd-grid" id="home">
+            <!-- Animated Hero Shapes (Calendly Style) -->
+            <div class="hero-shapes">
+                <div class="shape shape-circle-1"></div>
+                <div class="shape shape-circle-2"></div>
+                <div class="shape shape-triangle"></div>
+            </div>
+
+            <div class="home__data">
+                <h1 class="home__title">
+                    Muh. <span class="home__title-color">Fahril</span>
+                    <span class="typing"></span>
+                </h1>
+                <p class="home__p">Seorang mahasiswa yang hobi bermain game</p>
+
+                <a href="#about" class="button">About Me</a>
+
+                <div class="home__social">
+                    <a href="https://www.instagram.com/m.fahrill/" class="home__social-icon"><i
+                            class='bx bxl-instagram'></i></a>
+                    <a href="https://www.linkedin.com/in/muh-fahril-812b11209/" class="home__social-icon"><i
+                            class='bx bxl-linkedin'></i></a>
+                    <a href="https://github.com/fahril168" class="home__social-icon"><i class='bx bxl-github'></i></a>
+                </div>
+            </div>
+
+            <div class="home__img">
+                <img src="assets/img/fahril.png" />
+            </div>
+        </section>
+
+        <!--===== ABOUT =====-->
+        <section class="about section " id="about">
+            <h2 class="section-title">About</h2>
+
+            <div class="about__container bd-grid">
+                <div class="about__img">
+                    <img src="assets/img/about.jpg" alt="">
                 </div>
 
-                <div class="nav__menu" id="nav-menu">
-                    <ul class="nav__list">
-                        <li class="nav__item"><a href="#home" class="nav__link active-link">Home</a></li>
-                        <li class="nav__item"><a href="#about" class="nav__link">About</a></li>
-                        <li class="nav__item"><a href="#work" class="nav__link">Work</a></li>
-                        <li class="nav__item"><a href="#contact" class="nav__link">Contact</a></li>
+                <div>
+                    <h2 class="about__subtitle">Muh. Fahril</h2>
+                    <p class="about__text">Seorang mahasiswa Teknik Informatika yang memiliki minat dalam bidang
+                        videografi, fotografi, desain grafis, dan motion graphics. Saya juga berfokus pada pengembangan
+                        web, khususnya teknologi front-end. Saya fokus membangun website yang responsif, menarik, dan
+                        mudah digunakan, sambil terus meningkatkan keterampilan saya dalam HTML, CSS, JavaScript, dan
+                        manajemen database.</p>
+                    <a href="assets/cv/cv-fahril.pdf" class="button">Open CV</a>
+                </div>
+            </div>
+        </section>
+
+
+        <!--===== WORK (KARYA UNGGULAN) =====-->
+        <section class="work section" id="work">
+            <h2 class="section-title">Work</h2>
+            
+            <div class="portfolio-header bd-grid" style="display: flex; justify-content: center; margin-bottom: 2rem;">
+                <div class="portfolio-filter">
+                    <button class="filter-btn active" data-filter="website">WEBSITE</button>
+                    <button class="filter-btn" data-filter="design">DESIGN</button>
+                    <button class="filter-btn" data-filter="video">VIDEO</button>
+                    <button class="filter-btn" data-filter="dokumentasi">DOKUMENTASI</button>
+                </div>
+            </div>
+
+            <div class="portfolio-grid bd-grid" id="portfolio-grid">
+                <!-- Content will be injected dynamically from DB by JS -->
+            </div>
+
+            <div class="portfolio-more bd-grid">
+                <a href="design.html" id="see-all-link" class="button">Lihat Semua Portofolio <i class='bx bx-right-arrow-alt'></i></a>
+            </div>
+        </section>
+
+        <!--===== CONTACT =====-->
+        <section class="contact section" id="contact">
+            <h2 class="section-title">Contact</h2>
+
+            <div class="contact__container bd-grid">
+                <div class="contact__card">
+                    <div class="contact__icon">
+                        <i class='bx bxl-whatsapp'></i>
+                    </div>
+                    <h3>Chat Now</h3>
+                    <p>Hubungi saya melalui WhatsApp untuk diskusi lebih lanjut atau pertanyaan apapun.</p>
+                    <a href="https://wa.me/6282271591208" class="button">Start Chat</a>
+                </div>
+
+                <div class="contact__card">
+                    <div class="contact__icon">
+                        <i class='bx bxs-envelope'></i>
+                    </div>
+                    <h3>Email</h3>
+                    <p>Kirimkan email untuk kebutuhan proyek atau pertanyaan umum.</p>
+                    <a href="mailto:muh.fahril.uho@gmail.com" class="button">Send Email</a>
+                </div>
+
+                <div class="contact__card">
+                    <div class="contact__icon">
+                        <i class='bx bxs-phone'></i>
+                    </div>
+                    <h3>Call or Text</h3>
+                    <p>Hubungi saya langsung untuk diskusi lebih cepat atau emergency.</p>
+                    <span class="contact__button--disabled">+62 822 7159 1208</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!--===== FOOTER =====-->
+    <footer class="footer">
+        <div class="footer__inner">
+
+            <!-- ROW ATAS: Brand + Nav kolom-kolom -->
+            <div class="footer__top">
+
+                <!-- Kolom 1: Brand -->
+                <div class="footer__brand">
+                    <a href="index.html" class="footer__logo">Fahril<span>.</span></a>
+                    <p class="footer__tagline">Mahasiswa Teknik Informatika yang berfokus pada videografi, desain
+                        grafis, dan pengembangan web.</p>
+                    <div class="footer__socials">
+                        <a href="https://www.instagram.com/m.fahrill/" class="footer__social-link"
+                            aria-label="Instagram" target="_blank" rel="noopener">
+                            <i class='bx bxl-instagram'></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/muh-fahril-812b11209/" class="footer__social-link"
+                            aria-label="LinkedIn" target="_blank" rel="noopener">
+                            <i class='bx bxl-linkedin'></i>
+                        </a>
+                        <a href="https://github.com/fahril168" class="footer__social-link" aria-label="GitHub"
+                            target="_blank" rel="noopener">
+                            <i class='bx bxl-github'></i>
+                        </a>
+                        <a href="https://wa.me/6282271591208" class="footer__social-link" aria-label="WhatsApp"
+                            target="_blank" rel="noopener">
+                            <i class='bx bxl-whatsapp'></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Kolom 2: Navigasi -->
+                <div class="footer__col">
+                    <h4 class="footer__col-title">Navigasi</h4>
+                    <ul class="footer__nav">
+                        <li><a href="index.html#home">Home</a></li>
+                        <li><a href="index.html#about">About</a></li>
+                        <li><a href="index.html#work">Work</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
                     </ul>
                 </div>
 
-                <div class="nav__toggle" id="nav-toggle">
-                    <i class='bx bx-menu'></i>
-                </div>
-            </nav>
-        </header>
-
-        <main class="l-main">
-            <!--===== HOME =====-->
-            <section class="home bd-grid" id="home">
-                <div class="home__data">
-                    <h1 class="home__title">
-                        Muh. <span class="home__title-color">Fahril</span>
-                        <span class="typing"></span>
-                    </h1>
-                    <p class="home__p">Seorang mahasiswa yang hobi bermain game</p>
-
-                    <a href="#about" class="button">About Me</a>
-
-                    <div class="home__social">
-                        <a href="https://www.instagram.com/m.fahrill/" class="home__social-icon"><i class='bx bxl-instagram'></i></a>
-                        <a href="https://www.linkedin.com/in/muh-fahril-812b11209/" class="home__social-icon"><i class='bx bxl-linkedin' ></i></a>
-                        <a href="https://github.com/fahril168" class="home__social-icon"><i class='bx bxl-github' ></i></a>
-                    </div>
+                <!-- Kolom 3: Portfolio -->
+                <div class="footer__col">
+                    <h4 class="footer__col-title">Portfolio</h4>
+                    <ul class="footer__nav">
+                        <li><a href="design.html">Design Graphics</a></li>
+                        <li><a href="video.html">Video Editing</a></li>
+                        <li><a href="website.html">Websites</a></li>
+                    </ul>
                 </div>
 
-                <div class="home__img">
-                    <img src="assets/img/profil.jpg"/>
-                </div>
-            </section>
-
-            <!--===== ABOUT =====-->
-            <section class="about section " id="about">
-                <h2 class="section-title">About</h2>
-
-                <div class="about__container bd-grid">
-                    <div class="about__img">
-                        <img src="assets/img/about.jpg" alt="">
-                    </div>
-                    
-                    <div>
-                        <h2 class="about__subtitle">Muh. Fahril</h2>
-                        <p class="about__text">Seorang mahasiswa Teknik Informatika yang memiliki minat dalam bidang videografi, fotografi, desain grafis, dan motion graphics. Saya juga berfokus pada pengembangan web, khususnya teknologi front-end. Saya fokus membangun website yang responsif, menarik, dan mudah digunakan, sambil terus meningkatkan keterampilan saya dalam HTML, CSS, JavaScript, dan manajemen database.</p>  
-                        <a href="assets/cv/cv-fahril.pdf" class="button">Open CV</a>         
-                    </div>                                   
-                </div>
-            </section>
-
-
-            <!--===== WORK =====-->
-            <section class="work section" id="work">
-                <h2 class="section-title">Work</h2>
-
-                <div class="work__container bd-grid">
-                    <a class="work__card" href="design.html">
-                        <div class="work__image">
-                            <img src="assets/img/work1.jpg" alt="">
-                        </div>
-
-                        <div class="work__content">
-                            <div class="work__icon">
-                                <i class='bx bx-palette'></i>
-                            </div>
-
-                            <div class="work__text">
-                                <h3>Design</h3>
-                                <p>Desain grafis, poster, dan UI/UX design.</p>
-                            </div>
-                        </div>
-                    </a>
-                    
-                    <a class="work__card" href="video.html">
-                        <div class="work__image">
-                            <img src="assets/img/work2.jpg" alt="">
-                        </div>
-
-                        <div class="work__content">
-                            <div class="work__icon">
-                                <i class='bx bx-palette'></i>
-                            </div>
-
-                            <div class="work__text">
-                                <h3>Video Editing</h3>
-                                <p>Video editing, motion graphics, dan konten video kreatif.</p>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a class="work__card" href="">
-                        <div class="work__image">
-                            <img src="assets/img/work3.jpg" alt="">
-                        </div>
-
-                        <div class="work__content">
-                            <div class="work__icon">
-                                <i class='bx bx-palette'></i>
-                            </div>
-
-                            <div class="work__text">
-                                <h3>Dokumentasi</h3>
-                                <p>Fotografi dokumentasi event, portrait, dan landscape.</p>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a class="work__card" href="website.html">
-                        <div class="work__image">
-                            <img src="assets/img/work4.jpg" alt="">
-                        </div>
-
-                        <div class="work__content">
-                            <div class="work__icon">
-                                <i class='bx bx-laptop'></i>
-                            </div>
-
-                            <div class="work__text">
-                                <h3>Website</h3>
-                                <p>Website responsif menggunakan HTML, CSS, JavaScript, dan PHP</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            </section>
-
-            <!--===== CONTACT =====-->
-            <section class="contact section" id="contact">
-                <h2 class="section-title">Contact</h2>
-
-                <div class="contact__container bd-grid">
-                    <div class="contact__card">
-                        <div class="contact__icon">
-                            <i class='bx bxl-whatsapp'></i>
-                        </div>
-                        <h3>Chat Now</h3>
-                        <p>Hubungi saya melalui WhatsApp untuk diskusi lebih lanjut atau pertanyaan apapun.</p>
-                        <a href="https://wa.me/6282271591208" class="button">Start Chat</a>
-                    </div>
-
-                    <div class="contact__card">
-                        <div class="contact__icon">
+                <!-- Kolom 4: Kontak -->
+                <div class="footer__col">
+                    <h4 class="footer__col-title">Kontak</h4>
+                    <ul class="footer__contact-list">
+                        <li>
                             <i class='bx bxs-envelope'></i>
-                        </div>
-                        <h3>Email</h3>
-                        <p>Kirimkan email untuk kebutuhan proyek atau pertanyaan umum.</p>
-                        <a href="mailto:muh.fahril.uho@gmail.com" class="button">Send Email</a>
-                    </div>
-
-                    <div class="contact__card">
-                        <div class="contact__icon">
-                            <i class='bx bxs-phone'></i>
-                        </div>
-                        <h3>Call or Text</h3>
-                        <p>Hubungi saya langsung untuk diskusi lebih cepat atau emergency.</p>
-                        <span class="contact__button--disabled">+62 822 7159 1208</span>
-                    </div>
-                </div>
-            </section>
-        </main>
-
-        <!--===== FOOTER =====-->
-        <footer class="footer">
-            <div class="footer__inner">
-
-                <!-- ROW ATAS: Brand + Nav kolom-kolom -->
-                <div class="footer__top">
-
-                    <!-- Kolom 1: Brand -->
-                    <div class="footer__brand">
-                        <a href="index.html" class="footer__logo">Fahril<span>.</span></a>
-                        <p class="footer__tagline">Mahasiswa Teknik Informatika yang berfokus pada videografi, desain grafis, dan pengembangan web.</p>
-                        <div class="footer__socials">
-                            <a href="https://www.instagram.com/m.fahrill/" class="footer__social-link" aria-label="Instagram" target="_blank" rel="noopener">
-                                <i class='bx bxl-instagram'></i>
-                            </a>
-                            <a href="https://www.linkedin.com/in/muh-fahril-812b11209/" class="footer__social-link" aria-label="LinkedIn" target="_blank" rel="noopener">
-                                <i class='bx bxl-linkedin'></i>
-                            </a>
-                            <a href="https://github.com/fahril168" class="footer__social-link" aria-label="GitHub" target="_blank" rel="noopener">
-                                <i class='bx bxl-github'></i>
-                            </a>
-                            <a href="https://wa.me/6282271591208" class="footer__social-link" aria-label="WhatsApp" target="_blank" rel="noopener">
-                                <i class='bx bxl-whatsapp'></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Kolom 2: Navigasi -->
-                    <div class="footer__col">
-                        <h4 class="footer__col-title">Navigasi</h4>
-                        <ul class="footer__nav">
-                            <li><a href="index.html#home">Home</a></li>
-                            <li><a href="index.html#about">About</a></li>
-                            <li><a href="index.html#work">Work</a></li>
-                            <li><a href="index.html#contact">Contact</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Kolom 3: Portfolio -->
-                    <div class="footer__col">
-                        <h4 class="footer__col-title">Portfolio</h4>
-                        <ul class="footer__nav">
-                            <li><a href="design.html">Design Graphics</a></li>
-                            <li><a href="video.html">Video Editing</a></li>
-                            <li><a href="website.html">Websites</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Kolom 4: Kontak -->
-                    <div class="footer__col">
-                        <h4 class="footer__col-title">Kontak</h4>
-                        <ul class="footer__contact-list">
-                            <li>
-                                <i class='bx bxs-envelope'></i>
-                                <a href="mailto:muh.fahril.uho@gmail.com">muh.fahril.uho@gmail.com</a>
-                            </li>
-                            <li>
-                                <i class='bx bxl-whatsapp'></i>
-                                <a href="https://wa.me/6282271591208">+62 822-7159-1208</a>
-                            </li>
-                            <li>
-                                <i class='bx bxs-map'></i>
-                                <span>Kendari, Sulawesi Tenggara</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                </div>
-
-                <!-- DIVIDER -->
-                <div class="footer__divider"></div>
-
-                <!-- ROW BAWAH: copyright + back to top -->
-                <div class="footer__bottom">
-                    <p class="footer__copy">&copy; 2026 Muh. Fahril. All rights reserved.</p>
-                    <a href="#" class="footer__totop" aria-label="Kembali ke atas">
-                        <i class='bx bx-chevron-up'></i>
-                    </a>
+                            <a href="mailto:muh.fahril.uho@gmail.com">muh.fahril.uho@gmail.com</a>
+                        </li>
+                        <li>
+                            <i class='bx bxl-whatsapp'></i>
+                            <a href="https://wa.me/6282271591208">+62 822-7159-1208</a>
+                        </li>
+                        <li>
+                            <i class='bx bxs-map'></i>
+                            <span>Kendari, Sulawesi Tenggara</span>
+                        </li>
+                    </ul>
                 </div>
 
             </div>
-        </footer>
 
-        <!--===== SCROLL REVEAL =====-->
-        <script src="https://unpkg.com/scrollreveal"></script>
+            <!-- DIVIDER -->
+            <div class="footer__divider"></div>
 
-        <!--===== MAIN JS =====-->
-        <script src="assets/js/main.js"></script>
-    </body>
+            <!-- ROW BAWAH: copyright + back to top -->
+            <div class="footer__bottom">
+                <p class="footer__copy">&copy; 2026 Muh. Fahril. All rights reserved.</p>
+                <a href="#" class="footer__totop" aria-label="Kembali ke atas">
+                    <i class='bx bx-chevron-up'></i>
+                </a>
+            </div>
+
+        </div>
+    </footer>
+
+    <!--===== SCROLL REVEAL =====-->
+    <script src="https://unpkg.com/scrollreveal"></script>
+
+    <!--===== MAIN JS =====-->
+    <script src="assets/js/main.js"></script>
+</body>
+
 </html>
