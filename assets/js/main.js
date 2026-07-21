@@ -3,10 +3,10 @@
 ========================================================== */
 
 const SB_URL =
-    localStorage.getItem('fahril_sb_url') || '';
+    localStorage.getItem('fahril_sb_url') || 'https://hsytixfazdtsyvabkotz.supabase.co';
 
 const SB_KEY =
-    localStorage.getItem('fahril_sb_key') || '';
+    localStorage.getItem('fahril_sb_key') || 'sb_publishable_1_mMRJHjnQBf1BrxopH1Vw_-TZP-L4v';
 
 /* ==========================================================
    HELPERS
