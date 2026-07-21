@@ -5,14 +5,11 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="assets/css/styles.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Video Portfolio — Fahril</title>
-
+    <title>Dokumentasi — Fahril</title>
     <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
 </head>
 
 <body>
-
     <!--===== HEADER =====-->
     <header class="l-header">
         <nav class="nav bd-grid">
@@ -24,25 +21,10 @@
 
             <div class="nav__menu" id="nav-menu">
                 <ul class="nav__list">
-                    <li class="nav__item">
-                        <a href="index.html#home" class="nav__link">Home</a>
-                    </li>
-
-                    <li class="nav__item">
-                        <a href="index.html#about" class="nav__link">About</a>
-                    </li>
-
-                    <li class="nav__item">
-                        <a href="index.html#work" class="nav__link active-link">
-                            Work
-                        </a>
-                    </li>
-
-                    <li class="nav__item">
-                        <a href="index.html#contact" class="nav__link">
-                            Contact
-                        </a>
-                    </li>
+                    <li class="nav__item"><a href="index.html#home" class="nav__link">Home</a></li>
+                    <li class="nav__item"><a href="index.html#about" class="nav__link">About</a></li>
+                    <li class="nav__item"><a href="index.html#work" class="nav__link active-link">Work</a></li>
+                    <li class="nav__item"><a href="index.html#contact" class="nav__link">Contact</a></li>
                 </ul>
             </div>
 
@@ -52,9 +34,9 @@
         </nav>
     </header>
 
-    <section class="video-section">
+    <section class="design-section">
 
-        <!-- HERO -->
+        <!-- ══ HERO ══ -->
         <div class="design-hero" style="position: relative; overflow: hidden;">
             <!-- Animated Hero Shapes (Calendly Style) -->
             <div class="hero-shapes">
@@ -64,76 +46,75 @@
             </div>
             
             <div class="design-hero__content">
-                <h1 class="hero-title">
-                    Video <span class="hero-title--accent">Portfolio</span>
-                </h1>
-
-                <p class="hero-sub">
-                    Kumpulan hasil editing video, cinematic,
-                    reels, dan motion visual yang telah dibuat.
-                </p>
+                <h1 class="hero-title">Dokumentasi <span class="hero-title--accent">Kegiatan</span></h1>
+                <p class="hero-sub">Kumpulan foto dan dokumentasi kegiatan yang pernah saya ikuti.</p>
             </div>
         </div>
 
-        <!-- FILTER -->
-        <div class="filter-bar" id="video-filter-bar" style="display:none;"></div>
+        <!-- Filter kategori — diisi dinamis -->
+        <div class="filter-bar" id="filter-bar" style="display:none;"></div>
 
-        <!-- CONTENT -->
-        <div id="video-content">
+        <!-- Dynamic content -->
+        <div id="dokumentasi-content">
             <div style="margin-top:80px">
                 <div class="loading-wrap">
                     <div class="spinner"></div>
-                    <span>Memuat portfolio...</span>
+                    <span>Memuat dokumentasi...</span>
                 </div>
             </div>
         </div>
-
     </section>
+
+    <!-- ══ MODAL PREVIEW ══ -->
+    <div class="design-modal" aria-hidden="true" id="dokumentasi-modal">
+        <div class="design-modal__overlay" id="modal-overlay"></div>
+        <div class="design-modal__content" role="dialog" aria-modal="true" aria-label="Image preview">
+            <div class="design-modal__loader" id="modal-loader">
+                <div class="spinner"></div>
+            </div>
+            <button type="button" class="design-modal__close" id="modal-close" aria-label="Close preview">
+                <i class="bx bx-x"></i>
+            </button>
+            <img class="design-modal__img" id="modal-img" src="" alt="Preview">
+            <div class="design-modal__bar" id="modal-bar"></div>
+        </div>
+    </div>
 
     <!--===== FOOTER =====-->
     <footer class="footer">
         <div class="footer__inner">
 
+            <!-- ROW ATAS: Brand + Nav kolom-kolom -->
             <div class="footer__top">
 
+                <!-- Kolom 1: Brand -->
                 <div class="footer__brand">
-                    <a href="index.html" class="footer__logo">
-                        Fahril<span>.</span>
-                    </a>
-
-                    <p class="footer__tagline">
-                        Mahasiswa Teknik Informatika yang
-                        berfokus pada videografi, desain grafis,
-                        dan pengembangan web.
-                    </p>
-
+                    <a href="index.html" class="footer__logo">Fahril<span>.</span></a>
+                    <p class="footer__tagline">Mahasiswa Teknik Informatika yang berfokus pada videografi, desain
+                        grafis, dan pengembangan web.</p>
                     <div class="footer__socials">
-                        <a href="https://www.instagram.com/m.fahrill/" class="footer__social-link" target="_blank">
-
+                        <a href="https://www.instagram.com/m.fahrill/" class="footer__social-link"
+                            aria-label="Instagram" target="_blank" rel="noopener">
                             <i class='bx bxl-instagram'></i>
                         </a>
-
                         <a href="https://www.linkedin.com/in/muh-fahril-812b11209/" class="footer__social-link"
-                            target="_blank">
-
+                            aria-label="LinkedIn" target="_blank" rel="noopener">
                             <i class='bx bxl-linkedin'></i>
                         </a>
-
-                        <a href="https://github.com/fahril168" class="footer__social-link" target="_blank">
-
+                        <a href="https://github.com/fahril168" class="footer__social-link" aria-label="GitHub"
+                            target="_blank" rel="noopener">
                             <i class='bx bxl-github'></i>
                         </a>
-
-                        <a href="https://wa.me/6282271591208" class="footer__social-link" target="_blank">
-
+                        <a href="https://wa.me/6282271591208" class="footer__social-link" aria-label="WhatsApp"
+                            target="_blank" rel="noopener">
                             <i class='bx bxl-whatsapp'></i>
                         </a>
                     </div>
                 </div>
 
+                <!-- Kolom 2: Navigasi -->
                 <div class="footer__col">
                     <h4 class="footer__col-title">Navigasi</h4>
-
                     <ul class="footer__nav">
                         <li><a href="index.html#home">Home</a></li>
                         <li><a href="index.html#about">About</a></li>
@@ -142,33 +123,29 @@
                     </ul>
                 </div>
 
+                <!-- Kolom 3: Portfolio -->
                 <div class="footer__col">
                     <h4 class="footer__col-title">Portfolio</h4>
-
                     <ul class="footer__nav">
                         <li><a href="design.html">Design Graphics</a></li>
                         <li><a href="video.html">Video Editing</a></li>
+                        <li><a href="website.html">Websites</a></li>
+                        <li><a href="dokumentasi.html">Dokumentasi</a></li>
                     </ul>
                 </div>
 
+                <!-- Kolom 4: Kontak -->
                 <div class="footer__col">
                     <h4 class="footer__col-title">Kontak</h4>
-
                     <ul class="footer__contact-list">
                         <li>
                             <i class='bx bxs-envelope'></i>
-                            <a href="mailto:muh.fahril.uho@gmail.com">
-                                muh.fahril.uho@gmail.com
-                            </a>
+                            <a href="mailto:muh.fahril.uho@gmail.com">muh.fahril.uho@gmail.com</a>
                         </li>
-
                         <li>
                             <i class='bx bxl-whatsapp'></i>
-                            <a href="https://wa.me/6282271591208">
-                                +62 822-7159-1208
-                            </a>
+                            <a href="https://wa.me/6282271591208">+62 822-7159-1208</a>
                         </li>
-
                         <li>
                             <i class='bx bxs-map'></i>
                             <span>Kendari, Sulawesi Tenggara</span>
@@ -178,23 +155,21 @@
 
             </div>
 
+            <!-- DIVIDER -->
             <div class="footer__divider"></div>
 
+            <!-- ROW BAWAH: copyright + back to top -->
             <div class="footer__bottom">
-                <p class="footer__copy">
-                    &copy; 2026 Muh. Fahril. All rights reserved.
-                </p>
-
-                <a href="#" class="footer__totop">
+                <p class="footer__copy">&copy; 2026 Muh. Fahril. All rights reserved.</p>
+                <a href="#" class="footer__totop" aria-label="Kembali ke atas">
                     <i class='bx bx-chevron-up'></i>
                 </a>
             </div>
+
         </div>
     </footer>
 
-    <!-- MAIN JS -->
     <script src="assets/js/main.js?v=2"></script>
-
 </body>
 
 </html>

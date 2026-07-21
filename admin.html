@@ -371,10 +371,18 @@
         <i class='bx bx-laptop'></i> Websites
         <span class="sidebar-count" id="count-website">0</span>
       </button>
-      <div class="sidebar-section-label">Navigasi</div>
-      <a href="index.html" class="sidebar-link">
-        <i class='bx bx-home'></i> Lihat Portfolio
-      </a>
+      <button class="sidebar-link" id="tab-btn-dokumentasi" onclick="switchTab('dokumentasi')">
+        <i class='bx bx-camera'></i> Dokumentasi
+        <span class="sidebar-count" id="count-dokumentasi">0</span>
+      </button>
+        <div class="sidebar-section-label">Pengaturan</div>
+        <button class="sidebar-link" id="tab-btn-stats" onclick="switchTab('stats')">
+          <i class='bx bx-line-chart'></i> About Stats
+        </button>
+        <div class="sidebar-section-label">Navigasi</div>
+        <a href="index.html" class="sidebar-link">
+          <i class='bx bx-home'></i> Buka Website
+        </a>
       <div class="sidebar-section-label">Akun</div>
       <button class="sidebar-link" onclick="logout()">
         <i class='bx bx-log-out'></i> Logout
@@ -562,6 +570,83 @@
       </div>
     </div>
 
+    <!-- ═══════════════════════ TAB: DOKUMENTASI ═══════════════════════ -->
+    <div class="tab-panel" id="panel-dokumentasi">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Manajemen Dokumentasi</h1>
+          <p class="page-sub">Kelola dokumentasi kegiatan dan foto-foto</p>
+        </div>
+        <button class="button" onclick="openDokumentasiForm('add')"><i class='bx bx-plus'></i> Tambah Dokumentasi</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon"><i class='bx bx-camera'></i></div>
+          <div><div class="stat-label">Total Dokumentasi</div><div class="stat-value" id="dokumentasi-stat-total">0</div></div>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <div class="search-wrap">
+          <i class='bx bx-search'></i>
+          <input type="text" class="search-input" id="dokumentasi-search" placeholder="Cari dokumentasi..." oninput="filterDokumentasi()" />
+        </div>
+        <button class="button button-ghost" onclick="loadDokumentasi()"><i class='bx bx-refresh'></i> Refresh</button>
+      </div>
+
+      <div class="table-card">
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Dokumentasi</th>
+                <th>Tanggal</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="dokumentasi-tbody">
+              <tr><td colspan="3" class="center-cell"><div class="empty-icon"><i class='bx bx-plug'></i></div>Hubungkan ke Supabase untuk memuat data</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: STATS -->
+    <div class="tab-panel" id="panel-stats">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Pengaturan Statistik</h1>
+          <p class="page-sub">Ubah angka statistik yang tampil di halaman depan (About Section)</p>
+        </div>
+      </div>
+      
+      <div class="table-card" style="max-width: 600px;">
+        <form id="stats-form" onsubmit="saveStats(event)" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label">Projects Completed</label>
+            <input type="text" id="stat-input-projects" class="form-input" placeholder="e.g. 15+" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Clients</label>
+            <input type="text" id="stat-input-clients" class="form-input" placeholder="e.g. 10+" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Happy Clients</label>
+            <input type="text" id="stat-input-happy" class="form-input" placeholder="e.g. 99%" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Ongoing Projects</label>
+            <input type="text" id="stat-input-ongoing" class="form-input" placeholder="e.g. 3" required />
+          </div>
+          <button type="submit" class="button" id="btn-save-stats" style="align-self: flex-start; margin-top: 1rem;">
+            <i class='bx bx-save'></i> Simpan Perubahan
+          </button>
+        </form>
+      </div>
+    </div>
+
   </div><!-- /main -->
 </div><!-- /admin-layout -->
 
@@ -660,10 +745,10 @@
           <div class="upload-text">Klik untuk <strong>pilih gambar</strong></div>
           <div class="form-hint" style="margin-top:4px">Rekomendasi: 16:9, Max 2MB</div>
         </div>
-        <img class="upload-preview" id="w-upload-preview" />
-        <div class="upload-filename" id="w-upload-filename"></div>
-        <div class="upload-progress" id="w-upload-progress-container">
-          <div class="upload-progress-bar" id="w-upload-progress"></div>
+        <img class="upload-preview" id="w-img-preview" />
+        <div class="upload-filename" id="w-img-filename"></div>
+        <div class="upload-progress" id="w-upload-progress">
+          <div class="upload-progress-bar" id="w-upload-bar"></div>
         </div>
       </div>
     </div>
@@ -725,6 +810,41 @@
   </div>
 </div>
 
+<!-- ═══════════ MODAL: DOKUMENTASI FORM ═══════════ -->
+<div class="modal-overlay" id="modal-dokumentasi-form">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="dokumentasi-form-title">Tambah Dokumentasi Baru</h2>
+      <button class="modal-close" onclick="closeModal('modal-dokumentasi-form')"><i class='bx bx-x'></i></button>
+    </div>
+    <input type="hidden" id="dokumentasi-edit-id" />
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>Judul <span style="color:#ef4444">*</span></label>
+        <input type="text" id="do-title" placeholder="Contoh: Dokumentasi Kegiatan X" />
+      </div>
+      <div class="form-group full">
+        <label>Gambar / Foto <span style="color:#ef4444">*</span></label>
+        <div class="upload-area" id="do-upload-area" onclick="document.getElementById('do-img-file').click()">
+          <input type="file" id="do-img-file" accept="image/*" onchange="handleDokumentasiFileChange(event)" />
+          <i class='bx bx-image-add upload-icon'></i>
+          <div class="upload-text">Klik untuk <strong>pilih gambar</strong></div>
+          <div class="form-hint" style="margin-top:4px">Max 5MB</div>
+        </div>
+        <img class="upload-preview" id="do-img-preview" />
+        <div class="upload-filename" id="do-img-filename"></div>
+        <div class="upload-progress" id="do-upload-progress">
+          <div class="upload-progress-bar" id="do-upload-bar"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="button button-ghost" onclick="closeModal('modal-dokumentasi-form')">Batal</button>
+      <button class="button" id="btn-save-dokumentasi" onclick="saveDokumentasi()"><i class='bx bx-check'></i> Simpan</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL DELETE -->
 <div class="modal-overlay" id="modal-delete">
   <div class="modal" style="max-width:420px">
@@ -756,10 +876,10 @@ function logout() { sessionStorage.removeItem('fahril_admin'); window.location.h
 let SB_URL = localStorage.getItem('fahril_sb_url') || '';
 let SB_KEY = localStorage.getItem('fahril_sb_key') || '';
 let currentTab = 'design';
-let allDesigns = [], allVideos = [], allWebsites = [];
+let allDesigns = [], allVideos = [], allWebsites = [], allDokumentasi = [];
 let deleteId = null, deleteTable = null;
-let designEditMode = false, videoEditMode = false, websiteEditMode = false;
-let designFileToUpload = null, videoFileToUpload = null, websiteFileToUpload = null;
+let designEditMode = false, videoEditMode = false, websiteEditMode = false, dokumentasiEditMode = false;
+let designFileToUpload = null, videoFileToUpload = null, websiteFileToUpload = null, dokumentasiFileToUpload = null;
 
 /* Pre-fill banner if saved */
 if (SB_URL) document.getElementById('sb-url').value = SB_URL;
@@ -777,6 +897,8 @@ function switchTab(tab) {
   if (tab === 'design' && SB_URL) loadDesigns();
   if (tab === 'video' && SB_URL) loadVideos();
   if (tab === 'website' && SB_URL) loadWebsites();
+  if (tab === 'dokumentasi' && SB_URL) loadDokumentasi();
+  if (tab === 'stats' && SB_URL) loadStatsAdmin();
 }
 
 /* ══════════════════════════════════════════
@@ -846,7 +968,7 @@ async function connectSupabase() {
   localStorage.setItem('fahril_sb_key', key);
   document.getElementById('status-text').textContent = 'Menghubungkan...';
   try {
-    await Promise.all([loadDesigns(), loadVideos(), loadWebsites()]);
+    await Promise.all([loadDesigns(), loadVideos(), loadWebsites(), loadDokumentasi()]);
     document.getElementById('status-dot').classList.add('on');
     document.getElementById('status-text').textContent = 'Terhubung ke Supabase ✓';
     showToast('Berhasil terhubung!');
@@ -862,7 +984,7 @@ window.addEventListener('DOMContentLoaded', () => {
   if (SB_URL && SB_KEY) {
     document.getElementById('status-dot').classList.add('on');
     document.getElementById('status-text').textContent = 'Menghubungkan...';
-    Promise.all([loadDesigns(), loadVideos(), loadWebsites()]).then(() => {
+    Promise.all([loadDesigns(), loadVideos(), loadWebsites(), loadDokumentasi()]).then(() => {
       document.getElementById('status-text').textContent = 'Terhubung ke Supabase ✓';
     }).catch(e => {
       document.getElementById('status-dot').classList.remove('on');
@@ -1292,8 +1414,8 @@ function openWebsiteForm(mode, id = null) {
       document.getElementById('w-github').value = p.github_link || '';
       document.getElementById('w-desc').value = p.description || '';
       if (p.image_url) { 
-        document.getElementById('w-upload-preview').src = p.image_url;
-        document.getElementById('w-upload-preview').classList.add('show');
+        document.getElementById('w-img-preview').src = p.image_url;
+        document.getElementById('w-img-preview').classList.add('show');
       }
     }
   } else {
@@ -1308,10 +1430,10 @@ function handleWebsiteFileChange(e) {
   if (!file) return;
   if (file.size > 5 * 1024 * 1024) { showToast('Ukuran file maksimal 5MB!'); e.target.value = ''; return; }
   websiteFileToUpload = file;
-  const preview = document.getElementById('w-upload-preview');
+  const preview = document.getElementById('w-img-preview');
   preview.src = URL.createObjectURL(file);
   preview.classList.add('show');
-  document.getElementById('w-upload-filename').textContent = file.name;
+  document.getElementById('w-img-filename').textContent = file.name;
 }
 
 async function saveWebsite() {
@@ -1327,7 +1449,7 @@ async function saveWebsite() {
     let imageUrl = null;
     if (websiteFileToUpload) {
       btn.innerHTML = '<span class="spinner"></span> Mengupload gambar...';
-      imageUrl = await uploadToStorage('designs', websiteFileToUpload, 'w-upload-progress', 'w-upload-progress-container'); // Using designs bucket for images
+      imageUrl = await uploadToStorage('designs', websiteFileToUpload, 'w-upload-bar', 'w-upload-progress');
     }
 
     if (websiteEditMode && !imageUrl) {
@@ -1354,6 +1476,152 @@ async function saveWebsite() {
     }
     closeModal('modal-website-form');
     await loadWebsites();
+  } catch (e) {
+    showToast('Error: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="bx bx-check"></i> Simpan';
+  }
+}
+
+/* ══════════════════════════════════════════
+   DOKUMENTASI — LOAD & RENDER
+══════════════════════════════════════════ */
+async function loadDokumentasi() {
+  setLoadingDokumentasi(true);
+  try {
+    const data = await sbFetch('dokumentasi?select=*&order=created_at.desc');
+    allDokumentasi = data || [];
+    renderDokumentasiTable(allDokumentasi);
+    updateDokumentasiStats(allDokumentasi);
+  } catch (e) { showToast('Gagal memuat dokumentasi: ' + e.message); setLoadingDokumentasi(false); }
+}
+
+function setLoadingDokumentasi(on) {
+  if (on) document.getElementById('dokumentasi-tbody').innerHTML = 
+    `<tr><td colspan="3" class="center-cell"><span class="spinner"></span> Memuat...</td></tr>`;
+}
+
+function renderDokumentasiTable(list) {
+  const tb = document.getElementById('dokumentasi-tbody');
+  if (!list.length) {
+    tb.innerHTML = `<tr><td colspan="3" class="center-cell">
+      <div class="empty-icon"><i class='bx bx-camera'></i></div>
+      <div style="font-weight:700;margin-bottom:4px">Belum ada dokumentasi</div>
+      <div style="margin-bottom:1rem;font-size:.8rem">Mulai tambahkan dokumentasi.</div>
+      <button class="button" onclick="openDokumentasiForm('add')"><i class='bx bx-plus'></i> Tambah Dokumentasi</button>
+    </td></tr>`;
+    return;
+  }
+
+  let html = '';
+  list.forEach(item => {
+    const thumb = item.image_url ? `<img src="${item.image_url}">` : `<i class='bx bx-camera'></i>`;
+    const date = item.created_at ? new Date(item.created_at).toLocaleDateString('id-ID', {day:'numeric',month:'short',year:'numeric'}) : '—';
+    
+    html += `<tr>
+      <td>
+        <div class="project-cell">
+          <div class="project-thumb">${thumb}</div>
+          <div><div class="project-name">${esc(item.title || 'Untitled')}</div></div>
+        </div>
+      </td>
+      <td><span class="date-text">${date}</span></td>
+      <td>
+        <div class="action-group">
+          <button class="button button-ghost" style="padding:5px 8px;font-size:.8rem" onclick="openDokumentasiForm('edit', '${item.id}')"><i class='bx bx-edit'></i></button>
+          <button class="button button-ghost" style="padding:5px 8px;font-size:.8rem;color:#ef4444;border-color:#fef2f2;background:#fef2f2" onclick="askDelete('${item.id}', 'dokumentasi', '${esc(item.title).replace(/'/g, "\\'")}')"><i class='bx bx-trash'></i></button>
+        </div>
+      </td>
+    </tr>`;
+  });
+  tb.innerHTML = html;
+}
+
+function updateDokumentasiStats(list) {
+  document.getElementById('dokumentasi-stat-total').textContent = list.length;
+  document.getElementById('count-dokumentasi').textContent = list.length;
+}
+
+function filterDokumentasi() {
+  const q = document.getElementById('dokumentasi-search').value.toLowerCase();
+  renderDokumentasiTable(allDokumentasi.filter(p =>
+    p.title.toLowerCase().includes(q)
+  ));
+}
+
+/* ── DOKUMENTASI FORM ── */
+function openDokumentasiForm(mode, id = null) {
+  dokumentasiEditMode = mode === 'edit';
+  dokumentasiFileToUpload = null;
+  document.getElementById('dokumentasi-form-title').textContent = dokumentasiEditMode ? 'Edit Dokumentasi' : 'Tambah Dokumentasi Baru';
+  resetUploadUI('do');
+  
+  if (dokumentasiEditMode && id) {
+    const p = allDokumentasi.find(w => w.id === id);
+    if(p) {
+      document.getElementById('dokumentasi-edit-id').value = p.id;
+      document.getElementById('do-title').value = p.title || '';
+      if (p.image_url) { 
+        document.getElementById('do-img-preview').src = p.image_url;
+        document.getElementById('do-img-preview').classList.add('show');
+      }
+    }
+  } else {
+    document.getElementById('dokumentasi-edit-id').value = '';
+    document.getElementById('do-title').value = '';
+  }
+  document.getElementById('modal-dokumentasi-form').classList.add('open');
+}
+
+function handleDokumentasiFileChange(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) { showToast('Ukuran file maksimal 5MB!'); e.target.value = ''; return; }
+  dokumentasiFileToUpload = file;
+  const preview = document.getElementById('do-img-preview');
+  preview.src = URL.createObjectURL(file);
+  preview.classList.add('show');
+  document.getElementById('do-img-filename').textContent = file.name;
+}
+
+async function saveDokumentasi() {
+  const title = document.getElementById('do-title').value.trim();
+  if (!title) { showToast('Judul wajib diisi!'); return; }
+  if (!SB_URL) { showToast('Koneksikan Supabase terlebih dahulu!'); return; }
+
+  const btn = document.getElementById('btn-save-dokumentasi');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
+
+  try {
+    let imageUrl = null;
+    if (dokumentasiFileToUpload) {
+      btn.innerHTML = '<span class="spinner"></span> Mengupload gambar...';
+      imageUrl = await uploadToStorage('dokumentasi', dokumentasiFileToUpload, 'do-upload-bar', 'do-upload-progress');
+    }
+
+    if (dokumentasiEditMode && !imageUrl) {
+      const existing = allDokumentasi.find(w => w.id === document.getElementById('dokumentasi-edit-id').value);
+      if (existing) imageUrl = existing.image_url || null;
+    }
+
+    const payload = {
+      title,
+      image_url: imageUrl
+    };
+
+    btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
+    if (dokumentasiEditMode) {
+      const id = document.getElementById('dokumentasi-edit-id').value;
+      await sbFetch('dokumentasi?id=eq.' + id, { method: 'PATCH', body: JSON.stringify(payload), prefer: 'return=minimal' });
+      showToast('Dokumentasi berhasil diupdate!');
+    } else {
+      await sbFetch('dokumentasi', { method: 'POST', body: JSON.stringify(payload), prefer: 'return=minimal' });
+      showToast('Dokumentasi berhasil ditambahkan!');
+    }
+    closeModal('modal-dokumentasi-form');
+    await loadDokumentasi();
   } catch (e) {
     showToast('Error: ' + e.message);
   } finally {
@@ -1440,9 +1708,63 @@ function esc(s) {
 }
 
 /* Close modal on backdrop click */
-document.querySelectorAll('.modal-overlay').forEach(el => {
-  el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
-});
+  /* ==========================================================
+     STATS LOGIC
+  ========================================================== */
+  async function loadStatsAdmin() {
+    if (!SB_URL) return;
+    try {
+      const data = await sbFetch('about_stats?id=eq.1');
+      if (data && data.length > 0) {
+        document.getElementById('stat-input-projects').value = data[0].projects || '';
+        document.getElementById('stat-input-clients').value = data[0].clients || '';
+        document.getElementById('stat-input-happy').value = data[0].happy_clients || '';
+        document.getElementById('stat-input-ongoing').value = data[0].ongoing || '';
+      }
+    } catch (err) {
+      console.error(err);
+      showToast('Gagal memuat statistik');
+    }
+  }
+
+  async function saveStats(e) {
+    e.preventDefault();
+    if (!SB_URL) return;
+    
+    const payload = {
+      projects: document.getElementById('stat-input-projects').value,
+      clients: document.getElementById('stat-input-clients').value,
+      happy_clients: document.getElementById('stat-input-happy').value,
+      ongoing: document.getElementById('stat-input-ongoing').value
+    };
+    
+    const btn = document.getElementById('btn-save-stats');
+    const oldHtml = btn.innerHTML;
+    btn.innerHTML = 'Menyimpan...';
+    btn.disabled = true;
+    
+    try {
+      // Check if row exists
+      const check = await sbFetch('about_stats?id=eq.1');
+      if (check && check.length > 0) {
+        await sbFetch('about_stats?id=eq.1', { method: 'PATCH', body: JSON.stringify(payload), prefer: 'return=minimal' });
+      } else {
+        payload.id = 1;
+        await sbFetch('about_stats', { method: 'POST', body: JSON.stringify(payload), prefer: 'return=minimal' });
+      }
+      showToast('Statistik berhasil disimpan!');
+    } catch (err) {
+      console.error(err);
+      showToast('Terjadi kesalahan saat menyimpan statistik');
+    } finally {
+      btn.innerHTML = oldHtml;
+      btn.disabled = false;
+    }
+  }
+
+  document.querySelectorAll('.modal-overlay').forEach(el => {
+    el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
+  });
 </script>
 </body>
 </html>

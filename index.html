@@ -72,8 +72,13 @@
         </section>
 
         <!--===== ABOUT =====-->
-        <section class="about section " id="about">
-            <h2 class="section-title">About</h2>
+        <section class="about section" id="about" style="position: relative;">
+            <div class="about-shapes">
+                <div class="shape shape-circle-1"></div>
+                <div class="shape shape-circle-2"></div>
+                <div class="shape shape-triangle"></div>
+            </div>
+            <h2 class="section-title" style="position: relative; z-index: 1;">About</h2>
 
             <div class="about__container bd-grid">
                 <div class="about__img">
@@ -81,12 +86,32 @@
                 </div>
 
                 <div>
-                    <h2 class="about__subtitle">Muh. Fahril</h2>
+                    <h1 class="about__subtitle">Muh. Fahril</h1>
                     <p class="about__text">Seorang mahasiswa Teknik Informatika yang memiliki minat dalam bidang
                         videografi, fotografi, desain grafis, dan motion graphics. Saya juga berfokus pada pengembangan
                         web, khususnya teknologi front-end. Saya fokus membangun website yang responsif, menarik, dan
                         mudah digunakan, sambil terus meningkatkan keterampilan saya dalam HTML, CSS, JavaScript, dan
                         manajemen database.</p>
+                        
+                    <div class="about__stats">
+                        <div class="about__stat">
+                            <span class="about__stat-number" id="front-stat-projects">15+</span>
+                            <span class="about__stat-title">Projects</span>
+                        </div>
+                        <div class="about__stat">
+                            <span class="about__stat-number" id="front-stat-clients">10+</span>
+                            <span class="about__stat-title">Clients</span>
+                        </div>
+                        <div class="about__stat">
+                            <span class="about__stat-number" id="front-stat-happy">99%</span>
+                            <span class="about__stat-title">Happy Clients</span>
+                        </div>
+                        <div class="about__stat">
+                            <span class="about__stat-number" id="front-stat-ongoing">3</span>
+                            <span class="about__stat-title">Ongoing Projects</span>
+                        </div>
+                    </div>
+
                     <a href="assets/cv/cv-fahril.pdf" class="button">Open CV</a>
                 </div>
             </div>
@@ -94,8 +119,13 @@
 
 
         <!--===== WORK (KARYA UNGGULAN) =====-->
-        <section class="work section" id="work">
-            <h2 class="section-title">Work</h2>
+        <section class="work section" id="work" style="position: relative;">
+            <div class="work-shapes">
+                <div class="shape shape-circle-1"></div>
+                <div class="shape shape-circle-2"></div>
+                <div class="shape shape-triangle"></div>
+            </div>
+            <h2 class="section-title" style="position: relative; z-index: 1;">Work</h2>
             
             <div class="portfolio-header bd-grid" style="display: flex; justify-content: center; margin-bottom: 2rem;">
                 <div class="portfolio-filter">
@@ -120,8 +150,13 @@
         </section>
 
         <!--===== CONTACT =====-->
-        <section class="contact section" id="contact">
-            <h2 class="section-title">Contact</h2>
+        <section class="contact section" id="contact" style="position: relative;">
+            <div class="contact-shapes">
+                <div class="shape shape-circle-1"></div>
+                <div class="shape shape-circle-2"></div>
+                <div class="shape shape-triangle"></div>
+            </div>
+            <h2 class="section-title" style="position: relative; z-index: 1;">Contact</h2>
 
             <div class="contact__container bd-grid">
                 <div class="contact__card">
@@ -153,6 +188,21 @@
             </div>
         </section>
     </main>
+
+    <!-- 🟢 MODAL PREVIEW 🟢 -->
+    <div class="design-modal" aria-hidden="true" id="design-modal">
+        <div class="design-modal__overlay" id="modal-overlay"></div>
+        <div class="design-modal__content" role="dialog" aria-modal="true" aria-label="Image preview">
+            <div class="design-modal__loader" id="modal-loader">
+                <div class="spinner"></div>
+            </div>
+            <button type="button" class="design-modal__close" id="modal-close" aria-label="Close preview">
+                <i class="bx bx-x"></i>
+            </button>
+            <img class="design-modal__img" id="modal-img" src="" alt="Preview">
+            <div class="design-modal__bar" id="modal-bar"></div>
+        </div>
+    </div>
 
     <!--===== FOOTER =====-->
     <footer class="footer">
@@ -246,7 +296,7 @@
     <script src="https://unpkg.com/scrollreveal"></script>
 
     <!--===== MAIN JS =====-->
-    <script src="assets/js/main.js"></script>
+    <script src="assets/js/main.js?v=4"></script>
 </body>
 
 </html>

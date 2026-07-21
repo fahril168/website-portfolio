@@ -43,6 +43,11 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  overflow-x: hidden;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -52,6 +57,7 @@ body {
   font-family: var(--body-font);
   font-size: var(--normal-font-size);
   color: var(--second-color);
+  width: 100%;
 }
 
 h1,
@@ -382,6 +388,53 @@ img {
   border-radius: 0.5rem;
 }
 
+/* About Stats */
+.about__stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 0;
+}
+
+@media screen and (max-width: 576px) {
+  .about__stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.about__stat {
+  text-align: center;
+  padding: 2rem 1rem;
+  background-color: #fff;
+  border: 1px solid rgba(64, 112, 244, 0.15);
+  /* Sangat tipis, hint biru */
+  border-radius: 1rem;
+  box-shadow: none;
+  transition: transform .3s, box-shadow .3s;
+}
+
+.about__stat:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(64, 112, 244, 0.05);
+}
+
+.about__stat-number {
+  display: block;
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--first-color);
+  margin-bottom: 0.25rem;
+}
+
+.about__stat-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-color);
+}
+
 
 /* ===== PORTFOLIO (KARYA UNGGULAN) =====*/
 .portfolio-header {
@@ -392,6 +445,7 @@ img {
   margin-bottom: 2rem;
   gap: 1.5rem;
 }
+
 @media screen and (min-width: 768px) {
   .portfolio-header {
     flex-direction: row;
@@ -400,7 +454,7 @@ img {
 }
 
 .portfolio-header__subtitle {
-  color: #ef4444; 
+  color: #ef4444;
   font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 1px;
@@ -429,7 +483,7 @@ img {
 }
 
 .filter-btn.active {
-  background-color: #ef4444; 
+  background-color: #ef4444;
   color: #ffffff;
 }
 
@@ -484,6 +538,7 @@ img {
   -ms-overflow-style: none;
   width: 100%;
 }
+
 .portfolio-grid::-webkit-scrollbar {
   display: none;
 }
@@ -491,7 +546,7 @@ img {
 .portfolio-card {
   background-color: #ffffff;
   border-radius: 1rem;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
   overflow: hidden;
   transition: transform 0.3s, box-shadow 0.3s;
   border: 1px solid #f3f4f6;
@@ -509,7 +564,7 @@ img {
 
 .portfolio-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
 }
 
 .portfolio-card__img {
@@ -524,17 +579,19 @@ img {
   height: 100%;
   object-fit: cover;
   transition: 0.5s;
+  transform: scale(1.03);
+  /* Memotong sedikit tepi gambar (garis pinggir) */
 }
 
 .portfolio-card:hover .portfolio-card__img img {
-  transform: scale(1.05);
+  transform: scale(1.08);
 }
 
 .portfolio-card__tag-overlay {
   position: absolute;
   top: 1rem;
   right: 1rem;
-  background-color: rgba(0,0,0,0.6);
+  background-color: rgba(0, 0, 0, 0.6);
   color: #fff;
   font-size: 0.7rem;
   font-weight: 700;
@@ -610,6 +667,7 @@ img {
   justify-content: center;
   margin-top: 3rem;
 }
+
 .portfolio-more .button {
   display: flex;
   align-items: center;
@@ -1225,6 +1283,10 @@ img {
   padding: 0 16px;
 }
 
+.website-grid {
+  columns: 2;
+}
+
 @media screen and (max-width: 992px) {
   .design-grid {
     columns: 2;
@@ -1236,6 +1298,10 @@ img {
     columns: 2;
     column-gap: 12px;
     padding: 0 12px;
+  }
+
+  .website-grid {
+    columns: 1;
   }
 
   .design-card {
@@ -1486,6 +1552,19 @@ img {
   z-index: 1;
 }
 
+/* Custom for website cards */
+.website-card {
+  position: relative;
+}
+
+.website-card img.thumb {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  transform: scale(1.05);
+}
+
 .design-card img.thumb.loaded {
   opacity: 1;
 }
@@ -1555,7 +1634,7 @@ img {
 .filter-bar {
   display: flex;
   flex-wrap: wrap;
-  gap: .5rem;
+  gap: 1rem 0.6rem;
   justify-content: center;
   margin: 0 auto 2.5rem;
   max-width: 900px;
@@ -1821,8 +1900,8 @@ img {
            FOOTER
         ══════════════════════════════════════ */
 .footer {
-  background-color: var(--second-color);
-  color: #fff;
+  background-color: #F5F5F5;
+  color: var(--second-color);
   padding: 0;
   font-family: var(--body-font);
 }
@@ -1846,7 +1925,7 @@ img {
   display: inline-block;
   font-size: 1.8rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--second-color);
   text-decoration: none;
   margin-bottom: .75rem;
   line-height: 1;
@@ -1857,12 +1936,12 @@ img {
 }
 
 .footer__logo:hover {
-  color: #fff;
+  color: var(--first-color);
 }
 
 .footer__tagline {
   font-size: .82rem;
-  color: rgba(255, 255, 255, .5);
+  color: rgba(0, 0, 0, .5);
   line-height: 1.7;
   margin: .5rem 0 1.25rem;
 }
@@ -1876,11 +1955,11 @@ img {
   width: 36px;
   height: 36px;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, .15);
+  border: 1px solid rgba(0, 0, 0, .15);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(255, 255, 255, .7);
+  color: rgba(0, 0, 0, .7);
   font-size: 1.1rem;
   text-decoration: none;
   transition: background .2s, color .2s, border-color .2s;
@@ -1898,7 +1977,7 @@ img {
   font-weight: 700;
   letter-spacing: .1em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, .35);
+  color: rgba(0, 0, 0, .45);
   margin: 0 0 1.1rem;
 }
 
@@ -1912,7 +1991,7 @@ img {
 }
 
 .footer__nav a {
-  color: rgba(255, 255, 255, .65);
+  color: rgba(0, 0, 0, .65);
   font-size: .85rem;
   text-decoration: none;
   transition: color .2s;
@@ -1931,7 +2010,7 @@ img {
 }
 
 .footer__nav a:hover {
-  color: #fff;
+  color: var(--first-color);
 }
 
 .footer__nav a:hover::before {
@@ -1953,7 +2032,7 @@ img {
   align-items: flex-start;
   gap: .6rem;
   font-size: .82rem;
-  color: rgba(255, 255, 255, .6);
+  color: rgba(0, 0, 0, .65);
 }
 
 .footer__contact-list i {
@@ -1964,20 +2043,20 @@ img {
 }
 
 .footer__contact-list a {
-  color: rgba(255, 255, 255, .6);
+  color: rgba(0, 0, 0, .65);
   text-decoration: none;
   transition: color .2s;
   word-break: break-all;
 }
 
 .footer__contact-list a:hover {
-  color: #fff;
+  color: var(--first-color);
 }
 
 /* ── Divider ── */
 .footer__divider {
   height: 1px;
-  background: rgba(255, 255, 255, .08);
+  background: rgba(0, 0, 0, .08);
 }
 
 /* ── Bottom row ── */
@@ -1990,7 +2069,7 @@ img {
 
 .footer__copy {
   font-size: .75rem;
-  color: rgba(255, 255, 255, .35);
+  color: rgba(0, 0, 0, .45);
   margin: 0;
 }
 
@@ -1998,11 +2077,11 @@ img {
   width: 34px;
   height: 34px;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, .15);
+  border: 1px solid rgba(0, 0, 0, .15);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(255, 255, 255, .5);
+  color: rgba(0, 0, 0, .5);
   font-size: 1.2rem;
   text-decoration: none;
   transition: background .2s, color .2s, border-color .2s;
@@ -2062,11 +2141,9 @@ img {
 .hero-shapes {
   position: absolute;
   top: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
   width: 100vw;
   height: 100%;
-  overflow: hidden;
   z-index: -1;
   pointer-events: none;
 }
@@ -2080,7 +2157,8 @@ img {
 .shape-circle-1 {
   width: 400px;
   height: 400px;
-  background-color: #fbbc05; /* Yellow */
+  background-color: #fbbc05;
+  /* Yellow */
   border-radius: 50%;
   top: -10%;
   right: 15%;
@@ -2090,7 +2168,8 @@ img {
 .shape-circle-2 {
   width: 450px;
   height: 450px;
-  background-color: #ea4335; /* Red */
+  background-color: #ea4335;
+  /* Red */
   border-radius: 50%;
   top: 20%;
   right: 5%;
@@ -2100,7 +2179,8 @@ img {
 .shape-triangle {
   width: 450px;
   height: 450px;
-  background-color: #4285f4; /* Blue */
+  background-color: #4285f4;
+  /* Blue */
   /* Solid triangle shape */
   clip-path: polygon(0% 10%, 100% 0%, 70% 100%);
   top: 10%;
@@ -2109,29 +2189,183 @@ img {
 }
 
 @keyframes floatCircle1 {
-  0% { transform: translate(0, 0) scale(1) rotate(0deg); }
-  33% { transform: translate(-50px, 30px) scale(1.05) rotate(10deg); }
-  66% { transform: translate(20px, -40px) scale(0.95) rotate(-10deg); }
-  100% { transform: translate(-10px, 10px) scale(1) rotate(5deg); }
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+
+  33% {
+    transform: translate(-50px, 30px) scale(1.05) rotate(10deg);
+  }
+
+  66% {
+    transform: translate(20px, -40px) scale(0.95) rotate(-10deg);
+  }
+
+  100% {
+    transform: translate(-10px, 10px) scale(1) rotate(5deg);
+  }
 }
 
 @keyframes floatCircle2 {
-  0% { transform: translate(0, 0) scale(1) rotate(0deg); }
-  33% { transform: translate(40px, -50px) scale(0.9) rotate(-15deg); }
-  66% { transform: translate(-30px, 60px) scale(1.1) rotate(15deg); }
-  100% { transform: translate(10px, -20px) scale(1) rotate(-5deg); }
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+
+  33% {
+    transform: translate(40px, -50px) scale(0.9) rotate(-15deg);
+  }
+
+  66% {
+    transform: translate(-30px, 60px) scale(1.1) rotate(15deg);
+  }
+
+  100% {
+    transform: translate(10px, -20px) scale(1) rotate(-5deg);
+  }
 }
 
 @keyframes floatTriangle {
-  0% { transform: translate(0, 0) scale(1) rotate(0deg); }
-  33% { transform: translate(-60px, -30px) scale(1.05) rotate(20deg); }
-  66% { transform: translate(40px, 50px) scale(0.95) rotate(-20deg); }
-  100% { transform: translate(20px, -10px) scale(1) rotate(10deg); }
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+
+  33% {
+    transform: translate(-60px, -30px) scale(1.05) rotate(20deg);
+  }
+
+  66% {
+    transform: translate(40px, 50px) scale(0.95) rotate(-20deg);
+  }
+
+  100% {
+    transform: translate(20px, -10px) scale(1) rotate(10deg);
+  }
 }
 
 @media screen and (max-width: 968px) {
-  .shape-circle-1, .shape-circle-2, .shape-triangle {
+
+  .shape-circle-1,
+  .shape-circle-2,
+  .shape-triangle {
     width: 250px;
     height: 250px;
   }
+}
+
+/* ==========================================================
+   DYNAMIC SECTION ACCENT COLORS
+========================================================== */
+#work {
+  --first-color: #ea4335;
+  /* Red */
+}
+
+#contact {
+  --first-color: #fbbc05;
+  /* Yellow */
+}
+
+/* Navbar active and hover link underline colors matching sections */
+.nav__menu a[href="#work"]::after {
+  background-color: #ea4335 !important;
+}
+
+.nav__menu a[href="#contact"]::after {
+  background-color: #fbbc05 !important;
+}
+
+/* ==========================================================
+   ABOUT SECTION SHAPES (LEFT SIDE)
+========================================================== */
+.about-shapes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.about-shapes .shape-circle-1 {
+  left: 2%;
+  right: auto;
+  top: 10%;
+}
+
+.about-shapes .shape-circle-2 {
+  left: 10%;
+  right: auto;
+  top: 60%;
+}
+
+.about-shapes .shape-triangle {
+  left: -2%;
+  right: auto;
+  top: 15%;
+  transform: scaleX(-1);
+  /* flip horizontally */
+}
+
+/* ==========================================================
+   WORK SECTION SHAPES (BOTTOM RIGHT)
+========================================================== */
+.work-shapes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.work-shapes .shape-circle-1 {
+  left: auto;
+  right: 10%;
+  top: 40%;
+}
+
+.work-shapes .shape-circle-2 {
+  left: auto;
+  right: -2%;
+  top: 60%;
+}
+
+.work-shapes .shape-triangle {
+  left: auto;
+  right: 2%;
+  top: 30%;
+}
+
+/* ==========================================================
+   CONTACT SECTION SHAPES (BOTTOM LEFT)
+========================================================== */
+.contact-shapes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.contact-shapes .shape-circle-1 {
+  left: -5%;
+  right: auto;
+  top: 10%;
+}
+
+.contact-shapes .shape-circle-2 {
+  left: -2%;
+  right: auto;
+  top: 30%;
+}
+
+.contact-shapes .shape-triangle {
+  left: 2%;
+  right: auto;
+  top: 20%;
+  transform: scaleX(-1);
 }

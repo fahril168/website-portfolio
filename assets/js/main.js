@@ -49,13 +49,10 @@ async function sbFetch(path) {
     return txt ? JSON.parse(txt) : [];
 }
 
-function thumbUrl(url, width = 400) {
+function thumbUrl(url, bucket = 'designs') {
     if (!url) return '';
-    
-    // Fitur Image Transformation Supabase (/render/image/public/) berbayar (Pro Plan) 
-    // atau memiliki limit ketat di Free Plan. Jika gagal, gambar akan rusak.
-    // Solusi: Kembalikan URL asli agar browser memuat gambar ukuran penuh (original).
-    return url;
+    if (url.startsWith('http')) return url;
+    return `${SB_URL}/storage/v1/object/public/${bucket}/${url}`;
 }
 
 /* ==========================================================
@@ -177,13 +174,18 @@ if (
     });
 
     sr.reveal(
-        '.home__data, .about__img, .skills__subtitle, .skills__text',
+        '.section-title, .home__data, .about__img',
         {}
     );
 
     sr.reveal(
-        '.home__img, .about__subtitle, .about__text, .skills__img, .about__container .button',
+        '.home__img, .about__subtitle, .about__text, .about__stat',
         { delay: 400 }
+    );
+    
+    sr.reveal(
+        '.about__container .button',
+        { delay: 600 }
     );
 
     sr.reveal(
@@ -192,8 +194,24 @@ if (
     );
 
     sr.reveal(
-        '.skills__data, .work__img, .contact__input',
+        '.portfolio-header, .portfolio-grid, .contact__container',
+        { delay: 200 }
+    );
+    
+    sr.reveal(
+        '.portfolio-more .button',
+        { delay: 400 }
+    );
+    
+    sr.reveal(
+        '.contact__card',
         { interval: 200 }
+    );
+
+    // Animasi pudar (fade-in) pada elemen bentuk latar belakang
+    sr.reveal(
+        '.hero-shapes, .about-shapes, .contact-shapes',
+        { delay: 300, distance: '0px', duration: 2500 }
     );
 }
 
@@ -440,7 +458,7 @@ if (
 
                                 <img
                                     class="thumb"
-                                    data-src="${thumbUrl(item.image_url)}"
+                                    data-src="${thumbUrl(item.image_url, 'designs')}"
                                     alt="${item.title || 'Design'}">
 
                                 <div class="design-card__overlay">
@@ -660,11 +678,11 @@ if (
                                 <a
                                     href="${item.video_url}"
                                     target="_blank"
-                                    class="design-card">
+                                    class="design-card img-loaded">
 
                                     <img
                                         class="thumb loaded"
-                                        src="${item.thumbnail_url}"
+                                        src="${thumbUrl(item.thumbnail_url, 'videos') || 'assets/img/work2.jpg'}"
                                         alt="${item.title || 'Video'}">
 
                                     <div class="design-card__overlay">
@@ -709,20 +727,20 @@ if (document.getElementById('website-content')) {
             return;
         }
 
-        let html = '<div class="year-section visible"><div class="design-grid">';
+        let html = '<div class="year-section visible"><div class="design-grid website-grid">';
         data.forEach(item => {
-            const imgSrc = item.image_url ? item.image_url : 'assets/img/work4.jpg'; // default
+            const imgSrc = item.image_url ? thumbUrl(item.image_url, 'designs') : 'assets/img/work4.jpg'; // default
             
             // Layout card untuk website: Menampilkan link demo dan github jika ada
             html += `
-                <div class="design-card" style="cursor: default; padding-bottom: 50px;">
+                <div class="design-card website-card img-loaded" style="cursor: default;">
                     <img class="thumb loaded" src="${imgSrc}" alt="${item.title || 'Website'}">
-                    <div class="design-card__label" style="bottom: 45px;">
+                    <div class="design-card__label" style="bottom: auto; top: 0; transform: translateY(-100%); background: linear-gradient(rgba(14, 36, 49, .72), transparent);">
                         ${item.title || 'Website'}
                     </div>
-                    <div style="position: absolute; bottom: 10px; width: 100%; display: flex; justify-content: center; gap: 10px; z-index: 5;">
-                        ${item.project_link ? `<a href="${item.project_link}" target="_blank" class="button" style="padding: 5px 15px; font-size: 0.8rem;"><i class='bx bx-link-external'></i> Visit</a>` : ''}
-                        ${item.github_link ? `<a href="${item.github_link}" target="_blank" class="button button-ghost" style="padding: 5px 15px; font-size: 0.8rem;"><i class='bx bxl-github'></i> Code</a>` : ''}
+                    <div style="position: absolute; bottom: 15px; width: 100%; display: flex; justify-content: center; gap: 10px; z-index: 5;">
+                        ${item.project_link ? `<a href="${item.project_link}" target="_blank" class="button" style="padding: 5px 15px; font-size: 0.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.3);"><i class='bx bx-link-external'></i> Visit</a>` : ''}
+                        ${item.github_link ? `<a href="${item.github_link}" target="_blank" class="button button-ghost" style="padding: 5px 15px; font-size: 0.8rem; background: rgba(255,255,255,0.9); box-shadow: 0 4px 10px rgba(0,0,0,0.3);"><i class='bx bxl-github'></i> Code</a>` : ''}
                     </div>
                 </div>
             `;
@@ -792,13 +810,18 @@ if (document.getElementById('portfolio-grid')) {
         'website': { url: 'website.html', text: 'Lihat Semua Website', table: 'websites' },
         'design': { url: 'design.html', text: 'Lihat Semua Design', table: 'designs' },
         'video': { url: 'video.html', text: 'Lihat Semua Video', table: 'videos' },
-        'dokumentasi': { url: '#', text: 'Lihat Semua Dokumentasi', table: null }
+        'dokumentasi': { url: 'dokumentasi.html', text: 'Lihat Semua Dokumentasi', table: 'dokumentasi' }
     };
 
     let currentCategory = 'website';
-    let currentOffset = 0;
-    let isLoadingMore = false;
-    let hasMoreData = true;
+    
+    // Caching state for each category
+    const state = {
+        'website': { data: [], offset: 0, hasMore: true, isLoading: false, initialized: false },
+        'design':  { data: [], offset: 0, hasMore: true, isLoading: false, initialized: false },
+        'video':   { data: [], offset: 0, hasMore: true, isLoading: false, initialized: false },
+        'dokumentasi': { data: [], offset: 0, hasMore: true, isLoading: false, initialized: false }
+    };
 
     // Navigation buttons logic
     const prevBtn = document.getElementById('slider-prev');
@@ -819,7 +842,8 @@ if (document.getElementById('portfolio-grid')) {
 
     // Infinite scroll listener
     grid.addEventListener('scroll', () => {
-        if (isLoadingMore || !hasMoreData) return;
+        const catState = state[currentCategory];
+        if (catState.isLoading || !catState.hasMore) return;
         if (grid.scrollLeft + grid.clientWidth >= grid.scrollWidth - 100) {
             loadMore();
         }
@@ -837,24 +861,38 @@ if (document.getElementById('portfolio-grid')) {
         items.forEach(item => {
             const title = item.title || 'Portfolio Item';
             const desc = item.description || (category === 'video' ? 'Karya video kreatif.' : 'Deskripsi portofolio.');
-            const img = item.image_url || item.thumbnail_url || 'assets/img/work1.jpg';
             
-            let tagsHtml = `<span>${category.toUpperCase()}</span>`;
+            const imgRaw = item.image_url || item.thumbnail_url;
+            let bucket = 'designs';
+            if (category === 'video') bucket = 'videos';
+            if (category === 'dokumentasi') bucket = 'dokumentasi';
+            
+            const img = imgRaw ? thumbUrl(imgRaw, bucket) : 'assets/img/work1.jpg';
+            
+            const badgeText = (item.category || category).toUpperCase();
+            let tagsHtml = `<span>${badgeText}</span>`;
             
             let footerHtml = '';
             if (item.github_link) {
-                footerHtml += `<a href="${item.github_link}" target="_blank" class="portfolio-card__link"><i class='bx bxl-github'></i> Code</a>`;
+                footerHtml += `<a href="${item.github_link}" target="_blank" class="portfolio-card__link" onclick="event.stopPropagation()"><i class='bx bxl-github'></i> Code</a>`;
             }
             let demoLink = item.project_link || item.video_url || item.image_url;
             if (demoLink) {
-                footerHtml += `<a href="${demoLink}" target="_blank" class="portfolio-card__link"><i class='bx bx-link-external'></i> View</a>`;
+                footerHtml += `<a href="${demoLink}" target="_blank" class="portfolio-card__link" onclick="event.stopPropagation()"><i class='bx bx-link-external'></i> View</a>`;
+            }
+            
+            let cardClickHtml = '';
+            if ((category === 'website' || category === 'video') && demoLink) {
+                cardClickHtml = `onclick="window.open('${demoLink}', '_blank')" style="cursor: pointer;" title="Buka ${title}"`;
+            } else if ((category === 'design' || category === 'dokumentasi') && imgRaw) {
+                cardClickHtml = `onclick="window.openDesignModal('${thumbUrl(imgRaw, bucket)}', '${title.replace(/'/g, "\\'")}')" style="cursor: pointer;" title="Preview ${title}"`;
             }
 
             html += `
-                <div class="portfolio-card">
+                <div class="portfolio-card" ${cardClickHtml}>
                     <div class="portfolio-card__img">
                         <img src="${img}" alt="${title}">
-                        <span class="portfolio-card__tag-overlay">${category.toUpperCase()}</span>
+                        <span class="portfolio-card__tag-overlay">${badgeText}</span>
                     </div>
                     <div class="portfolio-card__body">
                         <h3 class="portfolio-card__title">${title}</h3>
@@ -877,6 +915,8 @@ if (document.getElementById('portfolio-grid')) {
 
     const fetchCategoryData = async (category, offset) => {
         const mapping = categoryMap[category];
+        if (!mapping || !mapping.table) return [];
+
         let order = 'created_at.desc';
         let query = `${mapping.table}?select=*`;
         
@@ -885,7 +925,8 @@ if (document.getElementById('portfolio-grid')) {
         } else if (category === 'design') {
             order = 'created_at.desc';
         }
-        query += `&order=${order}&limit=5&offset=${offset}`;
+        // Change limit from 5 to 4
+        query += `&order=${order}&limit=4&offset=${offset}`;
 
         let data = [];
         if (SB_URL) {
@@ -895,87 +936,85 @@ if (document.getElementById('portfolio-grid')) {
             if ((!data || data.length === 0) && category === 'design') {
                 let proj = await sbFetch(`websites?select=*&order=created_at.desc`);
                 if (proj && proj.length > 0) {
-                    data = proj.filter(p => p.category && (p.category.toLowerCase().includes('desain') || p.category.toLowerCase().includes('design'))).slice(offset, offset + 5);
+                    data = proj.filter(p => p.category && (p.category.toLowerCase().includes('desain') || p.category.toLowerCase().includes('design'))).slice(offset, offset + 4);
                 }
             }
         }
-        return data;
+        return data || [];
     };
 
     const loadMore = async () => {
-        if (!hasMoreData) return;
-        isLoadingMore = true;
-
+        const catState = state[currentCategory];
+        if (!catState.hasMore) return;
+        
+        catState.isLoading = true;
         try {
-            const data = await fetchCategoryData(currentCategory, currentOffset);
+            const data = await fetchCategoryData(currentCategory, catState.offset);
             if (data && data.length > 0) {
-                renderCards(data, currentCategory, true);
-                currentOffset += data.length;
-                if (data.length < 5) hasMoreData = false;
+                catState.data = catState.data.concat(data);
+                catState.offset += data.length;
+                if (data.length < 4) catState.hasMore = false;
+                
+                // Only render if we are still on the same category
+                if (currentCategory === currentCategory) {
+                    renderCards(data, currentCategory, true);
+                }
             } else {
-                hasMoreData = false;
+                catState.hasMore = false;
             }
         } catch (e) {
-            hasMoreData = false;
+            catState.hasMore = false;
         } finally {
-            isLoadingMore = false;
+            catState.isLoading = false;
         }
     };
 
-    const loadCategory = async (category) => {
+    const getDummyData = (category) => {
+        if (category === 'website') {
+            return [
+                { title: "E-Commerce SportApp", description: "Website e-commerce untuk perlengkapan olahraga dengan fitur payment gateway.", image_url: "assets/img/work1.jpg", project_link: "https://example.com", github_link: "#" },
+                { title: "Dashboard Admin", description: "Sistem inventaris.", image_url: "assets/img/work2.jpg", project_link: "#" }
+            ];
+        } else if (category === 'design') {
+            return [
+                { title: "Ocular Sentinel", description: "Deteksi gangguan proyek.", image_url: "assets/img/work1.jpg", project_link: "#" },
+                { title: "UI/UX Mobile App", description: "Desain antarmuka pengguna.", image_url: "assets/img/work3.jpg", project_link: "#" }
+            ];
+        } else if (category === 'video') {
+            return [
+                { title: "Motion Graphics Ad", thumbnail_url: "assets/img/work2.jpg", video_url: "#" }
+            ];
+        }
+        return [];
+    };
+
+    const switchCategoryUI = (category) => {
         currentCategory = category;
-        currentOffset = 0;
-        hasMoreData = true;
-        isLoadingMore = false;
-
         const mapping = categoryMap[category];
-        if (!mapping) return;
-
+        
+        // Update Buttons
         filterBtns.forEach(b => b.classList.remove('active'));
         const activeBtn = document.querySelector(`.filter-btn[data-filter="${category}"]`);
         if (activeBtn) activeBtn.classList.add('active');
 
-        if (seeAllLink) {
+        // Update See All Link
+        if (seeAllLink && mapping) {
             seeAllLink.href = mapping.url;
             seeAllLink.innerHTML = `${mapping.text} <i class='bx bx-right-arrow-alt'></i>`;
         }
-
-        grid.innerHTML = `<div style="text-align:center; padding:2rem; width:100%; color:#6b7280;"><p>Memuat data...</p></div>`;
-
-        if (!mapping.table) {
-            grid.innerHTML = `<div style="text-align:center; padding:2rem; width:100%; color:#6b7280;"><p>Data segera hadir.</p></div>`;
-            return;
+        
+        const catState = state[category];
+        if (!catState.initialized) {
+            grid.innerHTML = `<div style="text-align:center; padding:2rem; width:100%; color:#6b7280;"><p>Memuat data...</p></div>`;
+        } else {
+            renderCards(catState.data, category, false);
+            // reset scroll position for new category
+            grid.scrollLeft = 0;
         }
+    };
 
-        try {
-            const data = await fetchCategoryData(category, currentOffset);
-            
-            if (!data || data.length === 0) throw new Error("No data");
-            
-            if (data.length < 5) hasMoreData = false;
-            
-            renderCards(data, category, false);
-            currentOffset += data.length;
-        } catch (err) {
-            let dummyData = [];
-            if (category === 'website') {
-                dummyData = [
-                    { title: "E-Commerce SportApp", description: "Website e-commerce untuk perlengkapan olahraga dengan fitur payment gateway.", image_url: "assets/img/work1.jpg", project_link: "https://example.com", github_link: "#" },
-                    { title: "Dashboard Admin", description: "Sistem inventaris.", image_url: "assets/img/work2.jpg", project_link: "#" }
-                ];
-            } else if (category === 'design') {
-                dummyData = [
-                    { title: "Ocular Sentinel", description: "Deteksi gangguan proyek.", image_url: "assets/img/work1.jpg", project_link: "#" },
-                    { title: "UI/UX Mobile App", description: "Desain antarmuka pengguna.", image_url: "assets/img/work3.jpg", project_link: "#" }
-                ];
-            } else if (category === 'video') {
-                dummyData = [
-                    { title: "Motion Graphics Ad", thumbnail_url: "assets/img/work2.jpg", video_url: "#" }
-                ];
-            }
-            renderCards(dummyData, category, false);
-            hasMoreData = false;
-        }
+    const loadCategory = (category) => {
+        switchCategoryUI(category);
     };
 
     filterBtns.forEach(btn => {
@@ -985,5 +1024,163 @@ if (document.getElementById('portfolio-grid')) {
         });
     });
 
-    loadCategory('website');
+    // Initialize all categories simultaneously
+    const initializeAllCategories = async () => {
+        // Prepare initial UI
+        switchCategoryUI('website');
+        
+        const categoriesToFetch = ['website', 'design', 'video', 'dokumentasi'];
+        
+        await Promise.all(categoriesToFetch.map(async (cat) => {
+            const catState = state[cat];
+            try {
+                const data = await fetchCategoryData(cat, 0);
+                if (!data || data.length === 0) throw new Error("No data");
+                
+                catState.data = data;
+                catState.offset = data.length;
+                if (data.length < 4) catState.hasMore = false;
+                catState.initialized = true;
+            } catch (err) {
+                // fallback to dummy data
+                const dummy = getDummyData(cat);
+                catState.data = dummy;
+                catState.hasMore = false;
+                catState.initialized = true;
+            }
+        }));
+
+        // Render the currently selected category after everything is initialized
+        if (state[currentCategory].initialized) {
+            renderCards(state[currentCategory].data, currentCategory, false);
+        }
+    };
+
+    // Fetch and load stats for About Section
+    const loadStatsFront = async () => {
+        try {
+            if (typeof sbFetch !== 'function') return;
+            const data = await sbFetch('about_stats?id=eq.1');
+            if (data && data.length > 0) {
+                const stat = data[0];
+                const p = document.getElementById('front-stat-projects');
+                const c = document.getElementById('front-stat-clients');
+                const h = document.getElementById('front-stat-happy');
+                const o = document.getElementById('front-stat-ongoing');
+                if(p) p.innerText = stat.projects || '0';
+                if(c) c.innerText = stat.clients || '0';
+                if(h) h.innerText = stat.happy_clients || '0';
+                if(o) o.innerText = stat.ongoing || '0';
+            }
+        } catch (e) {
+            console.log('Using default stats', e);
+        }
+    };
+    
+    // Call it immediately if on index
+    if (document.getElementById('front-stat-projects')) {
+        loadStatsFront();
+    }
+
+    initializeAllCategories();
+}
+
+/* ==========================================================
+   GLOBAL DESIGN PREVIEW MODAL
+========================================================== */
+window.openDesignModal = function(fullSrc, title) {
+    const modal = document.getElementById('design-modal');
+    if (!modal) return;
+    
+    const modalImg = document.getElementById('modal-img');
+    const modalBar = document.getElementById('modal-bar');
+    const modalLoader = document.getElementById('modal-loader');
+    
+    if (modalLoader) modalLoader.classList.remove('hidden');
+    if (modalImg) modalImg.style.opacity = '0';
+    if (modalBar) modalBar.textContent = title || '';
+    
+    modal.classList.add('is-active');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    
+    const tempImg = new Image();
+    tempImg.onload = () => {
+        if (modalImg) {
+            modalImg.src = fullSrc;
+            modalImg.style.opacity = '1';
+        }
+        if (modalLoader) modalLoader.classList.add('hidden');
+    };
+    tempImg.onerror = () => {
+        if (modalLoader) modalLoader.classList.add('hidden');
+        if (modalImg) {
+            modalImg.src = fullSrc;
+            modalImg.style.opacity = '1';
+        }
+    };
+    tempImg.src = fullSrc;
+};
+
+window.closeDesignModal = function() {
+    const modal = document.getElementById('design-modal');
+    if (!modal) return;
+    modal.classList.remove('is-active');
+    modal.setAttribute('aria-hidden', 'true');
+    const modalImg = document.getElementById('modal-img');
+    if (modalImg) modalImg.src = '';
+    document.body.style.overflow = '';
+};
+
+document.addEventListener('click', (e) => {
+    const overlay = document.getElementById('modal-overlay');
+    const closeBtn = document.getElementById('modal-close');
+    if (e.target === overlay || (closeBtn && closeBtn.contains(e.target))) {
+        window.closeDesignModal();
+    }
+});
+
+/* ==========================================================
+   DOKUMENTASI — LOAD & RENDER
+========================================================= */
+if (document.getElementById('dokumentasi-content')) {
+    function renderDokumentasi(data) {
+        const container = document.getElementById('dokumentasi-content');
+        if (!data?.length) {
+            container.innerHTML = `<div class="empty-state"><p>Belum ada dokumentasi.</p></div>`;
+            return;
+        }
+
+        let html = '<div class="year-section visible"><div class="design-grid">';
+        data.forEach(item => {
+            const imgSrc = item.image_url ? thumbUrl(item.image_url, 'dokumentasi') : 'assets/img/work1.jpg'; // default
+            
+            html += `
+                <div class="design-card img-loaded" style="cursor: default; padding-bottom: 20px;">
+                    <img class="thumb loaded" src="${imgSrc}" alt="${item.title || 'Dokumentasi'}">
+                    <div class="design-card__label">
+                        ${item.title || 'Dokumentasi'}
+                    </div>
+                </div>
+            `;
+        });
+        html += '</div></div>';
+        container.innerHTML = html;
+    }
+
+    async function loadDokumentasiPublic() {
+        const container = document.getElementById('dokumentasi-content');
+        let data = [];
+        try {
+            if (SB_URL) {
+                data = await sbFetch('dokumentasi?select=*&order=created_at.desc');
+            }
+        } catch (err) {
+            console.warn("Gagal mengambil data dari Supabase:", err.message);
+        }
+            
+        renderDokumentasi(data);
+    }
+
+    loadDokumentasiPublic();
 }
