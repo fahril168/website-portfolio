@@ -514,17 +514,17 @@ img {
 }
 
 .slider-nav:hover {
-  background-color: #4070F4;
+  background-color: var(--first-color);
   color: white;
-  border-color: #4070F4;
+  border-color: var(--first-color);
 }
 
 .slider-nav--prev {
-  left: -20px;
+  left: 0;
 }
 
 .slider-nav--next {
-  right: -20px;
+  right: 0;
 }
 
 .portfolio-grid {
@@ -994,6 +994,14 @@ img {
   .work__container {
     grid-template-columns: repeat(2, 1fr);
     column-gap: 2rem;
+  }
+
+  .slider-nav--prev {
+    left: -20px;
+  }
+
+  .slider-nav--next {
+    right: -20px;
   }
 }
 
