@@ -870,7 +870,27 @@ if (document.getElementById('portfolio-grid')) {
             const img = imgRaw ? thumbUrl(imgRaw, bucket) : 'assets/img/work1.jpg';
             
             const badgeText = (item.category || category).toUpperCase();
-            let tagsHtml = `<span>${badgeText}</span>`;
+            
+            // Tech stack handling (split by comma, pipe, semicolon, or slash)
+            let techStacks = [];
+            if (item.tech_stack) {
+                if (Array.isArray(item.tech_stack)) {
+                    techStacks = item.tech_stack;
+                } else if (typeof item.tech_stack === 'string') {
+                    // Split berdasarkan koma (,), garis tegak (|), titik koma (;), atau garis miring (/)
+                    techStacks = item.tech_stack.split(/[,|;/]+/).map(s => s.trim()).filter(Boolean);
+                }
+            } else if (category === 'website') {
+                // Default fallback if tech_stack is not specified for website
+                techStacks = ['HTML', 'CSS', 'JavaScript'];
+            }
+            
+            let tagsHtml = '';
+            if (techStacks.length > 0) {
+                tagsHtml = techStacks.map(tech => `<span class="tech-badge"><i class='bx bx-code-alt'></i> ${esc(tech)}</span>`).join('');
+            } else {
+                tagsHtml = `<span>${badgeText}</span>`;
+            }
             
             let footerHtml = '';
             if (item.github_link) {
@@ -972,8 +992,8 @@ if (document.getElementById('portfolio-grid')) {
     const getDummyData = (category) => {
         if (category === 'website') {
             return [
-                { title: "E-Commerce SportApp", description: "Website e-commerce untuk perlengkapan olahraga dengan fitur payment gateway.", image_url: "assets/img/work1.jpg", project_link: "https://example.com", github_link: "#" },
-                { title: "Dashboard Admin", description: "Sistem inventaris.", image_url: "assets/img/work2.jpg", project_link: "#" }
+                { title: "E-Commerce SportApp", description: "Website e-commerce untuk perlengkapan olahraga dengan fitur payment gateway.", tech_stack: "React, Laravel, Tailwind CSS, MySQL", image_url: "assets/img/work1.jpg", project_link: "https://example.com", github_link: "#" },
+                { title: "Dashboard Admin", description: "Sistem inventaris dan analitik data.", tech_stack: "Vue.js, Laravel, Bootstrap, PostgreSQL", image_url: "assets/img/work2.jpg", project_link: "#" }
             ];
         } else if (category === 'design') {
             return [

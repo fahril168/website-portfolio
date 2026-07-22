@@ -634,6 +634,16 @@ img {
   font-size: 0.75rem;
   padding: 0.3rem 0.8rem;
   border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-weight: 500;
+}
+
+.portfolio-card__tags span.tech-badge {
+  background-color: hsl(var(--hue-color), 89%, 95%);
+  color: var(--first-color);
+  border: 1px solid hsl(var(--hue-color), 89%, 88%);
 }
 
 .portfolio-card__footer {

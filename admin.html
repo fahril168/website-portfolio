@@ -734,6 +734,10 @@
         <input type="url" id="w-github" placeholder="https://github.com/..." />
       </div>
       <div class="form-group full">
+        <label>Tech Stacks <span class="label-opt">(pisah dengan koma, misal: React, Laravel, Tailwind CSS)</span></label>
+        <input type="text" id="w-tech" placeholder="Contoh: React, Laravel, MySQL" />
+      </div>
+      <div class="form-group full">
         <label>Deskripsi <span class="label-opt">(opsional)</span></label>
         <textarea id="w-desc" placeholder="Deskripsi singkat website ini..."></textarea>
       </div>
@@ -1359,12 +1363,16 @@ function renderWebsiteTable(list) {
     const date = item.created_at ? new Date(item.created_at).toLocaleDateString('id-ID', {day:'numeric',month:'short',year:'numeric'}) : '—';
     const demoLink = item.project_link ? `<a href="${item.project_link}" target="_blank" class="chip chip-cat"><i class='bx bx-link-external'></i> Buka</a>` : `<span class="chip chip-null">Tidak ada</span>`;
     const githubLink = item.github_link ? `<a href="${item.github_link}" target="_blank" class="chip chip-cat"><i class='bx bxl-github'></i> Kode</a>` : `<span class="chip chip-null">Tidak ada</span>`;
+    const techText = item.tech_stack ? `<div class="project-meta"><i class='bx bx-code-alt'></i> ${esc(item.tech_stack)}</div>` : '';
     
     html += `<tr>
       <td>
         <div class="project-cell">
           <div class="project-thumb">${thumb}</div>
-          <div><div class="project-name">${esc(item.title || 'Untitled')}</div></div>
+          <div>
+            <div class="project-name">${esc(item.title || 'Untitled')}</div>
+            ${techText}
+          </div>
         </div>
       </td>
       <td>${demoLink}</td>
@@ -1412,6 +1420,7 @@ function openWebsiteForm(mode, id = null) {
       document.getElementById('w-title').value = p.title || '';
       document.getElementById('w-link').value = p.project_link || '';
       document.getElementById('w-github').value = p.github_link || '';
+      document.getElementById('w-tech').value = p.tech_stack || '';
       document.getElementById('w-desc').value = p.description || '';
       if (p.image_url) { 
         document.getElementById('w-img-preview').src = p.image_url;
@@ -1420,7 +1429,7 @@ function openWebsiteForm(mode, id = null) {
     }
   } else {
     document.getElementById('website-edit-id').value = '';
-    ['w-title','w-link','w-github','w-desc'].forEach(i => document.getElementById(i).value = '');
+    ['w-title','w-link','w-github','w-tech','w-desc'].forEach(i => document.getElementById(i).value = '');
   }
   document.getElementById('modal-website-form').classList.add('open');
 }
@@ -1461,6 +1470,7 @@ async function saveWebsite() {
       title,
       project_link: document.getElementById('w-link').value.trim() || null,
       github_link: document.getElementById('w-github').value.trim() || null,
+      tech_stack: document.getElementById('w-tech').value.trim() || null,
       description: document.getElementById('w-desc').value.trim() || null,
       image_url: imageUrl
     };
