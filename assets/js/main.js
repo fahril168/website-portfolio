@@ -727,25 +727,47 @@ if (document.getElementById('website-content')) {
             return;
         }
 
-        let html = '<div class="year-section visible"><div class="design-grid website-grid">';
+        let html = '<div class="website-grid-new">';
         data.forEach(item => {
-            const imgSrc = item.image_url ? thumbUrl(item.image_url, 'designs') : 'assets/img/work4.jpg'; // default
-            
-            // Layout card untuk website: Menampilkan link demo dan github jika ada
+            const imgSrc = item.image_url ? thumbUrl(item.image_url, 'designs') : 'assets/img/about.jpg';
+            const title = esc(item.title || 'Judul Website');
+            const desc = esc(item.description || item.desc || 'Proyek pengembangan website responsif dan modern.');
+            const linkUrl = item.project_link || item.github_link || item.demo_link || '#';
+            const linkTarget = linkUrl !== '#' ? 'target="_blank"' : '';
+
+            // Tech stack parsing
+            let techStacks = [];
+            if (item.tech_stack) {
+                if (Array.isArray(item.tech_stack)) {
+                    techStacks = item.tech_stack;
+                } else if (typeof item.tech_stack === 'string') {
+                    techStacks = item.tech_stack.split(/[,|;/]+/).map(s => s.trim()).filter(Boolean);
+                }
+            }
+            if (!techStacks.length) {
+                techStacks = ['HTML', 'CSS', 'JavaScript'];
+            }
+            const tagsHtml = techStacks.map(tech => `<span class="website-card-new__tag"><i class='bx bx-code-alt'></i> ${esc(tech)}</span>`).join('');
+
             html += `
-                <div class="design-card website-card img-loaded" style="cursor: default;">
-                    <img class="thumb loaded" src="${imgSrc}" alt="${item.title || 'Website'}">
-                    <div class="design-card__label" style="bottom: auto; top: 0; transform: translateY(-100%); background: linear-gradient(rgba(14, 36, 49, .72), transparent);">
-                        ${item.title || 'Website'}
+                <div class="website-card-new">
+                    <div class="website-card-new__img-wrap">
+                        <img src="${imgSrc}" alt="${title}" loading="lazy">
                     </div>
-                    <div style="position: absolute; bottom: 15px; width: 100%; display: flex; justify-content: center; gap: 10px; z-index: 5;">
-                        ${item.project_link ? `<a href="${item.project_link}" target="_blank" class="button" style="padding: 5px 15px; font-size: 0.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.3);"><i class='bx bx-link-external'></i> Visit</a>` : ''}
-                        ${item.github_link ? `<a href="${item.github_link}" target="_blank" class="button button-ghost" style="padding: 5px 15px; font-size: 0.8rem; background: rgba(255,255,255,0.9); box-shadow: 0 4px 10px rgba(0,0,0,0.3);"><i class='bx bxl-github'></i> Code</a>` : ''}
+                    <div class="website-card-new__content">
+                        <h3 class="website-card-new__title">${title}</h3>
+                        <div class="website-card-new__tags">
+                            ${tagsHtml}
+                        </div>
+                        <p class="website-card-new__desc">${desc}</p>
+                        <a href="${linkUrl}" ${linkTarget} class="website-card-new__link">
+                            Lihat Detail <i class='bx bx-right-arrow-alt'></i>
+                        </a>
                     </div>
                 </div>
             `;
         });
-        html += '</div></div>';
+        html += '</div>';
         container.innerHTML = html;
     }
 
@@ -758,39 +780,61 @@ if (document.getElementById('website-content')) {
             }
         } catch (err) {
             console.warn("Gagal mengambil data dari Supabase:", err.message);
-            // Lanjutkan untuk menampilkan data dummy
         }
             
-        // --- INJEKSI DATA DUMMY SEMENTARA ---
+        // --- DATA DUMMY PREVIEW ---
         if (!data || data.length === 0) {
             data = [
                 {
-                    title: "E-Commerce SportApp",
-                    description: "Website e-commerce untuk perlengkapan olahraga dengan fitur payment gateway terintegrasi.",
-                    image_url: "assets/img/work1.jpg",
+                    title: "Pembangunan Gedung Dinas PUPR Kota Kendari",
+                    tech_stack: "HTML, CSS, JavaScript, PHP",
+                    description: "Proyek pembangunan gedung kantor Dinas Pekerjaan Umum dan Penataan Ruang Kota Kendari...",
+                    image_url: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80",
                     project_link: "https://example.com",
-                    github_link: "https://github.com",
                     created_at: new Date().toISOString()
                 },
                 {
-                    title: "Dashboard Admin Pro",
-                    description: "Sistem manajemen inventaris berbasis web dengan analitik real-time dan dark mode.",
-                    image_url: "assets/img/work2.jpg",
+                    title: "Peningkatan Jalan Provinsi Ruas Konawe-Konawe Utara",
+                    tech_stack: "Laravel, Vue.js, Tailwind CSS",
+                    description: "Proyek peningkatan jalan provinsi sepanjang 12,5 km yang menghubungkan Kabupaten Konawe dengan...",
+                    image_url: "https://images.unsplash.com/photo-1519999482648-25049ddd37b1?auto=format&fit=crop&w=800&q=80",
                     project_link: "https://example.com",
-                    github_link: null,
                     created_at: new Date(Date.now() - 86400000).toISOString()
                 },
                 {
-                    title: "Landing Page SaaS",
-                    description: "Desain landing page modern untuk perusahaan Software as a Service.",
-                    image_url: "assets/img/work3.jpg",
-                    project_link: null,
-                    github_link: "https://github.com",
+                    title: "Pembangunan Jembatan Sungai Konaweha",
+                    tech_stack: "React, Next.js, Supabase",
+                    description: "Pembangunan jembatan beton bertulang sepanjang 120 meter yang menghubungkan dua kecamatan di...",
+                    image_url: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
+                    project_link: "https://example.com",
                     created_at: new Date(Date.now() - 172800000).toISOString()
+                },
+                {
+                    title: "Pembangunan Gedung Rumah Sakit Daerah",
+                    tech_stack: "HTML, CSS, JavaScript, Bootstrap",
+                    description: "Perencanaan dan pembangunan struktur gedung fasilitas rumah sakit daerah multi-lantai modern.",
+                    image_url: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b3?auto=format&fit=crop&w=800&q=80",
+                    project_link: "https://example.com",
+                    created_at: new Date(Date.now() - 259200000).toISOString()
+                },
+                {
+                    title: "Pekerjaan Restorasi & Utilitas Infrastruktur",
+                    tech_stack: "Node.js, Express, MongoDB",
+                    description: "Konstruksi dan revitalisasi jaringan fasilitas utilitas umum daerah bertaraf standar nasional.",
+                    image_url: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80",
+                    project_link: "https://example.com",
+                    created_at: new Date(Date.now() - 345600000).toISOString()
+                },
+                {
+                    title: "Pembangunan Gedung Perkuliahan Terpadu",
+                    tech_stack: "React, Tailwind CSS, PostgreSQL",
+                    description: "Pembangunan fasilitas perkuliahan terpadu modern dengan arsitektur klasik ramah lingkungan.",
+                    image_url: "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=800&q=80",
+                    project_link: "https://example.com",
+                    created_at: new Date(Date.now() - 432000000).toISOString()
                 }
             ];
         }
-        // ------------------------------------
         
         renderWebsites(data);
     }
