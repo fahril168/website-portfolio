@@ -4,7 +4,7 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import HeroShapes from '../components/HeroShapes'
 import ModalPreview from '../components/ModalPreview'
 import { WarpBackground } from '../components/ui/warp-background'
-import { sbFetch, thumbUrl } from '../config/supabase'
+import { getPortfolioData, thumbUrl } from '../services/localDataService'
 
 function Tilt3DImage({ src, alt, className = 'home__img', maxWidth = '300px' }) {
   const containerRef = useRef(null)
@@ -109,28 +109,22 @@ export default function Home() {
     }
   }, [location])
 
-  // Fetch Stats from Supabase
+  // Fetch Stats from Local JSON
   useEffect(() => {
     async function loadStats() {
       try {
-        const data = await sbFetch('portfolio_stats?select=*')
-        if (data && data.length > 0) {
-          const s = data[0]
-          setStats({
-            projects: s.projects || '15+',
-            clients: s.clients || '10+',
-            happy: s.happy || '99%',
-            ongoing: s.ongoing || '3'
-          })
+        const data = await getPortfolioData()
+        if (data && data.stats) {
+          setStats(data.stats)
         }
       } catch (err) {
-        console.warn('Menggunakan data statistik default:', err.message)
+        console.warn('Gagal memuat statistik lokal:', err.message)
       }
     }
     loadStats()
   }, [])
 
-  // Fetch Featured Work by Category
+  // Fetch Featured Work by Category from Local JSON
   useEffect(() => {
     async function fetchWork() {
       setLoadingWork(true)
@@ -142,26 +136,14 @@ export default function Home() {
       }
 
       const table = categoryMap[activeCategory] || 'websites'
-      let order = 'created_at.desc'
-      if (activeCategory === 'video') order = 'year.desc,created_at.desc'
 
       try {
-        let data = await sbFetch(`${table}?select=*&order=${order}&limit=6`)
-        
-        if ((!data || data.length === 0) && activeCategory === 'design') {
-          const proj = await sbFetch('websites?select=*&order=created_at.desc')
-          if (proj && proj.length > 0) {
-            data = proj.filter(p => p.category && (p.category.toLowerCase().includes('desain') || p.category.toLowerCase().includes('design'))).slice(0, 6)
-          }
-        }
-
-        if (!data || data.length === 0) {
-          data = getFallbackData(activeCategory)
-        }
-
+        const fullData = await getPortfolioData()
+        const data = (fullData && fullData[table]) ? fullData[table].slice(0, 6) : []
         setWorkData(data)
       } catch (err) {
-        setWorkData(getFallbackData(activeCategory))
+        console.warn('Gagal memuat karya lokal:', err.message)
+        setWorkData([])
       } finally {
         setLoadingWork(false)
       }

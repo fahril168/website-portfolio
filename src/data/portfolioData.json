@@ -1,0 +1,102 @@
+{
+  "stats": {
+    "projects": "15+",
+    "clients": "10+",
+    "happy": "99%",
+    "ongoing": "3"
+  },
+  "websites": [
+    {
+      "id": "web-1",
+      "title": "Pembangunan Gedung Dinas PUPR Kota Kendari",
+      "category": "Website",
+      "tech_stack": "HTML, CSS, JavaScript, PHP",
+      "description": "Proyek pembangunan gedung kantor Dinas Pekerjaan Umum dan Penataan Ruang Kota Kendari bertaraf nasional.",
+      "image_url": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80",
+      "project_link": "https://example.com",
+      "github_link": "https://github.com/fahril168",
+      "created_at": "2026-01-15T10:00:00.000Z"
+    },
+    {
+      "id": "web-2",
+      "title": "Peningkatan Jalan Provinsi Ruas Konawe-Konawe Utara",
+      "category": "Web App",
+      "tech_stack": "Laravel, Vue.js, Tailwind CSS",
+      "description": "Proyek peningkatan jalan provinsi sepanjang 12,5 km yang menghubungkan Kabupaten Konawe.",
+      "image_url": "https://images.unsplash.com/photo-1519999482648-25049ddd37b1?auto=format&fit=crop&w=800&q=80",
+      "project_link": "https://example.com",
+      "github_link": "https://github.com/fahril168",
+      "created_at": "2026-02-10T12:00:00.000Z"
+    },
+    {
+      "id": "web-3",
+      "title": "Pembangunan Jembatan Sungai Konaweha",
+      "category": "Monitoring System",
+      "tech_stack": "React, Next.js, Node.js",
+      "description": "Pembangunan jembatan beton bertulang sepanjang 120 meter yang menghubungkan dua kecamatan.",
+      "image_url": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
+      "project_link": "https://example.com",
+      "github_link": "https://github.com/fahril168",
+      "created_at": "2026-03-01T14:30:00.000Z"
+    }
+  ],
+  "designs": [
+    {
+      "id": "des-1",
+      "title": "Poster Event Seminar Teknologi",
+      "category": "Poster",
+      "image_url": "assets/img/about.jpg",
+      "created_at": "2026-01-20T08:00:00.000Z"
+    },
+    {
+      "id": "des-2",
+      "title": "Branding & Identity Design",
+      "category": "Branding",
+      "image_url": "assets/img/about.jpg",
+      "created_at": "2026-02-15T09:00:00.000Z"
+    },
+    {
+      "id": "des-3",
+      "title": "UI/UX Mobile App Exploration",
+      "category": "UI/UX",
+      "image_url": "assets/img/about.jpg",
+      "created_at": "2026-03-05T11:00:00.000Z"
+    }
+  ],
+  "videos": [
+    {
+      "id": "vid-1",
+      "title": "Company Profile Video 2026",
+      "category": "Cinematic",
+      "thumbnail_url": "assets/img/about.jpg",
+      "video_url": "https://www.youtube.com",
+      "year": 2026,
+      "created_at": "2026-02-01T15:00:00.000Z"
+    },
+    {
+      "id": "vid-2",
+      "title": "Aftermovie Gathering & Expo",
+      "category": "Event",
+      "thumbnail_url": "assets/img/about.jpg",
+      "video_url": "https://www.youtube.com",
+      "year": 2025,
+      "created_at": "2025-11-20T16:00:00.000Z"
+    }
+  ],
+  "dokumentasi": [
+    {
+      "id": "doc-1",
+      "title": "Dokumentasi Seminar Nasional",
+      "category": "Event",
+      "image_url": "assets/img/about.jpg",
+      "created_at": "2026-01-10T10:00:00.000Z"
+    },
+    {
+      "id": "doc-2",
+      "title": "Kunjungan Lapangan & Workshop",
+      "category": "Workshop",
+      "image_url": "assets/img/about.jpg",
+      "created_at": "2026-02-18T13:00:00.000Z"
+    }
+  ]
+}

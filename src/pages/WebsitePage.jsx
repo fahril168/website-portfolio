@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import HeroShapes from '../components/HeroShapes'
-import { sbFetch, thumbUrl } from '../config/supabase'
+import { getPortfolioData, thumbUrl } from '../services/localDataService'
 
 export default function WebsitePage() {
   const [websites, setWebsites] = useState([])
@@ -9,44 +9,15 @@ export default function WebsitePage() {
   useEffect(() => {
     async function loadWebsites() {
       setLoading(true)
-      let data = []
       try {
-        data = await sbFetch('websites?select=*&order=created_at.desc')
+        const data = await getPortfolioData()
+        setWebsites(data.websites || [])
       } catch (err) {
-        console.warn('Gagal mengambil data website dari Supabase:', err.message)
+        console.warn('Gagal mengambil data website lokal:', err.message)
+        setWebsites([])
+      } finally {
+        setLoading(false)
       }
-
-      if (!data || data.length === 0) {
-        data = [
-          {
-            id: 1,
-            title: "Pembangunan Gedung Dinas PUPR Kota Kendari",
-            tech_stack: "HTML, CSS, JavaScript, PHP",
-            description: "Proyek pembangunan gedung kantor Dinas Pekerjaan Umum dan Penataan Ruang Kota Kendari bertaraf nasional.",
-            image_url: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80",
-            project_link: "https://example.com"
-          },
-          {
-            id: 2,
-            title: "Peningkatan Jalan Provinsi Ruas Konawe-Konawe Utara",
-            tech_stack: "Laravel, Vue.js, Tailwind CSS",
-            description: "Proyek peningkatan jalan provinsi sepanjang 12,5 km yang menghubungkan Kabupaten Konawe.",
-            image_url: "https://images.unsplash.com/photo-1519999482648-25049ddd37b1?auto=format&fit=crop&w=800&q=80",
-            project_link: "https://example.com"
-          },
-          {
-            id: 3,
-            title: "Pembangunan Jembatan Sungai Konaweha",
-            tech_stack: "React, Next.js, Supabase",
-            description: "Pembangunan jembatan beton bertulang sepanjang 120 meter yang menghubungkan dua kecamatan.",
-            image_url: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
-            project_link: "https://example.com"
-          }
-        ]
-      }
-
-      setWebsites(data)
-      setLoading(false)
     }
 
     loadWebsites()
@@ -77,7 +48,7 @@ export default function WebsitePage() {
         ) : (
           <div className="website-grid-new" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '2rem' }}>
             {websites.map((item) => {
-              const imgSrc = item.image_url ? thumbUrl(item.image_url, 'designs') : 'assets/img/about.jpg'
+              const imgSrc = thumbUrl(item.image_url)
               const title = item.title || 'Judul Website'
               const desc = item.description || item.desc || 'Proyek pengembangan website responsif dan modern.'
               const linkUrl = item.project_link || item.github_link || item.demo_link || '#'

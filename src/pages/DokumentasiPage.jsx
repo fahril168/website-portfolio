@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import HeroShapes from '../components/HeroShapes'
 import ModalPreview from '../components/ModalPreview'
-import { sbFetch, thumbUrl } from '../config/supabase'
+import { getPortfolioData, thumbUrl } from '../services/localDataService'
 
 export default function DokumentasiPage() {
   const [docs, setDocs] = useState([])
@@ -13,8 +13,8 @@ export default function DokumentasiPage() {
     async function loadDocs() {
       setLoading(true)
       try {
-        const data = await sbFetch('dokumentasi?select=*&order=created_at.desc')
-        setDocs(data || [])
+        const data = await getPortfolioData()
+        setDocs(data.dokumentasi || [])
       } catch (err) {
         setError(err.message)
       } finally {
@@ -60,13 +60,13 @@ export default function DokumentasiPage() {
                 className="design-card img-loaded"
                 onClick={() => setModalData({
                   isOpen: true,
-                  src: thumbUrl(item.image_url, 'dokumentasi'),
+                  src: thumbUrl(item.image_url),
                   title: item.title || 'Dokumentasi'
                 })}
               >
                 <img
                   className="thumb loaded"
-                  src={thumbUrl(item.image_url, 'dokumentasi')}
+                  src={thumbUrl(item.image_url)}
                   alt={item.title || 'Dokumentasi'}
                 />
                 <div className="design-card__overlay">

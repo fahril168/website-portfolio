@@ -1,6 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { sbFetch, supabase, thumbUrl } from '../config/supabase'
+import {
+  getPortfolioData,
+  addItem,
+  deleteItem,
+  updateStats,
+  uploadImageFile,
+  thumbUrl
+} from '../services/localDataService'
 
 export default function AdminDashboard() {
   const navigate = useNavigate()
@@ -9,6 +16,11 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true)
   const [stats, setStats] = useState({ projects: '15+', clients: '10+', happy: '99%', ongoing: '3' })
   const [msg, setMsg] = useState({ type: '', text: '' })
+
+  // Upload States
+  const fileInputRef = useRef(null)
+  const [uploadingImage, setUploadingImage] = useState(false)
+  const [previewImage, setPreviewImage] = useState('')
 
   // Form State
   const [formData, setFormData] = useState({
@@ -37,51 +49,64 @@ export default function AdminDashboard() {
     navigate('/login')
   }
 
-  // Fetch Current Data Tab
+  // Load Current Tab Data
   const loadTabData = async () => {
     setLoading(true)
-    setMsg({ type: '', text: '' })
-
     try {
+      const data = await getPortfolioData()
       if (activeTab === 'stats') {
-        const res = await sbFetch('portfolio_stats?select=*')
-        if (res && res.length > 0) {
-          setStats({
-            projects: res[0].projects || '15+',
-            clients: res[0].clients || '10+',
-            happy: res[0].happy || '99%',
-            ongoing: res[0].ongoing || '3'
-          })
-        }
+        setStats(data.stats || { projects: '15+', clients: '10+', happy: '99%', ongoing: '3' })
       } else {
-        let order = 'created_at.desc'
-        if (activeTab === 'videos') order = 'year.desc,created_at.desc'
-        const res = await sbFetch(`${activeTab}?select=*&order=${order}`)
-        setItems(res || [])
+        setItems(data[activeTab] || [])
       }
     } catch (err) {
-      setMsg({ type: 'error', text: `Gagal memuat data: ${err.message}` })
+      setMsg({ type: 'error', text: `Gagal memuat data lokal: ${err.message}` })
     } finally {
       setLoading(false)
     }
   }
 
   useEffect(() => {
+    setMsg({ type: '', text: '' })
+    setPreviewImage('')
+    if (fileInputRef.current) fileInputRef.current.value = ''
     loadTabData()
   }, [activeTab])
+
+  // Handle Local Image File Upload
+  const handleFileUpload = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setUploadingImage(true)
+    setMsg({ type: 'info', text: 'Mengunggah dan menyalin foto ke folder assets/img/...' })
+
+    try {
+      const result = await uploadImageFile(file)
+      if (result.success && result.url) {
+        if (activeTab === 'videos') {
+          setFormData(prev => ({ ...prev, thumbnail_url: result.url }))
+        } else {
+          setFormData(prev => ({ ...prev, image_url: result.url }))
+        }
+        setPreviewImage(result.url)
+        setMsg({ type: 'success', text: `✅ Foto "${result.filename}" berhasil disalin ke folder assets/img!` })
+      }
+    } catch (err) {
+      setMsg({ type: 'error', text: `Gagal mengupload foto: ${err.message}` })
+    } finally {
+      setUploadingImage(false)
+    }
+  }
 
   // Save Stats
   const handleSaveStats = async (e) => {
     e.preventDefault()
-    setMsg({ type: 'info', text: 'Menyimpan statistik...' })
+    setMsg({ type: 'info', text: 'Menyimpan statistik ke file JSON...' })
 
     try {
-      const { error } = await supabase
-        .from('portfolio_stats')
-        .upsert([{ id: 1, ...stats }])
-
-      if (error) throw error
-      setMsg({ type: 'success', text: 'Statistik berhasil diperbarui!' })
+      await updateStats(stats)
+      setMsg({ type: 'success', text: '✅ Statistik berhasil disimpan ke src/data/portfolioData.json!' })
     } catch (err) {
       setMsg({ type: 'error', text: `Gagal menyimpan: ${err.message}` })
     }
@@ -95,43 +120,46 @@ export default function AdminDashboard() {
       return
     }
 
-    setMsg({ type: 'info', text: 'Menambahkan item...' })
+    setMsg({ type: 'info', text: 'Menambahkan item ke JSON lokal...' })
 
     let payload = {}
     if (activeTab === 'websites') {
       payload = {
         title: formData.title,
+        category: formData.category || 'Website',
         tech_stack: formData.tech_stack,
         description: formData.description,
-        image_url: formData.image_url,
+        image_url: formData.image_url || 'assets/img/about.jpg',
         project_link: formData.project_link,
         github_link: formData.github_link
       }
     } else if (activeTab === 'designs') {
       payload = {
         title: formData.title,
-        category: formData.category || 'Desain',
-        image_url: formData.image_url
+        category: formData.category || 'Design',
+        image_url: formData.image_url || 'assets/img/about.jpg'
       }
     } else if (activeTab === 'videos') {
       payload = {
         title: formData.title,
+        category: formData.category || 'Video',
         video_url: formData.video_url,
-        thumbnail_url: formData.thumbnail_url,
+        thumbnail_url: formData.thumbnail_url || 'assets/img/about.jpg',
         year: parseInt(formData.year) || new Date().getFullYear()
       }
     } else if (activeTab === 'dokumentasi') {
       payload = {
         title: formData.title,
-        image_url: formData.image_url
+        category: formData.category || 'Dokumentasi',
+        image_url: formData.image_url || 'assets/img/about.jpg'
       }
     }
 
     try {
-      const { error } = await supabase.from(activeTab).insert([payload])
-      if (error) throw error
-
-      setMsg({ type: 'success', text: 'Item baru berhasil ditambahkan!' })
+      await addItem(activeTab, payload)
+      setMsg({ type: 'success', text: `✅ Karya "${formData.title}" berhasil ditambahkan ke portfolioData.json!` })
+      
+      // Reset Form
       setFormData({
         title: '',
         category: '',
@@ -144,6 +172,8 @@ export default function AdminDashboard() {
         github_link: '',
         year: new Date().getFullYear()
       })
+      setPreviewImage('')
+      if (fileInputRef.current) fileInputRef.current.value = ''
       loadTabData()
     } catch (err) {
       setMsg({ type: 'error', text: `Gagal menambahkan: ${err.message}` })
@@ -152,12 +182,11 @@ export default function AdminDashboard() {
 
   // Delete Item
   const handleDeleteItem = async (id) => {
-    if (!window.confirm('Yakin ingin menghapus item ini?')) return
+    if (!window.confirm('Yakin ingin menghapus item ini dari data portofolio?')) return
 
     try {
-      const { error } = await supabase.from(activeTab).delete().eq('id', id)
-      if (error) throw error
-      setMsg({ type: 'success', text: 'Item berhasil dihapus.' })
+      await deleteItem(activeTab, id)
+      setMsg({ type: 'success', text: '✅ Item berhasil dihapus dari file JSON.' })
       loadTabData()
     } catch (err) {
       setMsg({ type: 'error', text: `Gagal menghapus: ${err.message}` })
@@ -173,12 +202,16 @@ export default function AdminDashboard() {
             <Link to="/" className="nav__logo">
               <h2>Fahril Admin</h2>
             </Link>
-            <span className="nav__badge">Dashboard</span>
+            <span className="nav__badge" style={{ background: '#e0e7ff', color: '#3730a3', padding: '0.2rem 0.6rem', borderRadius: '0.375rem', fontSize: '0.75rem', fontWeight: '600' }}>
+              Mode JSON Lokal
+            </span>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <span style={{ fontSize: '0.85rem', fontWeight: '600' }}>Halo, Admin</span>
-            <button onClick={handleLogout} className="nav__logout">
+            <Link to="/" target="_blank" style={{ fontSize: '0.85rem', color: 'var(--first-color)', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+              <i className='bx bx-show'></i> Lihat Website
+            </Link>
+            <button onClick={handleLogout} className="nav__logout" style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
               <i className='bx bx-log-out'></i> Keluar
             </button>
           </div>
@@ -244,12 +277,16 @@ export default function AdminDashboard() {
             <div style={{
               padding: '0.75rem 1rem',
               borderRadius: '0.5rem',
-              marginBottom: '1rem',
+              marginBottom: '1.25rem',
               background: msg.type === 'error' ? '#fee2e2' : msg.type === 'success' ? '#dcfce7' : '#e0f2fe',
               color: msg.type === 'error' ? '#991b1b' : msg.type === 'success' ? '#166534' : '#075985',
-              fontSize: '0.9rem'
+              fontSize: '0.9rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem'
             }}>
-              {msg.text}
+              <i className={`bx ${msg.type === 'error' ? 'bx-error-circle' : msg.type === 'success' ? 'bx-check-circle' : 'bx-info-circle'}`} style={{ fontSize: '1.2rem' }}></i>
+              <span>{msg.text}</span>
             </div>
           )}
 
@@ -294,17 +331,22 @@ export default function AdminDashboard() {
                   />
                 </div>
                 <div style={{ gridColumn: 'span 2', marginTop: '1rem' }}>
-                  <button type="submit" className="button">Simpan Statistik</button>
+                  <button type="submit" className="button">Simpan Statistik ke JSON</button>
                 </div>
               </form>
             </div>
           ) : (
             <div>
-              <h2 style={{ fontSize: '1.25rem', marginBottom: '1.5rem', fontWeight: '700', textTransform: 'capitalize' }}>Kelola {activeTab}</h2>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                <h2 style={{ fontSize: '1.25rem', fontWeight: '700', textTransform: 'capitalize' }}>Kelola {activeTab}</h2>
+                <span style={{ fontSize: '0.85rem', color: '#6b7280' }}>Total: {items.length} karya</span>
+              </div>
 
               {/* Form Tambah Item */}
-              <form onSubmit={handleAddItem} style={{ background: '#f9fafb', padding: '1.25rem', borderRadius: '0.75rem', marginBottom: '2rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                <h3 style={{ gridColumn: 'span 2', fontSize: '1rem', fontWeight: '600' }}>+ Tambah Karya {activeTab}</h3>
+              <form onSubmit={handleAddItem} style={{ background: '#f9fafb', padding: '1.25rem', borderRadius: '0.75rem', marginBottom: '2rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', border: '1px solid #e5e7eb' }}>
+                <h3 style={{ gridColumn: 'span 2', fontSize: '1rem', fontWeight: '600', color: 'var(--first-color)' }}>
+                  + Tambah Karya {activeTab}
+                </h3>
 
                 <div>
                   <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '0.25rem' }}>Judul Karya *</label>
@@ -325,7 +367,7 @@ export default function AdminDashboard() {
                       type="text"
                       value={formData.category}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                      placeholder="e.g. Poster, UI/UX, Branding"
+                      placeholder="e.g. Poster, UI/UX, Branding, Banner"
                       style={{ width: '100%', padding: '0.6rem', borderRadius: '0.5rem', border: '1px solid #d1d5db' }}
                     />
                   </div>
@@ -338,7 +380,7 @@ export default function AdminDashboard() {
                       type="text"
                       value={formData.tech_stack}
                       onChange={(e) => setFormData({ ...formData, tech_stack: e.target.value })}
-                      placeholder="React, Supabase, Tailwind"
+                      placeholder="React, Tailwind, Node.js"
                       style={{ width: '100%', padding: '0.6rem', borderRadius: '0.5rem', border: '1px solid #d1d5db' }}
                     />
                   </div>
@@ -347,12 +389,22 @@ export default function AdminDashboard() {
                 {activeTab === 'videos' && (
                   <>
                     <div>
-                      <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '0.25rem' }}>URL Video (YouTube / Drive)</label>
+                      <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '0.25rem' }}>Kategori Video</label>
+                      <input
+                        type="text"
+                        value={formData.category}
+                        onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                        placeholder="Cinematic, Event, Reels, Motion"
+                        style={{ width: '100%', padding: '0.6rem', borderRadius: '0.5rem', border: '1px solid #d1d5db' }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '0.25rem' }}>URL Video (YouTube / Link)</label>
                       <input
                         type="text"
                         value={formData.video_url}
                         onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
-                        placeholder="https://..."
+                        placeholder="https://youtube.com/..."
                         style={{ width: '100%', padding: '0.6rem', borderRadius: '0.5rem', border: '1px solid #d1d5db' }}
                       />
                     </div>
@@ -368,18 +420,70 @@ export default function AdminDashboard() {
                   </>
                 )}
 
-                {(activeTab === 'websites' || activeTab === 'designs' || activeTab === 'dokumentasi') && (
+                {activeTab === 'dokumentasi' && (
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '0.25rem' }}>URL Gambar / Thumbnail</label>
+                    <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '0.25rem' }}>Kategori Dokumentasi</label>
                     <input
                       type="text"
-                      value={formData.image_url}
-                      onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                      placeholder="https://... atau nama file"
+                      value={formData.category}
+                      onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                      placeholder="Event, Seminar, Workshop"
                       style={{ width: '100%', padding: '0.6rem', borderRadius: '0.5rem', border: '1px solid #d1d5db' }}
                     />
                   </div>
                 )}
+
+                {/* IMAGE UPLOAD WIDGET */}
+                <div style={{ gridColumn: 'span 2', background: '#fff', padding: '1rem', borderRadius: '0.5rem', border: '1px dashed #cbd5e1' }}>
+                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '0.5rem', color: '#1e293b' }}>
+                    <i className='bx bx-cloud-upload'></i> Upload Foto dari Komputer (Otomatis Masuk ke folder assets/img/)
+                  </label>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      accept="image/*"
+                      onChange={handleFileUpload}
+                      disabled={uploadingImage}
+                      style={{ fontSize: '0.85rem' }}
+                    />
+                    {uploadingImage && <span style={{ fontSize: '0.85rem', color: 'var(--first-color)' }}>Sedang mengupload & menyalin file...</span>}
+                  </div>
+
+                  {previewImage && (
+                    <div style={{ marginTop: '0.75rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                      <img
+                        src={thumbUrl(previewImage)}
+                        alt="Preview"
+                        style={{ width: '80px', height: '60px', objectFit: 'cover', borderRadius: '0.375rem', border: '1px solid #e2e8f0' }}
+                      />
+                      <span style={{ fontSize: '0.8rem', color: '#16a34a', fontWeight: '600' }}>
+                        File siap digunakan: <code>{previewImage}</code>
+                      </span>
+                    </div>
+                  )}
+
+                  <div style={{ marginTop: '0.75rem' }}>
+                    <label style={{ display: 'block', fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem' }}>
+                      Atau masukkan path gambar manual / URL online:
+                    </label>
+                    <input
+                      type="text"
+                      value={activeTab === 'videos' ? formData.thumbnail_url : formData.image_url}
+                      onChange={(e) => {
+                        const val = e.target.value
+                        if (activeTab === 'videos') {
+                          setFormData({ ...formData, thumbnail_url: val })
+                        } else {
+                          setFormData({ ...formData, image_url: val })
+                        }
+                      }}
+                      placeholder="assets/img/nama-foto.jpg atau https://..."
+                      style={{ width: '100%', padding: '0.5rem', borderRadius: '0.375rem', border: '1px solid #e2e8f0', fontSize: '0.85rem' }}
+                    />
+                  </div>
+                </div>
 
                 {activeTab === 'websites' && (
                   <>
@@ -417,7 +521,9 @@ export default function AdminDashboard() {
                 )}
 
                 <div style={{ gridColumn: 'span 2', marginTop: '0.5rem' }}>
-                  <button type="submit" className="button">+ Tambahkan ke Database</button>
+                  <button type="submit" className="button" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <i className='bx bx-plus'></i> Simpan Karya ke JSON
+                  </button>
                 </div>
               </form>
 
@@ -426,16 +532,16 @@ export default function AdminDashboard() {
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
                   <thead>
                     <tr style={{ background: '#f3f4f6', textAlign: 'left' }}>
-                      <th style={{ padding: '0.75rem 1rem' }}>Gambar / Thumbnail</th>
+                      <th style={{ padding: '0.75rem 1rem' }}>Foto / Gambar</th>
                       <th style={{ padding: '0.75rem 1rem' }}>Judul</th>
-                      <th style={{ padding: '0.75rem 1rem' }}>Info / Stack</th>
+                      <th style={{ padding: '0.75rem 1rem' }}>Kategori / Info</th>
                       <th style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>Aksi</th>
                     </tr>
                   </thead>
                   <tbody>
                     {loading ? (
                       <tr>
-                        <td colSpan="4" style={{ textAlign: 'center', padding: '2rem' }}>Memuat data...</td>
+                        <td colSpan="4" style={{ textAlign: 'center', padding: '2rem' }}>Memuat data portofolio...</td>
                       </tr>
                     ) : items.length === 0 ? (
                       <tr>
@@ -446,9 +552,9 @@ export default function AdminDashboard() {
                         <tr key={item.id} style={{ borderBottom: '1px solid #e5e7eb' }}>
                           <td style={{ padding: '0.75rem 1rem' }}>
                             <img
-                              src={thumbUrl(item.image_url || item.thumbnail_url, activeTab) || 'assets/img/work1.jpg'}
+                              src={thumbUrl(item.image_url || item.thumbnail_url)}
                               alt={item.title}
-                              style={{ width: '50px', height: '36px', objectFit: 'cover', borderRadius: '0.25rem' }}
+                              style={{ width: '54px', height: '40px', objectFit: 'cover', borderRadius: '0.375rem', border: '1px solid #e2e8f0' }}
                             />
                           </td>
                           <td style={{ padding: '0.75rem 1rem', fontWeight: '600' }}>{item.title}</td>
@@ -458,9 +564,9 @@ export default function AdminDashboard() {
                           <td style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>
                             <button
                               onClick={() => handleDeleteItem(item.id)}
-                              style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '0.4rem 0.75rem', borderRadius: '0.375rem', cursor: 'pointer' }}
+                              style={{ background: '#fee2e2', color: '#dc2626', border: '1px solid #fca5a5', padding: '0.4rem 0.75rem', borderRadius: '0.375rem', cursor: 'pointer', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}
                             >
-                              Hapus
+                              <i className='bx bx-trash'></i> Hapus
                             </button>
                           </td>
                         </tr>

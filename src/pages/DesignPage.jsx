@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import HeroShapes from '../components/HeroShapes'
 import ModalPreview from '../components/ModalPreview'
-import { sbFetch, thumbUrl } from '../config/supabase'
+import { getPortfolioData, thumbUrl } from '../services/localDataService'
 
 export default function DesignPage() {
   const [designs, setDesigns] = useState([])
@@ -14,8 +14,8 @@ export default function DesignPage() {
     async function loadDesigns() {
       setLoading(true)
       try {
-        const data = await sbFetch('designs?select=*&order=category.asc,created_at.desc')
-        setDesigns(data || [])
+        const data = await getPortfolioData()
+        setDesigns(data.designs || [])
       } catch (err) {
         setError(err.message)
       } finally {
@@ -98,13 +98,13 @@ export default function DesignPage() {
                     className="design-card img-loaded"
                     onClick={() => setModalData({
                       isOpen: true,
-                      src: thumbUrl(item.image_url, 'designs'),
+                      src: thumbUrl(item.image_url),
                       title: item.title || 'Design'
                     })}
                   >
                     <img
                       className="thumb loaded"
-                      src={thumbUrl(item.image_url, 'designs')}
+                      src={thumbUrl(item.image_url)}
                       alt={item.title || 'Design'}
                     />
                     <div className="design-card__overlay">

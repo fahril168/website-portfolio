@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import HeroShapes from '../components/HeroShapes'
-import { sbFetch, thumbUrl } from '../config/supabase'
+import { getPortfolioData, thumbUrl } from '../services/localDataService'
 
 export default function VideoPage() {
   const [videos, setVideos] = useState([])
@@ -11,8 +11,8 @@ export default function VideoPage() {
     async function loadVideos() {
       setLoading(true)
       try {
-        const data = await sbFetch('videos?select=*&order=year.desc,created_at.desc')
-        setVideos(data || [])
+        const data = await getPortfolioData()
+        setVideos(data.videos || [])
       } catch (err) {
         setError(err.message)
       } finally {
@@ -67,14 +67,14 @@ export default function VideoPage() {
                 {groupedYears[year].map(item => (
                   <a
                     key={item.id}
-                    href={item.video_url}
+                    href={item.video_url || '#'}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="design-card img-loaded"
                   >
                     <img
                       className="thumb loaded"
-                      src={thumbUrl(item.thumbnail_url, 'videos') || 'assets/img/work2.jpg'}
+                      src={thumbUrl(item.thumbnail_url || 'assets/img/work2.jpg')}
                       alt={item.title || 'Video'}
                     />
                     <div className="design-card__overlay">
