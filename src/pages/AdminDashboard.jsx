@@ -92,7 +92,7 @@ export default function AdminDashboard() {
 
     const targetBucket = uploadBucket || getDefaultBucket(activeTab)
     setUploadingImage(true)
-    setMsg({ type: 'info', text: `Mengunggah foto ke Supabase Storage (bucket: ${targetBucket})...` })
+    setMsg({ type: 'info', text: `Mengunggah foto "${file.name}" ke Supabase Storage (${targetBucket})...` })
 
     try {
       const result = await uploadImageToSupabase(file, targetBucket)
@@ -103,7 +103,7 @@ export default function AdminDashboard() {
           setFormData(prev => ({ ...prev, image_url: result.url }))
         }
         setPreviewImage(result.url)
-        setMsg({ type: 'success', text: `✅ Foto "${result.filename}" berhasil diunggah ke Supabase Storage (${targetBucket})!` })
+        setMsg({ type: 'success', text: `✅ Foto "${file.name}" berhasil diunggah ke Supabase Storage!` })
       }
     } catch (err) {
       setMsg({ type: 'error', text: `Gagal mengunggah foto ke Supabase: ${err.message}` })
@@ -133,7 +133,40 @@ export default function AdminDashboard() {
       return
     }
 
-    setMsg({ type: 'info', text: `Menambahkan karya ke tabel ${activeTab} di Supabase...` })
+    if (uploadingImage) {
+      setMsg({ type: 'info', text: 'Sedang mengunggah foto ke Supabase Storage, mohon tunggu sebentar...' })
+      return
+    }
+
+    let finalImageUrl = formData.image_url
+    let finalThumbUrl = formData.thumbnail_url
+
+    // Auto-upload if user selected a file in the input but didn't wait or if state not synced
+    const selectedFile = fileInputRef.current?.files?.[0]
+    if (selectedFile && ((!finalImageUrl && activeTab !== 'videos') || (!finalThumbUrl && activeTab === 'videos'))) {
+      const targetBucket = uploadBucket || getDefaultBucket(activeTab)
+      setUploadingImage(true)
+      setMsg({ type: 'info', text: `Mengunggah foto "${selectedFile.name}" ke Supabase Storage (${targetBucket})...` })
+      try {
+        const uploadResult = await uploadImageToSupabase(selectedFile, targetBucket)
+        if (uploadResult.success && uploadResult.url) {
+          if (activeTab === 'videos') {
+            finalThumbUrl = uploadResult.url
+          } else {
+            finalImageUrl = uploadResult.url
+          }
+          setPreviewImage(uploadResult.url)
+        }
+      } catch (err) {
+        setMsg({ type: 'error', text: `Gagal mengunggah foto: ${err.message}` })
+        setUploadingImage(false)
+        return
+      } finally {
+        setUploadingImage(false)
+      }
+    }
+
+    setMsg({ type: 'info', text: `Menambahkan karya "${formData.title}" ke tabel ${activeTab}...` })
 
     let payload = {}
     if (activeTab === 'websites') {
@@ -142,7 +175,7 @@ export default function AdminDashboard() {
         category: formData.category || 'Website',
         tech_stack: formData.tech_stack,
         description: formData.description,
-        image_url: formData.image_url,
+        image_url: finalImageUrl || '',
         project_link: formData.project_link,
         github_link: formData.github_link
       }
@@ -151,7 +184,7 @@ export default function AdminDashboard() {
         title: formData.title,
         category: formData.category || 'Design',
         year: parseInt(formData.year) || new Date().getFullYear(),
-        image_url: formData.image_url,
+        image_url: finalImageUrl || '',
         description: formData.description
       }
     } else if (activeTab === 'videos') {
@@ -159,20 +192,20 @@ export default function AdminDashboard() {
         title: formData.title,
         category: formData.category || 'Video',
         video_url: formData.video_url,
-        thumbnail_url: formData.thumbnail_url,
+        thumbnail_url: finalThumbUrl || '',
         year: parseInt(formData.year) || new Date().getFullYear(),
         description: formData.description
       }
     } else if (activeTab === 'dokumentasi') {
       payload = {
         title: formData.title,
-        image_url: formData.image_url
+        image_url: finalImageUrl || ''
       }
     }
 
     try {
       await addItem(activeTab, payload)
-      setMsg({ type: 'success', text: `✅ Karya "${formData.title}" berhasil ditambahkan ke database Supabase!` })
+      setMsg({ type: 'success', text: `✅ Karya "${formData.title}" berhasil disimpan ke database Supabase!` })
       
       // Reset Form
       setFormData({
@@ -479,15 +512,18 @@ export default function AdminDashboard() {
                   </div>
 
                   {previewImage && (
-                    <div style={{ marginTop: '0.75rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <div style={{ marginTop: '0.75rem', display: 'flex', alignItems: 'center', gap: '1rem', background: '#f0fdf4', padding: '0.5rem 0.75rem', borderRadius: '0.375rem', border: '1px solid #bbf7d0' }}>
                       <img
                         src={thumbUrl(previewImage, uploadBucket)}
                         alt="Preview"
-                        style={{ width: '80px', height: '60px', objectFit: 'cover', borderRadius: '0.375rem', border: '1px solid #e2e8f0' }}
+                        style={{ width: '80px', height: '60px', objectFit: 'cover', borderRadius: '0.375rem', border: '1px solid #86efac' }}
                       />
-                      <span style={{ fontSize: '0.8rem', color: '#16a34a', fontWeight: '600' }}>
-                        URL Cloud Supabase siap: <code style={{ wordBreak: 'break-all' }}>{previewImage}</code>
-                      </span>
+                      <div>
+                        <span style={{ fontSize: '0.8rem', color: '#16a34a', fontWeight: '700', display: 'block' }}>
+                          ✅ Foto Berhasil Terunggah ke Supabase
+                        </span>
+                        <code style={{ fontSize: '0.75rem', color: '#475569', wordBreak: 'break-all' }}>{previewImage}</code>
+                      </div>
                     </div>
                   )}
 
@@ -548,8 +584,20 @@ export default function AdminDashboard() {
                 )}
 
                 <div style={{ gridColumn: 'span 2', marginTop: '0.5rem' }}>
-                  <button type="submit" className="button" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <i className='bx bx-plus'></i> Simpan Karya ke Supabase
+                  <button
+                    type="submit"
+                    className="button"
+                    disabled={uploadingImage}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      opacity: uploadingImage ? 0.7 : 1,
+                      cursor: uploadingImage ? 'not-allowed' : 'pointer'
+                    }}
+                  >
+                    <i className={`bx ${uploadingImage ? 'bx-loader-alt bx-spin' : 'bx-plus'}`}></i>
+                    {uploadingImage ? 'Sedang Mengunggah Foto...' : 'Simpan Karya ke Supabase'}
                   </button>
                 </div>
               </form>
