@@ -19,23 +19,50 @@ export function WarpBackground({
     let width = (canvas.width = window.innerWidth)
     let height = (canvas.height = window.innerHeight)
 
-    const handleResize = () => {
-      width = canvas.width = window.innerWidth
-      height = canvas.height = window.innerHeight
+    const isMobileCheck = () => {
+      return (
+        window.innerWidth <= 768 ||
+        (typeof window !== 'undefined' &&
+          window.matchMedia &&
+          window.matchMedia('(hover: none), (max-width: 768px)').matches)
+      )
     }
-    window.addEventListener('resize', handleResize)
 
-    const handleMouseMove = (e) => {
-      mouseRef.current = { x: e.clientX, y: e.clientY }
+    let isMobile = isMobileCheck()
+
+    // Draw clean static grid (used on mobile for maximum smoothness and zero lag/bugs)
+    const drawStaticGrid = () => {
+      ctx.clearRect(0, 0, width, height)
+
+      // Background
+      ctx.fillStyle = '#ffffff'
+      ctx.fillRect(0, 0, width, height)
+
+      // Static Light Gray grid lines
+      ctx.strokeStyle = '#e5e7eb'
+      ctx.lineWidth = 1
+
+      // Vertical lines
+      for (let x = 0; x <= width + gridSize; x += gridSize) {
+        ctx.beginPath()
+        ctx.moveTo(x + 0.5, 0)
+        ctx.lineTo(x + 0.5, height)
+        ctx.stroke()
+      }
+
+      // Horizontal lines
+      for (let y = 0; y <= height + gridSize; y += gridSize) {
+        ctx.beginPath()
+        ctx.moveTo(0, y + 0.5)
+        ctx.lineTo(width, y + 0.5)
+        ctx.stroke()
+      }
     }
-    window.addEventListener('mousemove', handleMouseMove)
 
-    const handleMouseLeave = () => {
-      mouseRef.current = { x: -1000, y: -1000 }
-    }
-    window.addEventListener('mouseleave', handleMouseLeave)
+    // Interactive render loop with mouse cell hover effect (for desktop)
+    const renderInteractive = () => {
+      if (isMobile) return
 
-    const render = () => {
       ctx.clearRect(0, 0, width, height)
 
       // White background
@@ -122,10 +149,44 @@ export function WarpBackground({
         ctx.stroke()
       }
 
-      animFrameRef.current = requestAnimationFrame(render)
+      animFrameRef.current = requestAnimationFrame(renderInteractive)
     }
 
-    render()
+    const startMode = () => {
+      if (animFrameRef.current) {
+        cancelAnimationFrame(animFrameRef.current)
+        animFrameRef.current = null
+      }
+
+      isMobile = isMobileCheck()
+
+      if (isMobile) {
+        drawStaticGrid()
+      } else {
+        animFrameRef.current = requestAnimationFrame(renderInteractive)
+      }
+    }
+
+    startMode()
+
+    const handleResize = () => {
+      width = canvas.width = window.innerWidth
+      height = canvas.height = window.innerHeight
+      startMode()
+    }
+    window.addEventListener('resize', handleResize)
+
+    const handleMouseMove = (e) => {
+      if (isMobile) return
+      mouseRef.current = { x: e.clientX, y: e.clientY }
+    }
+    window.addEventListener('mousemove', handleMouseMove)
+
+    const handleMouseLeave = () => {
+      if (isMobile) return
+      mouseRef.current = { x: -1000, y: -1000 }
+    }
+    window.addEventListener('mouseleave', handleMouseLeave)
 
     return () => {
       window.removeEventListener('resize', handleResize)

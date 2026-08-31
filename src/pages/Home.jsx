@@ -3,8 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import HeroShapes from '../components/HeroShapes'
 import ModalPreview from '../components/ModalPreview'
-import { WarpBackground } from '../components/ui/warp-background'
-import { getPortfolioData, thumbUrl } from '../services/localDataService'
+import { getPortfolioData, thumbUrl } from '../services/supabaseService'
 
 function Tilt3DImage({ src, alt, className = 'home__img', maxWidth = '300px' }) {
   const containerRef = useRef(null)
@@ -239,7 +238,7 @@ export default function Home() {
           </div>
         </div>
 
-        <Tilt3DImage src="assets/img/fahril.png" alt="Muh. Fahril" className="home__img" maxWidth="360px" />
+        <Tilt3DImage src="assets/img/profile/fahril.png" alt="Muh. Fahril" className="home__img" maxWidth="360px" />
       </section>
 
       {/* ===== ABOUT ===== */}
@@ -248,7 +247,7 @@ export default function Home() {
         <h2 className="section-title" style={{ position: 'relative', zIndex: 1 }}>About</h2>
 
         <div className="about__container bd-grid">
-          <Tilt3DImage src="assets/img/about.jpg" alt="About Fahril" className="about__img" maxWidth="380px" />
+          <Tilt3DImage src="assets/img/profile/about.jpg" alt="About Fahril" className="about__img" maxWidth="380px" />
 
           <div>
             <h1 className="about__subtitle">Muh. Fahril</h1>

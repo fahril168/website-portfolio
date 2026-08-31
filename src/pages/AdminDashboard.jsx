@@ -5,9 +5,9 @@ import {
   addItem,
   deleteItem,
   updateStats,
-  uploadImageFile,
+  uploadImageToSupabase,
   thumbUrl
-} from '../services/localDataService'
+} from '../services/supabaseService'
 
 export default function AdminDashboard() {
   const navigate = useNavigate()
@@ -21,6 +21,7 @@ export default function AdminDashboard() {
   const fileInputRef = useRef(null)
   const [uploadingImage, setUploadingImage] = useState(false)
   const [previewImage, setPreviewImage] = useState('')
+  const [uploadBucket, setUploadBucket] = useState('designs')
 
   // Form State
   const [formData, setFormData] = useState({
@@ -36,6 +37,16 @@ export default function AdminDashboard() {
     year: new Date().getFullYear()
   })
 
+  const getDefaultBucket = (tab) => {
+    switch (tab) {
+      case 'videos': return 'videos'
+      case 'dokumentasi': return 'dokumentasi'
+      case 'designs':
+      case 'websites':
+      default: return 'designs'
+    }
+  }
+
   // Auth Guard
   useEffect(() => {
     const isAuth = sessionStorage.getItem('fahril_admin') === '1'
@@ -49,7 +60,7 @@ export default function AdminDashboard() {
     navigate('/login')
   }
 
-  // Load Current Tab Data
+  // Load Current Tab Data from Supabase
   const loadTabData = async () => {
     setLoading(true)
     try {
@@ -60,7 +71,7 @@ export default function AdminDashboard() {
         setItems(data[activeTab] || [])
       }
     } catch (err) {
-      setMsg({ type: 'error', text: `Gagal memuat data lokal: ${err.message}` })
+      setMsg({ type: 'error', text: `Gagal memuat data dari Supabase: ${err.message}` })
     } finally {
       setLoading(false)
     }
@@ -69,20 +80,22 @@ export default function AdminDashboard() {
   useEffect(() => {
     setMsg({ type: '', text: '' })
     setPreviewImage('')
+    setUploadBucket(getDefaultBucket(activeTab))
     if (fileInputRef.current) fileInputRef.current.value = ''
     loadTabData()
   }, [activeTab])
 
-  // Handle Local Image File Upload
+  // Handle Supabase Storage Image Upload
   const handleFileUpload = async (e) => {
     const file = e.target.files?.[0]
     if (!file) return
 
+    const targetBucket = uploadBucket || getDefaultBucket(activeTab)
     setUploadingImage(true)
-    setMsg({ type: 'info', text: 'Mengunggah dan menyalin foto ke folder assets/img/...' })
+    setMsg({ type: 'info', text: `Mengunggah foto ke Supabase Storage (bucket: ${targetBucket})...` })
 
     try {
-      const result = await uploadImageFile(file)
+      const result = await uploadImageToSupabase(file, targetBucket)
       if (result.success && result.url) {
         if (activeTab === 'videos') {
           setFormData(prev => ({ ...prev, thumbnail_url: result.url }))
@@ -90,29 +103,29 @@ export default function AdminDashboard() {
           setFormData(prev => ({ ...prev, image_url: result.url }))
         }
         setPreviewImage(result.url)
-        setMsg({ type: 'success', text: `✅ Foto "${result.filename}" berhasil disalin ke folder assets/img!` })
+        setMsg({ type: 'success', text: `✅ Foto "${result.filename}" berhasil diunggah ke Supabase Storage (${targetBucket})!` })
       }
     } catch (err) {
-      setMsg({ type: 'error', text: `Gagal mengupload foto: ${err.message}` })
+      setMsg({ type: 'error', text: `Gagal mengunggah foto ke Supabase: ${err.message}` })
     } finally {
       setUploadingImage(false)
     }
   }
 
-  // Save Stats
+  // Save Stats to Supabase
   const handleSaveStats = async (e) => {
     e.preventDefault()
-    setMsg({ type: 'info', text: 'Menyimpan statistik ke file JSON...' })
+    setMsg({ type: 'info', text: 'Menyimpan statistik ke Supabase...' })
 
     try {
       await updateStats(stats)
-      setMsg({ type: 'success', text: '✅ Statistik berhasil disimpan ke src/data/portfolioData.json!' })
+      setMsg({ type: 'success', text: '✅ Statistik berhasil disimpan ke Supabase database!' })
     } catch (err) {
-      setMsg({ type: 'error', text: `Gagal menyimpan: ${err.message}` })
+      setMsg({ type: 'error', text: `Gagal menyimpan statistik: ${err.message}` })
     }
   }
 
-  // Create Item
+  // Create Item in Supabase
   const handleAddItem = async (e) => {
     e.preventDefault()
     if (!formData.title) {
@@ -120,7 +133,7 @@ export default function AdminDashboard() {
       return
     }
 
-    setMsg({ type: 'info', text: 'Menambahkan item ke JSON lokal...' })
+    setMsg({ type: 'info', text: `Menambahkan karya ke tabel ${activeTab} di Supabase...` })
 
     let payload = {}
     if (activeTab === 'websites') {
@@ -129,7 +142,7 @@ export default function AdminDashboard() {
         category: formData.category || 'Website',
         tech_stack: formData.tech_stack,
         description: formData.description,
-        image_url: formData.image_url || 'assets/img/about.jpg',
+        image_url: formData.image_url,
         project_link: formData.project_link,
         github_link: formData.github_link
       }
@@ -137,27 +150,29 @@ export default function AdminDashboard() {
       payload = {
         title: formData.title,
         category: formData.category || 'Design',
-        image_url: formData.image_url || 'assets/img/about.jpg'
+        year: parseInt(formData.year) || new Date().getFullYear(),
+        image_url: formData.image_url,
+        description: formData.description
       }
     } else if (activeTab === 'videos') {
       payload = {
         title: formData.title,
         category: formData.category || 'Video',
         video_url: formData.video_url,
-        thumbnail_url: formData.thumbnail_url || 'assets/img/about.jpg',
-        year: parseInt(formData.year) || new Date().getFullYear()
+        thumbnail_url: formData.thumbnail_url,
+        year: parseInt(formData.year) || new Date().getFullYear(),
+        description: formData.description
       }
     } else if (activeTab === 'dokumentasi') {
       payload = {
         title: formData.title,
-        category: formData.category || 'Dokumentasi',
-        image_url: formData.image_url || 'assets/img/about.jpg'
+        image_url: formData.image_url
       }
     }
 
     try {
       await addItem(activeTab, payload)
-      setMsg({ type: 'success', text: `✅ Karya "${formData.title}" berhasil ditambahkan ke portfolioData.json!` })
+      setMsg({ type: 'success', text: `✅ Karya "${formData.title}" berhasil ditambahkan ke database Supabase!` })
       
       // Reset Form
       setFormData({
@@ -176,17 +191,17 @@ export default function AdminDashboard() {
       if (fileInputRef.current) fileInputRef.current.value = ''
       loadTabData()
     } catch (err) {
-      setMsg({ type: 'error', text: `Gagal menambahkan: ${err.message}` })
+      setMsg({ type: 'error', text: `Gagal menambahkan karya: ${err.message}` })
     }
   }
 
-  // Delete Item
+  // Delete Item from Supabase
   const handleDeleteItem = async (id) => {
-    if (!window.confirm('Yakin ingin menghapus item ini dari data portofolio?')) return
+    if (!window.confirm('Yakin ingin menghapus item ini dari database Supabase?')) return
 
     try {
       await deleteItem(activeTab, id)
-      setMsg({ type: 'success', text: '✅ Item berhasil dihapus dari file JSON.' })
+      setMsg({ type: 'success', text: '✅ Item berhasil dihapus dari Supabase.' })
       loadTabData()
     } catch (err) {
       setMsg({ type: 'error', text: `Gagal menghapus: ${err.message}` })
@@ -202,8 +217,8 @@ export default function AdminDashboard() {
             <Link to="/" className="nav__logo">
               <h2>Fahril Admin</h2>
             </Link>
-            <span className="nav__badge" style={{ background: '#e0e7ff', color: '#3730a3', padding: '0.2rem 0.6rem', borderRadius: '0.375rem', fontSize: '0.75rem', fontWeight: '600' }}>
-              Mode JSON Lokal
+            <span className="nav__badge" style={{ background: '#dcfce7', color: '#166534', padding: '0.2rem 0.6rem', borderRadius: '0.375rem', fontSize: '0.75rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+              <i className='bx bx-check-circle'></i> Supabase Cloud Connected
             </span>
           </div>
 
@@ -221,7 +236,7 @@ export default function AdminDashboard() {
       <div className="bd-grid" style={{ display: 'grid', gridTemplateColumns: '240px 1fr', gap: '1.5rem', marginTop: '1rem' }}>
         {/* SIDEBAR */}
         <aside className="sidebar" style={{ background: '#fff', borderRadius: '1rem', padding: '1rem', boxShadow: '0 4px 16px rgba(14,36,49,0.07)', height: 'fit-content' }}>
-          <h3 style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: '#9ca3af', marginBottom: '0.75rem', fontWeight: '700' }}>Kategori Portofolio</h3>
+          <h3 style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: '#9ca3af', marginBottom: '0.75rem', fontWeight: '700' }}>Tabel Supabase</h3>
           <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             <li>
               <button
@@ -292,7 +307,7 @@ export default function AdminDashboard() {
 
           {activeTab === 'stats' ? (
             <div>
-              <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem', fontWeight: '700' }}>Pengaturan Statistik About Me</h2>
+              <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem', fontWeight: '700' }}>Pengaturan Statistik Supabase (about_stats)</h2>
               <form onSubmit={handleSaveStats} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '0.25rem' }}>Jumlah Projects</label>
@@ -331,7 +346,7 @@ export default function AdminDashboard() {
                   />
                 </div>
                 <div style={{ gridColumn: 'span 2', marginTop: '1rem' }}>
-                  <button type="submit" className="button">Simpan Statistik ke JSON</button>
+                  <button type="submit" className="button">Simpan Statistik ke Supabase</button>
                 </div>
               </form>
             </div>
@@ -339,13 +354,13 @@ export default function AdminDashboard() {
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
                 <h2 style={{ fontSize: '1.25rem', fontWeight: '700', textTransform: 'capitalize' }}>Kelola {activeTab}</h2>
-                <span style={{ fontSize: '0.85rem', color: '#6b7280' }}>Total: {items.length} karya</span>
+                <span style={{ fontSize: '0.85rem', color: '#6b7280' }}>Total: {items.length} karya di Supabase</span>
               </div>
 
               {/* Form Tambah Item */}
               <form onSubmit={handleAddItem} style={{ background: '#f9fafb', padding: '1.25rem', borderRadius: '0.75rem', marginBottom: '2rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', border: '1px solid #e5e7eb' }}>
                 <h3 style={{ gridColumn: 'span 2', fontSize: '1rem', fontWeight: '600', color: 'var(--first-color)' }}>
-                  + Tambah Karya {activeTab}
+                  + Tambah Karya {activeTab} ke Supabase
                 </h3>
 
                 <div>
@@ -361,16 +376,27 @@ export default function AdminDashboard() {
                 </div>
 
                 {activeTab === 'designs' && (
-                  <div>
-                    <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '0.25rem' }}>Kategori Desain</label>
-                    <input
-                      type="text"
-                      value={formData.category}
-                      onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                      placeholder="e.g. Poster, UI/UX, Branding, Banner"
-                      style={{ width: '100%', padding: '0.6rem', borderRadius: '0.5rem', border: '1px solid #d1d5db' }}
-                    />
-                  </div>
+                  <>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '0.25rem' }}>Kategori Desain</label>
+                      <input
+                        type="text"
+                        value={formData.category}
+                        onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                        placeholder="e.g. Poster, UI/UX, Branding, Banner, Infografis"
+                        style={{ width: '100%', padding: '0.6rem', borderRadius: '0.5rem', border: '1px solid #d1d5db' }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '0.25rem' }}>Tahun</label>
+                      <input
+                        type="number"
+                        value={formData.year}
+                        onChange={(e) => setFormData({ ...formData, year: e.target.value })}
+                        style={{ width: '100%', padding: '0.6rem', borderRadius: '0.5rem', border: '1px solid #d1d5db' }}
+                      />
+                    </div>
+                  </>
                 )}
 
                 {activeTab === 'websites' && (
@@ -399,12 +425,12 @@ export default function AdminDashboard() {
                       />
                     </div>
                     <div>
-                      <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '0.25rem' }}>URL Video (YouTube / Link)</label>
+                      <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '0.25rem' }}>URL Video (YouTube / Instagram)</label>
                       <input
                         type="text"
                         value={formData.video_url}
                         onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
-                        placeholder="https://youtube.com/..."
+                        placeholder="https://youtube.com/... atau https://instagram.com/..."
                         style={{ width: '100%', padding: '0.6rem', borderRadius: '0.5rem', border: '1px solid #d1d5db' }}
                       />
                     </div>
@@ -420,24 +446,25 @@ export default function AdminDashboard() {
                   </>
                 )}
 
-                {activeTab === 'dokumentasi' && (
-                  <div>
-                    <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '0.25rem' }}>Kategori Dokumentasi</label>
-                    <input
-                      type="text"
-                      value={formData.category}
-                      onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                      placeholder="Event, Seminar, Workshop"
-                      style={{ width: '100%', padding: '0.6rem', borderRadius: '0.5rem', border: '1px solid #d1d5db' }}
-                    />
-                  </div>
-                )}
-
-                {/* IMAGE UPLOAD WIDGET */}
+                {/* IMAGE UPLOAD WIDGET VIA SUPABASE STORAGE */}
                 <div style={{ gridColumn: 'span 2', background: '#fff', padding: '1rem', borderRadius: '0.5rem', border: '1px dashed #cbd5e1' }}>
-                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '0.5rem', color: '#1e293b' }}>
-                    <i className='bx bx-cloud-upload'></i> Upload Foto dari Komputer (Otomatis Masuk ke folder assets/img/)
-                  </label>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                    <label style={{ fontSize: '0.85rem', fontWeight: '700', color: '#1e293b', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                      <i className='bx bx-cloud-upload'></i> Upload Foto ke Supabase Storage
+                    </label>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: '600' }}>Bucket Storage:</span>
+                      <select
+                        value={uploadBucket}
+                        onChange={(e) => setUploadBucket(e.target.value)}
+                        style={{ padding: '0.25rem 0.5rem', borderRadius: '0.375rem', border: '1px solid #cbd5e1', fontSize: '0.75rem', fontWeight: '600', color: 'var(--first-color)', background: '#f8fafc' }}
+                      >
+                        <option value="designs">📦 designs (bucket)</option>
+                        <option value="videos">📦 videos (bucket)</option>
+                        <option value="dokumentasi">📦 dokumentasi (bucket)</option>
+                      </select>
+                    </div>
+                  </div>
 
                   <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
                     <input
@@ -448,25 +475,25 @@ export default function AdminDashboard() {
                       disabled={uploadingImage}
                       style={{ fontSize: '0.85rem' }}
                     />
-                    {uploadingImage && <span style={{ fontSize: '0.85rem', color: 'var(--first-color)' }}>Sedang mengupload & menyalin file...</span>}
+                    {uploadingImage && <span style={{ fontSize: '0.85rem', color: 'var(--first-color)' }}>Sedang mengunggah ke Supabase Storage ({uploadBucket})...</span>}
                   </div>
 
                   {previewImage && (
                     <div style={{ marginTop: '0.75rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
                       <img
-                        src={thumbUrl(previewImage)}
+                        src={thumbUrl(previewImage, uploadBucket)}
                         alt="Preview"
                         style={{ width: '80px', height: '60px', objectFit: 'cover', borderRadius: '0.375rem', border: '1px solid #e2e8f0' }}
                       />
                       <span style={{ fontSize: '0.8rem', color: '#16a34a', fontWeight: '600' }}>
-                        File siap digunakan: <code>{previewImage}</code>
+                        URL Cloud Supabase siap: <code style={{ wordBreak: 'break-all' }}>{previewImage}</code>
                       </span>
                     </div>
                   )}
 
                   <div style={{ marginTop: '0.75rem' }}>
                     <label style={{ display: 'block', fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem' }}>
-                      Atau masukkan path gambar manual / URL online:
+                      Atau masukkan URL / path gambar langsung:
                     </label>
                     <input
                       type="text"
@@ -479,7 +506,7 @@ export default function AdminDashboard() {
                           setFormData({ ...formData, image_url: val })
                         }
                       }}
-                      placeholder="assets/img/nama-foto.jpg atau https://..."
+                      placeholder="https://... atau nama file di Supabase Storage"
                       style={{ width: '100%', padding: '0.5rem', borderRadius: '0.375rem', border: '1px solid #e2e8f0', fontSize: '0.85rem' }}
                     />
                   </div>
@@ -522,7 +549,7 @@ export default function AdminDashboard() {
 
                 <div style={{ gridColumn: 'span 2', marginTop: '0.5rem' }}>
                   <button type="submit" className="button" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <i className='bx bx-plus'></i> Simpan Karya ke JSON
+                    <i className='bx bx-plus'></i> Simpan Karya ke Supabase
                   </button>
                 </div>
               </form>
@@ -541,18 +568,18 @@ export default function AdminDashboard() {
                   <tbody>
                     {loading ? (
                       <tr>
-                        <td colSpan="4" style={{ textAlign: 'center', padding: '2rem' }}>Memuat data portofolio...</td>
+                        <td colSpan="4" style={{ textAlign: 'center', padding: '2rem' }}>Memuat data dari Supabase...</td>
                       </tr>
                     ) : items.length === 0 ? (
                       <tr>
-                        <td colSpan="4" style={{ textAlign: 'center', padding: '2rem', color: '#9ca3af' }}>Belum ada data karya pada kategori ini.</td>
+                        <td colSpan="4" style={{ textAlign: 'center', padding: '2rem', color: '#9ca3af' }}>Belum ada data karya di tabel ini.</td>
                       </tr>
                     ) : (
                       items.map((item) => (
                         <tr key={item.id} style={{ borderBottom: '1px solid #e5e7eb' }}>
                           <td style={{ padding: '0.75rem 1rem' }}>
                             <img
-                              src={thumbUrl(item.image_url || item.thumbnail_url)}
+                              src={thumbUrl(item.image_url || item.thumbnail_url, getDefaultBucket(activeTab))}
                               alt={item.title}
                               style={{ width: '54px', height: '40px', objectFit: 'cover', borderRadius: '0.375rem', border: '1px solid #e2e8f0' }}
                             />

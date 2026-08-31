@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import HeroShapes from '../components/HeroShapes'
 import ModalPreview from '../components/ModalPreview'
-import { getPortfolioData, thumbUrl } from '../services/localDataService'
+import { getPortfolioData, thumbUrl } from '../services/supabaseService'
 
 export default function DokumentasiPage() {
   const [docs, setDocs] = useState([])
